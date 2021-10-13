@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PerfectWeatherAllYear</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="temperature_text">Temperature, C</string>
+    <string name="precipitation_text">Precipitation, %</string>
+    <string name="wind_text">Wind, m/sec</string>
+</resources>
