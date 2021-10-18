@@ -8,38 +8,47 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.R
 import com.example.perfectweatherallyear.model.DayWeather
 
-class WeatherForecastAdapter(private val dayOfWeekList: List<String>, private val weatherList: List<DayWeather>, onItemListener: ViewHolder.OnItemListener) :
+class WeatherForecastAdapter(private val dayOfWeekList: List<String>, private val weatherList: List<DayWeather>, private val onClick: (DayWeather) -> Unit) :
         RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
-    private val mOnItemListener: ViewHolder.OnItemListener = onItemListener
 
-    class ViewHolder(view: View, private val onItemListener: OnItemListener) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    class ViewHolder(view: View, val onClick: (DayWeather) -> Unit) : RecyclerView.ViewHolder(view), View.OnClickListener {
+
         val dayOfWeekTextView: TextView = view.findViewById(R.id.dayOfWeekTextView)
-        val maxMinTemperatureTextView: TextView = view.findViewById(R.id.maxMinTempretureTextView)
+        private val maxMinTemperatureTextView: TextView = view.findViewById(R.id.maxMinTempretureTextView)
+        private var currentDayWeather: DayWeather? = null
 
         init {
-            itemView.setOnClickListener(this)
-            }
-
-            override fun onClick(view: View?) {
-               onItemListener.onItemClick(adapterPosition)
-            }
-
-            interface OnItemListener {
-                fun onItemClick(position: Int)
+            itemView.setOnClickListener {
+                currentDayWeather?.let {
+                    onClick(it)
+                }
             }
         }
 
-        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.weather_row_item, viewGroup, false)
-            return ViewHolder(view, mOnItemListener)
+        fun bind(dayWeather: DayWeather) {
+            currentDayWeather = dayWeather
+            maxMinTemperatureTextView.text = dayWeather.temperature
         }
 
-        override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-            viewHolder.dayOfWeekTextView.text = dayOfWeekList[position]
-            viewHolder.maxMinTemperatureTextView.text = weatherList[position].temperature
+        override fun onClick(v: View?) { // do I need it here? Asks to implement
         }
-
-        override fun getItemCount() = dayOfWeekList.size
     }
 
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(viewGroup.context)
+            .inflate(R.layout.weather_row_item, viewGroup, false)
+        return ViewHolder(view, onClick)
+    }
+
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        viewHolder.dayOfWeekTextView.text = dayOfWeekList[position]
+        val dayWeather = getItem(position)
+        viewHolder.bind(dayWeather)
+    }
+
+    override fun getItemCount() = dayOfWeekList.size
+
+    private fun getItem(position: Int): DayWeather {
+        return weatherList[position]
+    }
+}
