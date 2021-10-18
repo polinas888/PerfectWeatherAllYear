@@ -3,18 +3,15 @@ package com.example.perfectweatherallyear.ui.weekWeather
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.perfectweatherallyear.R
+import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
 
 class WeatherForecastAdapter(private val dayOfWeekList: List<String>, private val weatherList: List<DayWeather>, private val onClick: (DayWeather) -> Unit) :
         RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, val onClick: (DayWeather) -> Unit) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    class ViewHolder(val binding: WeatherRowItemBinding, val onClick: (DayWeather) -> Unit) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
-        val dayOfWeekTextView: TextView = view.findViewById(R.id.dayOfWeekTextView)
-        private val maxMinTemperatureTextView: TextView = view.findViewById(R.id.maxMinTempretureTextView)
         private var currentDayWeather: DayWeather? = null
 
         init {
@@ -27,7 +24,6 @@ class WeatherForecastAdapter(private val dayOfWeekList: List<String>, private va
 
         fun bind(dayWeather: DayWeather) {
             currentDayWeather = dayWeather
-            maxMinTemperatureTextView.text = dayWeather.temperature
         }
 
         override fun onClick(v: View?) { // do I need it here? Asks to implement
@@ -35,14 +31,14 @@ class WeatherForecastAdapter(private val dayOfWeekList: List<String>, private va
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.weather_row_item, viewGroup, false)
-        return ViewHolder(view, onClick)
+        val binding = WeatherRowItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        return ViewHolder(binding, onClick)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.dayOfWeekTextView.text = dayOfWeekList[position]
         val dayWeather = getItem(position)
+        viewHolder.binding.dayOfWeekTextView.text = dayOfWeekList[position]
+        viewHolder.binding.maxMinTempretureTextView.text = dayWeather.temperature
         viewHolder.bind(dayWeather)
     }
 
