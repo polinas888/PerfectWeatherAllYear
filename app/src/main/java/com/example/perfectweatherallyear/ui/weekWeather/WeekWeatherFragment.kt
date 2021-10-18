@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.model.DayWeather
 import androidx.fragment.app.FragmentTransaction
+import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
 
 class WeekWeatherFragment : Fragment(), WeatherForecastAdapter.ViewHolder.OnItemListener {
-    private lateinit var weatherForecastRecyclerView: RecyclerView
+    private var _binding: FragmentWeekWeatherBinding? = null // why like this?
+    private val binding get() = _binding!!
 
     private val dayOfWeekList = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
     private val weatherPerWeekList = listOf(DayWeather("+15/+5", 15, 5),
@@ -26,15 +28,16 @@ class WeekWeatherFragment : Fragment(), WeatherForecastAdapter.ViewHolder.OnItem
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(com.example.perfectweatherallyear.R.layout.fragment_week_weather, container, false)
+    ): View {
+        _binding = FragmentWeekWeatherBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        weatherForecastRecyclerView = view.findViewById(com.example.perfectweatherallyear.R.id.weatherForecastRecyclerView)
-        weatherForecastRecyclerView.adapter = WeatherForecastAdapter(dayOfWeekList, weatherPerWeekList, this)
-        weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.weatherForecastRecyclerView.adapter = WeatherForecastAdapter(dayOfWeekList, weatherPerWeekList, this)
+        binding.weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     override fun onItemClick(position: Int) {
@@ -53,5 +56,10 @@ class WeekWeatherFragment : Fragment(), WeatherForecastAdapter.ViewHolder.OnItem
         transaction.replace(com.example.perfectweatherallyear.R.id.nav_host_fragment, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null // обязательно?
     }
 }
