@@ -6,16 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.model.DayWeather
 import androidx.fragment.app.FragmentTransaction
-import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
 
-class WeekWeatherFragment : Fragment() {
-    private var _binding: FragmentWeekWeatherBinding? = null // why like this?
-    private val binding get() = _binding!!
+class WeekWeatherFragment : Fragment(), WeatherForecastAdapter.ViewHolder.OnItemListener {
+    private lateinit var weatherForecastRecyclerView: RecyclerView
 
     private val dayOfWeekList = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
     private val weatherPerWeekList = listOf(DayWeather("+15/+5", 15, 5),
@@ -27,23 +26,23 @@ class WeekWeatherFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentWeekWeatherBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+    ): View? {
+        return inflater.inflate(com.example.perfectweatherallyear.R.layout.fragment_week_weather, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.weatherForecastRecyclerView.adapter = WeatherForecastAdapter(dayOfWeekList, weatherPerWeekList)
-        {dayWeather -> adapterOnClick(dayWeather)}
-        binding.weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        weatherForecastRecyclerView = view.findViewById(com.example.perfectweatherallyear.R.id.weatherForecastRecyclerView)
+        weatherForecastRecyclerView.adapter = WeatherForecastAdapter(dayOfWeekList, weatherPerWeekList, this)
+        weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    private fun adapterOnClick(dayWeather: DayWeather) {
+    override fun onItemClick(position: Int) {
         val fragment = DetailWeatherFragment()
 
         val args = Bundle()
+        val dayWeather = DayWeather(temperature = weatherPerWeekList[position].temperature,
+            precipitation = weatherPerWeekList[position].precipitation, wind = weatherPerWeekList[position].wind)
         val builder = GsonBuilder()
         val gson = builder.create()
         val result: String = gson.toJson(dayWeather)
@@ -54,10 +53,5 @@ class WeekWeatherFragment : Fragment() {
         transaction.replace(com.example.perfectweatherallyear.R.id.nav_host_fragment, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null // обязательно?
     }
 }

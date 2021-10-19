@@ -5,34 +5,38 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.perfectweatherallyear.databinding.FragmentDetailWeatherBinding
+import android.widget.TextView
+import com.example.perfectweatherallyear.R
 import com.example.perfectweatherallyear.model.DayWeather
+
 import com.google.gson.GsonBuilder
 
 const val ARG_DAY_WEATHER: String = "DAY_WEATHER"
 
 class DetailWeatherFragment : Fragment() {
-    private var _binding: FragmentDetailWeatherBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var temperatureTextView: TextView
+    private lateinit var precipitationTextView: TextView
+    private lateinit var windTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentDetailWeatherBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+    ): View? {
+        return inflater.inflate(R.layout.fragment_detail_weather, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        temperatureTextView = view.findViewById(R.id.temperatureTextView)
+        precipitationTextView = view.findViewById(R.id.precipitationTextView)
+        windTextView = view.findViewById(R.id.windTextView)
 
         val builder = GsonBuilder()
         val gson = builder.create()
         val dayWeather: DayWeather = gson.fromJson(arguments?.getString(ARG_DAY_WEATHER), DayWeather::class.java)
 
-        binding.temperatureTextView.text = dayWeather.temperature
-        binding.precipitationTextView.text = dayWeather.precipitation.toString()
-        binding.windTextView.text = dayWeather.wind.toString()
+        temperatureTextView.text = dayWeather.temperature
+        precipitationTextView.text = dayWeather.precipitation.toString()
+        windTextView.text = dayWeather.wind.toString()
     }
 }
