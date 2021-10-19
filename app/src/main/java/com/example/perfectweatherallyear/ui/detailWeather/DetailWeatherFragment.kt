@@ -20,8 +20,7 @@ class DetailWeatherFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailWeatherBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,8 +30,15 @@ class DetailWeatherFragment : Fragment() {
         val gson = builder.create()
         val dayWeather: DayWeather = gson.fromJson(arguments?.getString(ARG_DAY_WEATHER), DayWeather::class.java)
 
-        binding.temperatureTextView.text = dayWeather.temperature
-        binding.precipitationTextView.text = dayWeather.precipitation.toString()
-        binding.windTextView.text = dayWeather.wind.toString()
+        binding.apply {
+            temperatureTextView.text = dayWeather.temperature
+            precipitationTextView.text = dayWeather.precipitation.toString()
+            windTextView.text = dayWeather.wind.toString()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

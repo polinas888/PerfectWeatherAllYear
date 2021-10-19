@@ -18,34 +18,35 @@ class WeekWeatherFragment : Fragment(), WeatherForecastAdapter.ViewHolder.OnItem
     private var _binding: FragmentWeekWeatherBinding? = null // why like this?
     private val binding get() = _binding!!
 
-    private val dayOfWeekList = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-    private val weatherPerWeekList = listOf(DayWeather("+15/+5", 15, 5),
-        DayWeather("+15/+5", 15, 5), DayWeather("+16/+6", 20, 10),
-            DayWeather("+20/+15", 70, 2), DayWeather("+15/+7", 10, 15),
-            DayWeather("+10/+5", 20, 5), DayWeather("+7/+0", 15, 8)
-    )
+    private val weekWeatherMap = mapOf("Monday" to DayWeather("+15/+5", 15, 5),
+        "Tuesday" to DayWeather("+15/+5", 15, 5), "Wednesday" to DayWeather("+16/+6", 20, 10),
+        "Thursday" to DayWeather("+20/+15", 70, 2), "Friday" to DayWeather("+15/+7", 10, 15),
+        "Saturday" to DayWeather("+10/+5", 20, 5), "Sunday" to DayWeather("+7/+0", 15, 8))
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentWeekWeatherBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.weatherForecastRecyclerView.adapter = WeatherForecastAdapter(dayOfWeekList, weatherPerWeekList, this)
-        binding.weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.apply {
+            weatherForecastRecyclerView.adapter = WeatherForecastAdapter(weekWeatherMap, this@WeekWeatherFragment)
+            weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
     }
 
     override fun onItemClick(position: Int) {
         val fragment = DetailWeatherFragment()
 
         val args = Bundle()
-        val dayWeather = DayWeather(temperature = weatherPerWeekList[position].temperature,
-            precipitation = weatherPerWeekList[position].precipitation, wind = weatherPerWeekList[position].wind)
+        val currentDayWeather = weekWeatherMap.get(weekWeatherMap.keys.toTypedArray()[position])
+        val dayWeather = currentDayWeather?.let { DayWeather(temperature = it.temperature,
+                precipitation = it.precipitation, wind = it.wind)
+        }
         val builder = GsonBuilder()
         val gson = builder.create()
         val result: String = gson.toJson(dayWeather)
@@ -58,8 +59,8 @@ class WeekWeatherFragment : Fragment(), WeatherForecastAdapter.ViewHolder.OnItem
         transaction.commit()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null // обязательно?
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
