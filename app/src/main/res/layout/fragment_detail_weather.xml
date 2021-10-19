@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="10dp"
+    android:layout_marginStart="10dp"
     android:layout_marginTop="10dp"
     tools:context=".ui.detailWeather.DetailWeatherFragment">
 
@@ -27,8 +27,8 @@
     <TextView
         android:id="@+id/precipitationNameTextView"
         android:layout_width="200dp"
-        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="@string/precipitation_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/temperatureNameTextView" />
@@ -45,8 +45,8 @@
         android:id="@+id/windNameTextView"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="@string/wind_text"
         android:layout_marginTop="20dp"
+        android:text="@string/wind_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/precipitationNameTextView" />
 
