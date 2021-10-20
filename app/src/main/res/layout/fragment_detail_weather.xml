@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
-    tools:context=".ui.detailWeather.DetailWeatherFragment">
+    android:background="@color/white"
+    android:paddingStart="10dp"
+    android:paddingTop="10dp"
+    tools:context=".ui.detailWeather.DetailWeatherFragment"
+    tools:ignore="RtlSymmetry">
 
     <TextView
         android:id="@+id/temperatureNameTextView"
