@@ -8,12 +8,12 @@ import com.example.perfectweatherallyear.model.DayWeather
 
 class WeatherForecastAdapter(
     private val weekWeatherMap: Map<String, DayWeather>,
-    private val onClick: (DayWeather) -> Unit
+    private val onItemClick: (DayWeather) -> Unit
 ) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding = WeatherRowItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        return ViewHolder(binding, onClick)
+        return ViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
