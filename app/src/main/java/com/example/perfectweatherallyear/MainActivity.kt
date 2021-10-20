@@ -1,8 +1,7 @@
 package com.example.perfectweatherallyear
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.findNavController
+import androidx.appcompat.app.AppCompatActivity
 import com.example.perfectweatherallyear.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
