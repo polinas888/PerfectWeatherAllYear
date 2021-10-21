@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
@@ -16,9 +16,7 @@ import com.google.gson.GsonBuilder
 class WeekWeatherFragment : Fragment(), WeatherForecastAdapter.ViewHolder.OnItemListener {
     private var _binding: FragmentWeekWeatherBinding? = null // why like this?
     private val binding get() = _binding!!
-    private val weekWeatherViewModel: WeekWeatherViewModel by lazy {
-        ViewModelProvider(this).get(WeekWeatherViewModel::class.java)
-    }
+    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
