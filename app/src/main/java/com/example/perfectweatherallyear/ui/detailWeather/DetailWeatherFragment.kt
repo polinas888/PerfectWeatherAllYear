@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.perfectweatherallyear.databinding.FragmentDetailWeatherBinding
+import com.example.perfectweatherallyear.model.DayWeather
+import com.google.gson.GsonBuilder
 
 const val ARG_DAY_WEATHER: String = "DAY_WEATHER"
 
@@ -26,12 +28,16 @@ class DetailWeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val builder = GsonBuilder()
+        val gson = builder.create()
+        detailWeatherViewModel.setDayWeatherData(
+            gson.fromJson(arguments?.getString(ARG_DAY_WEATHER), DayWeather::class.java)
+        )
+
         binding.apply {
-            arguments?.let {
-                temperatureTextView.text = detailWeatherViewModel.getDetailWeather(it).temperature
-                precipitationTextView.text = detailWeatherViewModel.getDetailWeather(it).precipitation.toString()
-                windTextView.text = detailWeatherViewModel.getDetailWeather(it).wind.toString()
-            }
+            temperatureTextView.text = detailWeatherViewModel.getDayWeatherData()?.temperature
+            precipitationTextView.text = detailWeatherViewModel.getDayWeatherData()?.precipitation.toString()
+            windTextView.text = detailWeatherViewModel.getDayWeatherData()?.wind.toString()
         }
     }
 
