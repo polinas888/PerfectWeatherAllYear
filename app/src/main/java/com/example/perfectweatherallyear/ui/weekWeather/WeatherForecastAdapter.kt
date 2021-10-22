@@ -1,45 +1,55 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
 
-class WeatherForecastAdapter(private val weekWeatherMap: Map<String, DayWeather>,
-    onItemListener: ViewHolder.OnItemListener
-) :
-    RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
-    private val mOnItemListener: ViewHolder.OnItemListener = onItemListener
+class WeatherForecastAdapter(
+    private val weekWeatherMap: Map<String, DayWeather>,
+    private val onItemClick: (DayWeather) -> Unit
+) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding = WeatherRowItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        return ViewHolder(binding, mOnItemListener)
+        return ViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.binding.apply {
-            dayOfWeekTextView.text = weekWeatherMap.keys.elementAt(position)
-            maxMinTempretureTextView.text =   weekWeatherMap.get(weekWeatherMap.keys.toTypedArray()[position])?.temperature
-        }
+            getDayWeather(position).also {
+                viewHolder.bind(it)
+            }
     }
 
     override fun getItemCount() = weekWeatherMap.size
 
-    class ViewHolder(val binding: WeatherRowItemBinding, private val onItemListener: OnItemListener) : RecyclerView.ViewHolder(binding.root),
-        View.OnClickListener {
+    private fun getDayWeather(position: Int): Pair<String, DayWeather> {
+        return weekWeatherMap.entries.toTypedArray()[position].let {
+            Pair(it.key, it.value)
+        }
+    }
+
+    inner class ViewHolder(
+        val binding: WeatherRowItemBinding,
+        val onClick: (DayWeather) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+        private var currentDayWeather: DayWeather? = null
 
         init {
-            itemView.setOnClickListener(this)
+            itemView.setOnClickListener {
+                currentDayWeather?.let {
+                    onClick(it)
+                }
+            }
         }
 
-        override fun onClick(view: View?) {
-            onItemListener.onItemClick(adapterPosition)
-        }
-
-        interface OnItemListener {
-            fun onItemClick(position: Int)
+        fun bind(dayWeather: Pair<String, DayWeather>) {
+            currentDayWeather = dayWeather.second
+            binding.apply {
+                dayOfWeekTextView.text = dayWeather.first
+                maxMinTempretureTextView.text = dayWeather.second.temperature
+            }
         }
     }
 }
