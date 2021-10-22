@@ -1,10 +1,11 @@
 package com.example.perfectweatherallyear.ui.detailWeather
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.perfectweatherallyear.databinding.FragmentDetailWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
 import com.google.gson.GsonBuilder
@@ -14,6 +15,7 @@ const val ARG_DAY_WEATHER: String = "DAY_WEATHER"
 class DetailWeatherFragment : Fragment() {
     private var _binding: FragmentDetailWeatherBinding? = null
     private val binding get() = _binding!!
+    private val detailWeatherViewModel by viewModels<DetailWeatherViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,12 +30,14 @@ class DetailWeatherFragment : Fragment() {
 
         val builder = GsonBuilder()
         val gson = builder.create()
-        val dayWeather: DayWeather = gson.fromJson(arguments?.getString(ARG_DAY_WEATHER), DayWeather::class.java)
+        detailWeatherViewModel.setDayWeatherData(
+            gson.fromJson(arguments?.getString(ARG_DAY_WEATHER), DayWeather::class.java)
+        )
 
         binding.apply {
-            temperatureTextView.text = dayWeather.temperature
-            precipitationTextView.text = dayWeather.precipitation.toString()
-            windTextView.text = dayWeather.wind.toString()
+            temperatureTextView.text = detailWeatherViewModel.getDayWeatherData()?.temperature
+            precipitationTextView.text = detailWeatherViewModel.getDayWeatherData()?.precipitation.toString()
+            windTextView.text = detailWeatherViewModel.getDayWeatherData()?.wind.toString()
         }
     }
 

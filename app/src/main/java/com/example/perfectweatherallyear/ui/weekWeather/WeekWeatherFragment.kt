@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
-import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
@@ -17,15 +17,7 @@ class WeekWeatherFragment : Fragment(){
     private var _binding: FragmentWeekWeatherBinding? = null // why like this?
     private val binding get() = _binding!!
 
-    private val weekWeatherMap = mapOf(
-        "Monday" to DayWeather("+15/+5", 15, 5),
-        "Tuesday" to DayWeather("+15/+5", 15, 5),
-        "Wednesday" to DayWeather("+16/+6", 20, 10),
-        "Thursday" to DayWeather("+20/+15", 70, 2),
-        "Friday" to DayWeather("+15/+7", 10, 15),
-        "Saturday" to DayWeather("+10/+5", 20, 5),
-        "Sunday" to DayWeather("+7/+0", 15, 8)
-    )
+    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +30,7 @@ class WeekWeatherFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            weatherForecastRecyclerView.adapter = WeatherForecastAdapter(weekWeatherMap)  {dayWeather -> adapterOnClick(dayWeather)}
+            weatherForecastRecyclerView.adapter = WeatherForecastAdapter(weekWeatherViewModel.weekWeatherMap)  {dayWeather -> adapterOnClick(dayWeather)}
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
     }
@@ -49,7 +41,9 @@ class WeekWeatherFragment : Fragment(){
         val args = Bundle()
         val builder = GsonBuilder()
         val gson = builder.create()
-        val result: String = gson.toJson(dayWeather)
+
+        val result: String = gson.toJson(weekWeatherViewModel.getCurrentDayWeather(position))
+
         args.putString(ARG_DAY_WEATHER, result)
         fragment.arguments = args
 
