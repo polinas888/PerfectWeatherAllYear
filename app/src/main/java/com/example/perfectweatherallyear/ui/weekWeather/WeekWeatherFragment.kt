@@ -63,11 +63,9 @@ class WeekWeatherFragment : Fragment(){
             is WeatherResult.Error -> weekWeather.error
             is WeatherResult.Ok -> {
                 val weekWeatherList = weekWeather.response
-                val map: Map<WeekDay, DayWeather>? = weekWeatherViewModel.combineListsIntoOrderedMap(
+                val map: Map<WeekDay, DayWeather> = weekWeatherViewModel.combineListsIntoOrderedMap(
                     weekWeatherViewModel.weekDaysList, weekWeatherList)
-                if (map != null) {
                     weekWeatherMap = map
-                }
             }
         }
     }
