@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
+import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
@@ -42,7 +43,7 @@ class WeekWeatherFragment : Fragment(){
         val builder = GsonBuilder()
         val gson = builder.create()
 
-        val result: String = gson.toJson(weekWeatherViewModel.getCurrentDayWeather(position))
+        val result: String = gson.toJson(dayWeather)
 
         args.putString(ARG_DAY_WEATHER, result)
         fragment.arguments = args
