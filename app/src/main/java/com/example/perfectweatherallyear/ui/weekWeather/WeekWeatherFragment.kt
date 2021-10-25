@@ -10,8 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.model.WeekDay
-import com.example.perfectweatherallyear.repository.WeatherData.WeatherResult
+import com.example.perfectweatherallyear.repository.Result
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
@@ -19,7 +18,7 @@ import com.google.gson.GsonBuilder
 class WeekWeatherFragment : Fragment(){
     private var _binding: FragmentWeekWeatherBinding? = null // why like this?
     private val binding get() = _binding!!
-    private var weekWeatherMap:Map<WeekDay, DayWeather> = mapOf()
+    private var weekWeatherMap:Map<String, DayWeather> = mapOf()
 
     private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>()
 
@@ -60,10 +59,10 @@ class WeekWeatherFragment : Fragment(){
 
     private fun loadData() {
         when(val weekWeather = weekWeatherViewModel.getWeekWeather()) {
-            is WeatherResult.Error -> weekWeather.error
-            is WeatherResult.Ok -> {
+            is Result.Error -> weekWeather.error
+            is Result.Ok -> {
                 val weekWeatherList = weekWeather.response
-                val map: Map<WeekDay, DayWeather> = weekWeatherViewModel.combineListsIntoOrderedMap(
+                val map: Map<String, DayWeather> = weekWeatherViewModel.combineListsIntoOrderedMap(
                     weekWeatherViewModel.weekDaysList, weekWeatherList)
                     weekWeatherMap = map
             }

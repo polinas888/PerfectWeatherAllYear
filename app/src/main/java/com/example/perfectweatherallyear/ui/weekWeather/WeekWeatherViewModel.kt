@@ -3,47 +3,41 @@ package com.example.perfectweatherallyear.ui.weekWeather
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.model.WeekDay
+import com.example.perfectweatherallyear.repository.Result
 import com.example.perfectweatherallyear.repository.WeatherData.WeatherRepository
 import com.example.perfectweatherallyear.repository.WeatherData.WeatherRepositoryImp
-import com.example.perfectweatherallyear.repository.WeatherData.WeatherResult
 import kotlinx.coroutines.launch
 import java.util.*
 
 class WeekWeatherViewModel : ViewModel() {
     private val weatherRepository: WeatherRepository = WeatherRepositoryImp()
-    val weekDaysList = listOf(WeekDay.MONDAY, WeekDay.TUESDAY, WeekDay.WEDNESDAY,
-        WeekDay.THURSDAY, WeekDay.FRIDAY, WeekDay.SATURDAY, WeekDay.SUNDAY)
 
-    fun getDayWeather(weekDay: WeekDay): WeatherResult? {
-        var result: WeatherResult? = null
+    val weekDaysList = Calendar.getInstance()
+        .getDisplayNames(Calendar.DAY_OF_WEEK,Calendar.LONG_FORMAT,Locale.ENGLISH)
+        .toList().sortedBy { value -> value.second }.map { it.first}.toList()
+
+    fun getDayWeather(weekDay: String): Result<List<DayWeather>>? {
+        var result: Result<List<DayWeather>>? = null
         viewModelScope.launch {
-            try {
-                result = WeatherResult.Ok(weatherRepository.getDayWeather(weekDay))
-            } catch (ex: Exception) {
-                result = WeatherResult.Error(ex.message)
-            }
+            result = weatherRepository.getDayWeather(weekDay)
         }
         return result
     }
 
-    fun getWeekWeather(): WeatherResult? {
-        var result: WeatherResult? = null
+    fun getWeekWeather(): Result<List<DayWeather>>? {
+        var result: Result<List<DayWeather>>? = null
         viewModelScope.launch {
-            try {
-                result = WeatherResult.Ok(weatherRepository.getWeekWeather())
-            } catch (ex: Exception) {
-                result = WeatherResult.Error(ex.message)
-            }
+            result = weatherRepository.getWeekWeather()
         }
         return result
     }
 
-    fun combineListsIntoOrderedMap(keys: List<WeekDay>, values: List<DayWeather>): Map<WeekDay, DayWeather> {
+    fun combineListsIntoOrderedMap(keys: List<String>, values: List<DayWeather>): Map<String, DayWeather> {
         require(keys.size == values.size) { "Cannot combine lists with dissimilar sizes" }
-        val map: MutableMap<WeekDay, DayWeather> = LinkedHashMap()
+        val map: MutableMap<String, DayWeather> = LinkedHashMap()
         for (i in keys.indices) {
-            map[keys[i]] = values[i] }
+            map[keys[i]] = values[i]
+        }
         return map
     }
 }

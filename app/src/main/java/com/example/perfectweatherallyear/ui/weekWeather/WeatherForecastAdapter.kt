@@ -5,10 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.model.WeekDay
 
 class WeatherForecastAdapter(
-    private val weekWeatherMap: Map<WeekDay, DayWeather>,
+    private val weekWeatherMap: Map<String, DayWeather>,
     private val onItemClick: (DayWeather) -> Unit
 ) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
@@ -25,7 +24,7 @@ class WeatherForecastAdapter(
 
     override fun getItemCount() = weekWeatherMap.size
 
-    private fun getDayWeather(position: Int): Pair<WeekDay, DayWeather> {
+    private fun getDayWeather(position: Int): Pair<String, DayWeather> {
         return weekWeatherMap.entries.toTypedArray()[position].let {
             Pair(it.key, it.value)
         }
@@ -45,10 +44,10 @@ class WeatherForecastAdapter(
             }
         }
 
-        fun bind(dayWeather: Pair<WeekDay, DayWeather>) {
+        fun bind(dayWeather: Pair<String, DayWeather>) {
             currentDayWeather = dayWeather.second
             binding.apply {
-                dayOfWeekTextView.text = dayWeather.first.toString()
+                dayOfWeekTextView.text = dayWeather.first
                 maxMinTempretureTextView.text = dayWeather.second.temperature
             }
         }
