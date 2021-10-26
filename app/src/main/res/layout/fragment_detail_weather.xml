@@ -10,54 +10,56 @@
     tools:context=".ui.detailWeather.DetailWeatherFragment"
     tools:ignore="RtlSymmetry">
 
-    <TextView
-        android:id="@+id/temperatureNameTextView"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="@string/temperature_text"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        style="@style/CardViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_margin="36dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/temperatureTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/temperatureNameTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/temperatureNameTextView"
+            style="@style/DetailWeatherPropertiesTextView"
+            android:layout_height="wrap_content"
+            android:text="@string/temperature_text" />
 
-    <TextView
-        android:id="@+id/precipitationNameTextView"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/precipitation_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temperatureNameTextView" />
+        <TextView
+            android:id="@+id/temperatureTextView"
+            style="@style/DetailWeatherPropertiesValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end" />
 
-    <TextView
-        android:id="@+id/precipitationTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/precipitationNameTextView"
-        app:layout_constraintTop_toTopOf="@+id/precipitationNameTextView" />
+        <TextView
+            android:id="@+id/precipitationNameTextView"
+            style="@style/DetailWeatherPropertiesTextView"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/precipitation_text" />
 
-    <TextView
-        android:id="@+id/windNameTextView"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/wind_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/precipitationNameTextView" />
+        <TextView
+            android:id="@+id/precipitationTextView"
+            style="@style/DetailWeatherPropertiesValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end" />
 
-    <TextView
-        android:id="@+id/windTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/windNameTextView"
-        app:layout_constraintTop_toTopOf="@+id/windNameTextView" />
+        <TextView
+            android:id="@+id/windNameTextView"
+            style="@style/DetailWeatherPropertiesTextView"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="@string/wind_text" />
+
+        <TextView
+            android:id="@+id/windTextView"
+            style="@style/DetailWeatherPropertiesValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end" />
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

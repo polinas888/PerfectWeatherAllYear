@@ -48,7 +48,7 @@ class WeatherForecastAdapter(
             currentDayWeather = dayWeather.second
             binding.apply {
                 dayOfWeekTextView.text = dayWeather.first
-                maxMinTempretureTextView.text = dayWeather.second.temperature
+                maxMinTemperatureTextView.text = dayWeather.second.temperature
             }
         }
     }
