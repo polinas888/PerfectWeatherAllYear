@@ -1,17 +1,43 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.repository.Result
+import com.example.perfectweatherallyear.repository.WeatherData.WeatherRepository
+import com.example.perfectweatherallyear.repository.WeatherData.WeatherRepositoryImp
+import kotlinx.coroutines.launch
+import java.util.*
 
-class WeekWeatherViewModel: ViewModel() {
-    val weekWeatherMap = mapOf(
-        "Monday" to DayWeather("+15/+5", 15, 5),
-        "Tuesday" to DayWeather("+15/+5", 15, 5), "Wednesday" to DayWeather("+16/+6", 20, 10),
-        "Thursday" to DayWeather("+20/+15", 70, 2), "Friday" to DayWeather("+15/+7", 10, 15),
-        "Saturday" to DayWeather("+10/+5", 20, 5), "Sunday" to DayWeather("+7/+0", 15, 8)
-    )
+class WeekWeatherViewModel : ViewModel() {
+    private val weatherRepository: WeatherRepository = WeatherRepositoryImp()
 
-    fun getCurrentDayWeather(position: Int): DayWeather? {
-        return weekWeatherMap[weekWeatherMap.keys.toTypedArray()[position]]
+    val weekDaysList = Calendar.getInstance()
+        .getDisplayNames(Calendar.DAY_OF_WEEK,Calendar.LONG_FORMAT,Locale.ENGLISH)
+        .toList().sortedBy { value -> value.second }.map { it.first}.toList()
+
+    fun getDayWeather(weekDay: String): Result<List<DayWeather>>? {
+        var result: Result<List<DayWeather>>? = null
+        viewModelScope.launch {
+            result = weatherRepository.getDayWeather(weekDay)
+        }
+        return result
+    }
+
+    fun getWeekWeather(): Result<List<DayWeather>>? {
+        var result: Result<List<DayWeather>>? = null
+        viewModelScope.launch {
+            result = weatherRepository.getWeekWeather()
+        }
+        return result
+    }
+
+    fun combineListsIntoOrderedMap(keys: List<String>, values: List<DayWeather>): Map<String, DayWeather> {
+        require(keys.size == values.size) { "Cannot combine lists with dissimilar sizes" }
+        val map: MutableMap<String, DayWeather> = LinkedHashMap()
+        for (i in keys.indices) {
+            map[keys[i]] = values[i]
+        }
+        return map
     }
 }

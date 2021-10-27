@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.repository.Result
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
@@ -17,6 +18,7 @@ import com.google.gson.GsonBuilder
 class WeekWeatherFragment : Fragment(){
     private var _binding: FragmentWeekWeatherBinding? = null // why like this?
     private val binding get() = _binding!!
+    private var weekWeatherMap:Map<String, DayWeather> = mapOf()
 
     private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>()
 
@@ -30,8 +32,9 @@ class WeekWeatherFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadData()
         binding.apply {
-            weatherForecastRecyclerView.adapter = WeatherForecastAdapter(weekWeatherViewModel.weekWeatherMap)  {dayWeather -> adapterOnClick(dayWeather)}
+            weatherForecastRecyclerView.adapter = WeatherForecastAdapter(weekWeatherMap) { dayWeather -> adapterOnClick(dayWeather)}
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
     }
@@ -52,6 +55,18 @@ class WeekWeatherFragment : Fragment(){
         transaction.replace(com.example.perfectweatherallyear.R.id.nav_host_fragment, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun loadData() {
+        when(val weekWeather = weekWeatherViewModel.getWeekWeather()) {
+            is Result.Error -> weekWeather.error
+            is Result.Ok -> {
+                val weekWeatherList = weekWeather.response
+                val map: Map<String, DayWeather> = weekWeatherViewModel.combineListsIntoOrderedMap(
+                    weekWeatherViewModel.weekDaysList, weekWeatherList)
+                    weekWeatherMap = map
+            }
+        }
     }
 
     override fun onDestroyView() {
