@@ -1,5 +1,6 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.perfectweatherallyear.model.DayWeather
@@ -11,6 +12,7 @@ import java.util.*
 
 class WeekWeatherViewModel : ViewModel() {
     private val weatherRepository: WeatherRepository = WeatherRepositoryImp()
+    val weekWeatherMapLiveData = MutableLiveData<Map<String,DayWeather>>()
 
     val weekDaysList = Calendar.getInstance()
         .getDisplayNames(Calendar.DAY_OF_WEEK,Calendar.LONG_FORMAT,Locale.ENGLISH)
@@ -39,5 +41,17 @@ class WeekWeatherViewModel : ViewModel() {
             map[keys[i]] = values[i]
         }
         return map
+    }
+
+     fun loadData() {
+        when(val weekWeather = getWeekWeather()) {
+            is Result.Error -> weekWeather.error
+            is Result.Ok -> {
+                val weekWeatherList = weekWeather.response
+                val map: Map<String, DayWeather> = combineListsIntoOrderedMap(
+                    weekDaysList, weekWeatherList)
+                weekWeatherMapLiveData.value = map
+            }
+        }
     }
 }

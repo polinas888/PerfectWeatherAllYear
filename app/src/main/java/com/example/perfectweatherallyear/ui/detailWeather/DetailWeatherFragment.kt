@@ -22,6 +22,19 @@ class DetailWeatherFragment : Fragment() {
         val binding = FragmentDetailWeatherBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.detailViewModel = detailWeatherViewModel
+
+        detailWeatherViewModel.temperature.observe(viewLifecycleOwner, {
+            detailWeatherViewModel._temperature.postValue(it)
+        })
+
+        detailWeatherViewModel.precipitation.observe(viewLifecycleOwner, {
+            detailWeatherViewModel._precipitation.postValue(it)
+        })
+
+        detailWeatherViewModel.wind.observe(viewLifecycleOwner, {
+            detailWeatherViewModel._wind.postValue(it)
+        })
+
         return binding.root
     }
 
