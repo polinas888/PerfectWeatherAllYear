@@ -13,15 +13,15 @@ import com.google.gson.GsonBuilder
 const val ARG_DAY_WEATHER: String = "DAY_WEATHER"
 
 class DetailWeatherFragment : Fragment() {
-    private var _binding: FragmentDetailWeatherBinding? = null
-    private val binding get() = _binding!!
     private val detailWeatherViewModel by viewModels<DetailWeatherViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDetailWeatherBinding.inflate(inflater, container, false)
+        val binding = FragmentDetailWeatherBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.detailViewModel = detailWeatherViewModel
         return binding.root
     }
 
@@ -33,16 +33,6 @@ class DetailWeatherFragment : Fragment() {
         detailWeatherViewModel.setDayWeatherData(
             gson.fromJson(arguments?.getString(ARG_DAY_WEATHER), DayWeather::class.java)
         )
-
-        binding.apply {
-            temperatureTextView.text = detailWeatherViewModel.getDayWeatherData()?.temperature
-            precipitationTextView.text = detailWeatherViewModel.getDayWeatherData()?.precipitation.toString()
-            windTextView.text = detailWeatherViewModel.getDayWeatherData()?.wind.toString()
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        detailWeatherViewModel.load()
     }
 }

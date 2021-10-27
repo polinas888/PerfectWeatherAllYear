@@ -1,16 +1,28 @@
 package com.example.perfectweatherallyear.ui.detailWeather
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.perfectweatherallyear.model.DayWeather
 
-class DetailWeatherViewModel: ViewModel() {
+class DetailWeatherViewModel : ViewModel() {
     var dayWeather: DayWeather? = null
 
-    fun setDayWeatherData(dayWeather: DayWeather?) {
+    val temperature = MutableLiveData<String>()
+    val precipitation = MutableLiveData<String>()
+    val wind = MutableLiveData<String>()
+
+    fun load() {
+        val dayWeather = getDayWeatherData()
+        temperature.value = dayWeather?.temperature
+        precipitation.value = dayWeather?.precipitation.toString()
+        wind.value = dayWeather?.wind.toString()
+    }
+
+    fun setDayWeatherData(dayWeather: DayWeather) {
         this.dayWeather = dayWeather
     }
 
-    fun getDayWeatherData(): DayWeather? {
+    private fun getDayWeatherData(): DayWeather? {
         return dayWeather
     }
 }
