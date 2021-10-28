@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.R
+import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
@@ -51,15 +51,9 @@ class WeekWeatherFragment : Fragment() {
         val args = Bundle()
         val builder = GsonBuilder()
         val gson = builder.create()
-
         val result: String = gson.toJson(dayWeather)
 
         args.putString(ARG_DAY_WEATHER, result)
-        fragment.arguments = args
-
-        val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.nav_host_fragment, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        fragment.changeFragment(args, parentFragmentManager)
     }
 }

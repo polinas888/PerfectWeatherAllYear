@@ -23,13 +23,13 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@{weekDay}"
-            tools:text="Monday" />
+            tools:text="@string/dayOfWeekTest" />
 
         <TextView
             android:id="@+id/maxMinTempretureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{dayWeather.temperature}"
-            tools:text="+15/+5" />
+            tools:text="@string/temperatureTest" />
     </LinearLayout>
 </layout>

@@ -13,14 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:paddingStart="10dp"
-        android:paddingTop="10dp"
+        android:paddingStart="@dimen/detail_constraintLayout_paddingStart"
+        android:paddingTop="@dimen/detail_constraintLayout_paddingTop"
         tools:context=".ui.detailWeather.DetailWeatherFragment"
         tools:ignore="RtlSymmetry">
 
         <TextView
             android:id="@+id/temperatureNameTextView"
-            android:layout_width="200dp"
+            android:layout_width="@dimen/detail_name_property_width_textView"
             android:layout_height="wrap_content"
             android:text="@string/temperature_text"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,9 +37,9 @@
 
         <TextView
             android:id="@+id/precipitationNameTextView"
-            android:layout_width="200dp"
+            android:layout_width="@dimen/detail_name_property_width_textView"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/detail_marginTop_name_property_textView"
             android:text="@string/precipitation_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/temperatureNameTextView" />
@@ -55,9 +55,9 @@
 
         <TextView
             android:id="@+id/windNameTextView"
-            android:layout_width="200dp"
+            android:layout_width="@dimen/detail_name_property_width_textView"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/detail_marginTop_name_property_textView"
             android:text="@string/wind_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/precipitationNameTextView" />

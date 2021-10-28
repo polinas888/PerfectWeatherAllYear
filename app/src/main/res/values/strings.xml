@@ -5,4 +5,6 @@
     <string name="temperature_text">Temperature, C</string>
     <string name="precipitation_text">Precipitation, %</string>
     <string name="wind_text">Wind, m/sec</string>
+    <string name="dayOfWeekTest">Monday</string>
+    <string name="temperatureTest">+15/+5</string>
 </resources>
