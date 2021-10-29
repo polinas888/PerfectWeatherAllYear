@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.perfectweatherallyear.R
 import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
@@ -18,6 +17,7 @@ import com.google.gson.GsonBuilder
 class WeekWeatherFragment : Fragment() {
     private var weekWeatherMap: Map<String, DayWeather> = mapOf()
     lateinit var weatherForecastAdapter: WeatherForecastAdapter
+    private lateinit var binding: FragmentWeekWeatherBinding
 
     private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>()
 
@@ -25,14 +25,12 @@ class WeekWeatherFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_week_weather, container, false)
+        binding = FragmentWeekWeatherBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentWeekWeatherBinding.bind(view)
-        binding.lifecycleOwner = this
-        binding.viewModel = weekWeatherViewModel
         weekWeatherViewModel.loadData()
         binding.apply {
             weatherForecastAdapter = WeatherForecastAdapter(weekWeatherMap) { dayWeather -> adapterOnClick(dayWeather) }

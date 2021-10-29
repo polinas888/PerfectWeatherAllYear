@@ -12,10 +12,11 @@ class DetailWeatherViewModel : ViewModel() {
     val wind = MutableLiveData<String>()
 
     fun load() {
-        val dayWeather = getDayWeatherData()
-        temperature.value = dayWeather?.temperature
-        precipitation.value = dayWeather?.precipitation.toString()
-        wind.value = dayWeather?.wind.toString()
+        getDayWeatherData()?.also {
+            temperature.value = dayWeather?.temperature
+            precipitation.value = dayWeather?.precipitation.toString()
+            wind.value = dayWeather?.wind.toString()
+        }
     }
 
     fun setDayWeatherData(dayWeather: DayWeather) {

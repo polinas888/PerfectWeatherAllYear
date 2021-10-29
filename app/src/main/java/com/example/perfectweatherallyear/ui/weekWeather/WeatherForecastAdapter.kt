@@ -17,15 +17,15 @@ class WeatherForecastAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-            getDayWeather(position).also {
-                viewHolder.bind(it)
-            }
+        getDayWeather(position).also {
+            viewHolder.bind(it)
+        }
     }
 
     override fun getItemCount() = weekWeatherMap.size
 
     fun setData(newData: Map<String, DayWeather>) {
-         weekWeatherMap = newData
+        weekWeatherMap = newData
         notifyDataSetChanged()
     }
 
@@ -50,9 +50,11 @@ class WeatherForecastAdapter(
         }
 
         fun bind(dayWeatherPair: Pair<String, DayWeather>) {
-            binding.dayWeather = dayWeatherPair.second
-            binding.weekDay = dayWeatherPair.first
-            currentDayWeather = dayWeatherPair.second
+            with(dayWeatherPair) {
+                binding.dayWeather = second
+                binding.weekDay = first
+                currentDayWeather = second
+            }
         }
     }
 }

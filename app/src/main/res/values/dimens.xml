@@ -4,4 +4,6 @@
     <dimen name="detail_marginTop_name_property_textView">20dp</dimen>
     <dimen name="detail_constraintLayout_paddingStart">10dp</dimen>
     <dimen name="detail_constraintLayout_paddingTop">10dp</dimen>
+    <dimen name="day_of_week_textView">150dp</dimen>
+    <dimen name="itemWeatherMarginBottomLayout">10dp</dimen>
 </resources>

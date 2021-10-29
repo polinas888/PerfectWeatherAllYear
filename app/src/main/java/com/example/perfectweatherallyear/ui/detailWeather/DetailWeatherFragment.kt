@@ -23,18 +23,6 @@ class DetailWeatherFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.detailViewModel = detailWeatherViewModel
 
-        detailWeatherViewModel.temperature.observe(viewLifecycleOwner, {
-            detailWeatherViewModel.temperature.postValue(it)
-        })
-
-        detailWeatherViewModel.precipitation.observe(viewLifecycleOwner, {
-            detailWeatherViewModel.precipitation.postValue(it)
-        })
-
-        detailWeatherViewModel.wind.observe(viewLifecycleOwner, {
-            detailWeatherViewModel.wind.postValue(it)
-        })
-
         return binding.root
     }
 
