@@ -3,8 +3,9 @@ package com.example.perfectweatherallyear.ui.detailWeather
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.repository.Repository
 
-class DetailWeatherViewModel : ViewModel() {
+class DetailWeatherViewModel (val repository: Repository) : ViewModel() {
     var dayWeather: DayWeather? = null
 
     val temperature = MutableLiveData<String>()

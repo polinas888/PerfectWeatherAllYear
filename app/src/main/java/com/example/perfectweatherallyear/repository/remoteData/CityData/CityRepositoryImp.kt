@@ -1,4 +1,4 @@
-package com.example.perfectweatherallyear.repository.CityData
+package com.example.perfectweatherallyear.repository.remoteData.CityData
 
 import com.example.perfectweatherallyear.model.City
 
