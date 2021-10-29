@@ -7,7 +7,7 @@ import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
 
 class WeatherForecastAdapter(
-    private val weekWeatherMap: Map<String, DayWeather>,
+    private var weekWeatherMap: Map<String, DayWeather>,
     private val onItemClick: (DayWeather) -> Unit
 ) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
@@ -17,12 +17,17 @@ class WeatherForecastAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-            getDayWeather(position).also {
-                viewHolder.bind(it)
-            }
+        getDayWeather(position).also {
+            viewHolder.bind(it)
+        }
     }
 
     override fun getItemCount() = weekWeatherMap.size
+
+    fun setData(newData: Map<String, DayWeather>) {
+        weekWeatherMap = newData
+        notifyDataSetChanged()
+    }
 
     private fun getDayWeather(position: Int): Pair<String, DayWeather> {
         return weekWeatherMap.entries.toTypedArray()[position].let {
@@ -44,11 +49,11 @@ class WeatherForecastAdapter(
             }
         }
 
-        fun bind(dayWeather: Pair<String, DayWeather>) {
-            currentDayWeather = dayWeather.second
-            binding.apply {
-                dayOfWeekTextView.text = dayWeather.first
-                maxMinTempretureTextView.text = dayWeather.second.temperature
+        fun bind(dayWeatherPair: Pair<String, DayWeather>) {
+            with(dayWeatherPair) {
+                binding.dayWeather = second
+                binding.weekDay = first
+                currentDayWeather = second
             }
         }
     }
