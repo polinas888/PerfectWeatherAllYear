@@ -25,7 +25,7 @@ object ApiFactory {
         chain.proceed(newRequest)
     }
 
-    val logging: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+    private val logging: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
@@ -34,7 +34,7 @@ object ApiFactory {
         .addInterceptor(logging)
         .build()
 
-    private fun createGsonConverter(type: Type, typeAdapter: Any): Converter.Factory? {
+    private fun createGsonConverter(type: Type, typeAdapter: Any): Converter.Factory {
         val gsonBuilder = GsonBuilder()
         gsonBuilder.registerTypeAdapter(type, typeAdapter)
         val gson = gsonBuilder.create()
@@ -44,6 +44,6 @@ object ApiFactory {
     fun weatherApiRetrofit(type: Type, typeAdapter: Any): Retrofit = Retrofit.Builder()
         .client(httpClient)
         .baseUrl("https://api.weatherapi.com/v1/")
-        .addConverterFactory(createGsonConverter(type, typeAdapter))
+        .addConverterFactory(GsonConverterFactory.create())
         .build()
 }
