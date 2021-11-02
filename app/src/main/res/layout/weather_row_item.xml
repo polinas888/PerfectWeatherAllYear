@@ -29,7 +29,7 @@
             android:id="@+id/maxMinTempretureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{dayWeather.temperature}"
+            android:text="@{dayWeather.temperatureMin}"
             tools:text="@string/temperatureTest" />
     </LinearLayout>
 </layout>

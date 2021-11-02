@@ -1,12 +1,12 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.Repository
+import kotlinx.coroutines.launch
 import java.util.*
 
 class WeekWeatherViewModel(val repository: Repository) : ViewModel() {
@@ -16,39 +16,21 @@ class WeekWeatherViewModel(val repository: Repository) : ViewModel() {
         .getDisplayNames(Calendar.DAY_OF_WEEK, Calendar.LONG_FORMAT, Locale.ENGLISH)
         .toList().sortedBy { value -> value.second }.map { it.first }.toList()
 
-    fun getDayWeather(weekDay: String): DataResult<List<DayWeather>> {
-        var result: DataResult<List<DayWeather>>
+    fun getDayWeather(weekDay: String): DataResult<List<DayWeather>>? {
+        var result: DataResult<List<DayWeather>>? = null
         viewModelScope.launch {
-            result = repository.getDayWeather(weekDay)
+            result = repository.getDayWeather("London", Calendar.DATE)
         }
         return result
     }
 
-    var weekWeatherLiveData = MutableLiveData<List<DayWeather>>()
-
-     fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
+    private fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>>? {
         var result: DataResult<List<DayWeather>>? = null
-         viewModelScope.lauch {
-             result = repository.getWeekWeather(city, daysAmount)
-             when (result) {
-                 is DataResult.Ok -> {
-                     weekWeatherLiveData.postValue(result.response!!)
-                 }
-                 else -> {
-                     Log.e("Error", "  ")
-                 }
-             }
-         }
+        viewModelScope.launch {
+            result = repository.getWeekWeather(city, daysAmount)
+        }
         return result
     }
-
-//    fun getWeekWeather(): Result<List<DayWeather>>? {
-//        var result: Result<List<DayWeather>>? = null
-//        viewModelScope.launch {
-//            result = repository.getWeekWeather()
-//        }
-//        return result
-//    }
 
     private fun combineListsIntoOrderedMap(keys: List<String>, values: List<DayWeather>): Map<String, DayWeather> {
         require(keys.size == values.size) { "Cannot combine lists with dissimilar sizes" }
@@ -60,18 +42,15 @@ class WeekWeatherViewModel(val repository: Repository) : ViewModel() {
     }
 
     fun loadData() {
-//        when (val weekWeather = getWeekWeather()) {
-//            is Result.Error -> weekWeather.error
-//            is Result.Ok -> {
-//                val weekWeatherList = weekWeather.response
-                val map: Map<String, DayWeather>? = weekWeatherLiveData.value?.let {
-                    combineListsIntoOrderedMap(
-                        weekDaysList, it
-                    )
-                }
+        val weekWeather = getWeekWeather("London", 7)
+        when (weekWeather) {
+            is DataResult.Ok -> {
+                val map: Map<String, DayWeather> =
+                    combineListsIntoOrderedMap(weekDaysList, weekWeather.response)
                 weekWeatherMapLiveData.value = map
-
             }
+            is DataResult.Error -> weekWeather.error
         }
-//    }
-//}
+    }
+}
+

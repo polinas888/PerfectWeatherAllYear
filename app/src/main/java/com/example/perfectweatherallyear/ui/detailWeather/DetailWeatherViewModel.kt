@@ -14,7 +14,7 @@ class DetailWeatherViewModel (val repository: Repository) : ViewModel() {
 
     fun load() {
         getDayWeatherData()?.also {
-            temperature.value = dayWeather?.temperature
+            temperature.value = dayWeather?.temperatureMin
             precipitation.value = dayWeather?.precipitation.toString()
             wind.value = dayWeather?.wind.toString()
         }

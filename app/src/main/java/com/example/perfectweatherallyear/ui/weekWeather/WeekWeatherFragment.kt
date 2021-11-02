@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.repository.Repository
+import com.example.perfectweatherallyear.repository.remoteData.WeatherData.RemoteDataSource
+import com.example.perfectweatherallyear.ui.ViewModelFactory
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
@@ -19,7 +22,7 @@ class WeekWeatherFragment : Fragment() {
     lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeekWeatherBinding
 
-    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>()
+    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>{ ViewModelFactory(Repository(RemoteDataSource())) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

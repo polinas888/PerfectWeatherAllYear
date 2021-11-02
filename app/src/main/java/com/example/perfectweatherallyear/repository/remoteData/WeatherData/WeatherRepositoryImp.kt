@@ -2,14 +2,13 @@ package com.example.perfectweatherallyear.repository.remoteData.WeatherData
 
 import com.example.perfectweatherallyear.model.DayWeather
 import retrofit2.http.GET
-import retrofit2.http.Path
-import java.time.LocalDate
+import retrofit2.http.Query
 
 interface WeatherRepositoryImp {
 
-    @GET("history/{city, data}")
-    suspend fun getDayWeather(@Path("city") city: String, @Path("date") date: LocalDate): List<DayWeather>
+    @GET("history.json")
+    suspend fun getDayWeather(@Query("q") city: String, @Query("dt") date: Int): List<DayWeather>
 
-    @GET("forecast/{city, daysAmount}")
-    suspend fun getWeekWeather(@Path("city") city: String, @Path("daysAmount") date: Int): List<DayWeather>
+    @GET("forecast.json")
+    suspend fun getWeekWeather(@Query("q") city: String, @Query("days") daysAmount: Int): List<DayWeather>
 }
