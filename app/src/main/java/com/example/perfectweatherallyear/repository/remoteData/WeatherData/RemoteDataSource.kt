@@ -11,8 +11,6 @@ class RemoteDataSource {
         weatherApiRetrofit().create(WeatherRepositoryImp::class.java)
     }
 
-    suspend fun getDayWeather(city: String, data: Int): List<DayWeather> = remoteService.getDayWeather(city, data)
-
     suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
         val response = remoteService.getWeekWeather(city, daysAmount)
 

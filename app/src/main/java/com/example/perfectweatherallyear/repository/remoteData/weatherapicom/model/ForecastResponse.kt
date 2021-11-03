@@ -34,7 +34,7 @@ fun ForecastResponse.convertToDayWeather(): List<DayWeather> {
     val forecastDay = forecast.forecastDay
     val dayWeatherList = mutableListOf<DayWeather>()
     forecastDay.forEach {
-        val dayWeather = DayWeather(it.day.minTemp, it.day.maxTemp, it.day.precipitation, it.day.wind)
+        val dayWeather = DayWeather(it.day.minTemp, it.day.maxTemp, it.day.precipitation, it.day.wind, it.date)
         dayWeatherList.add(dayWeather)
     }
     return dayWeatherList

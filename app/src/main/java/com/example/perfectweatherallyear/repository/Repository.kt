@@ -5,15 +5,6 @@ import com.example.perfectweatherallyear.repository.remoteData.WeatherData.Remot
 
 class Repository(private val remoteDataSource: RemoteDataSource) {
 
-    suspend fun getDayWeather(city: String, data: Int): DataResult<List<DayWeather>> {
-        return try {
-            val response = remoteDataSource.getDayWeather(city, data)
-            DataResult.Ok(response)
-        } catch (ex: java.lang.Exception) {
-            DataResult.Error(ex.message)
-        }
-    }
-
     suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
         return remoteDataSource.getWeekWeather(city, daysAmount)
     }

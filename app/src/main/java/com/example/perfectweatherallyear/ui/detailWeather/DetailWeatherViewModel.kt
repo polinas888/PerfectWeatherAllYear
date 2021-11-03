@@ -3,18 +3,19 @@ package com.example.perfectweatherallyear.ui.detailWeather
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.repository.Repository
 
-class DetailWeatherViewModel (val repository: Repository) : ViewModel() {
+class DetailWeatherViewModel : ViewModel() {
     var dayWeather: DayWeather? = null
 
-    val temperature = MutableLiveData<String>()
+    val minTemperature = MutableLiveData<String>()
+    val maxTemperature = MutableLiveData<String>()
     val precipitation = MutableLiveData<String>()
     val wind = MutableLiveData<String>()
 
     fun load() {
         getDayWeatherData()?.also {
-            temperature.value = dayWeather?.temperatureMin
+            minTemperature.value = dayWeather?.temperatureMin
+            maxTemperature.value = dayWeather?.temperatureMax
             precipitation.value = dayWeather?.precipitation.toString()
             wind.value = dayWeather?.wind.toString()
         }

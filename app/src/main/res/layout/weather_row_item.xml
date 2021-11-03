@@ -22,14 +22,21 @@
             android:id="@+id/dayOfWeekTextView"
             android:layout_width="@dimen/day_of_week_textView"
             android:layout_height="wrap_content"
-            android:text="@{weekDay}"
+            android:text="@{dayWeather.date}"
             tools:text="@string/dayOfWeekTest" />
 
         <TextView
-            android:id="@+id/maxMinTempretureTextView"
+            android:id="@+id/minTemperatureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{dayWeather.temperatureMin}"
+            tools:text="@string/temperatureTest" />
+
+        <TextView
+            android:id="@+id/maxTemperatureTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{'/' + dayWeather.temperatureMax}"
             tools:text="@string/temperatureTest" />
     </LinearLayout>
 </layout>

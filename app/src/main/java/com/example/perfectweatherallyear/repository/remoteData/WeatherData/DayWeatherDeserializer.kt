@@ -19,8 +19,9 @@ class DayWeatherDeserializer : JsonDeserializer<List<DayWeather>> {
                 val temperatureMax: String = dayJsonObject.get("mintemp_c").asString
                 val precipitation: String = dayJsonObject.get("daily_chance_of_rain").asString
                 val wind: String = dayJsonObject.get("maxwind_kph").asString
+                val date: String = dayJsonObject.get("date").asString
 
-                weekWeather.add(DayWeather(temperatureMin, temperatureMax, precipitation, wind))
+                weekWeather.add(DayWeather(temperatureMin, temperatureMax, precipitation, wind, date))
             }
 
         return weekWeather
