@@ -15,11 +15,6 @@ class Repository(private val remoteDataSource: RemoteDataSource) {
     }
 
     suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
-        return try {
-            val response = remoteDataSource.getWeekWeather(city, daysAmount)
-            DataResult.Ok(response)
-        } catch (ex: java.lang.Exception) {
-            DataResult.Error(ex.message)
-        }
+        return remoteDataSource.getWeekWeather(city, daysAmount)
     }
 }

@@ -9,24 +9,16 @@ class DayWeatherDeserializer : JsonDeserializer<List<DayWeather>> {
         val weekWeather = mutableListOf<DayWeather>()
 
         val jsonObject: JsonObject? = json?.let { json.asJsonObject }
-        val success: Boolean = jsonObject?.get("success")?.asBoolean ?: false
         val weekWeatherJsonArray: JsonArray = jsonObject?.get("data")?.asJsonArray ?: JsonArray()
 
             for ((index, dayWeatherJsonElement: JsonElement) in weekWeatherJsonArray.withIndex()) {
-                val dayWeatherJsonObject: JsonObject = dayWeatherJsonElement.asJsonObject
-//                val day: Day = Day()
-//                val forecastday: Forecastday = Forecastday(day)
-//                val forecast: Forecast = Forecast(listOf(forecastday))
-//                val weatherData: WeatherData = WeatherData(forecast)
-
-                val forecastDay = dayWeatherJsonObject.get("forecast").asJsonObject.get("forecastday").asJsonArray
-                val day = forecastDay[index]
-
-                val temperatureMin: String = dayWeatherJsonObject.get("forecast.forecastday[index]" +
-                        ".day.maxtemp_c").asString
-                val temperatureMax: String = dayWeatherJsonObject.get("forecast.forecastday.day.mintemp_c").asString
-                val precipitation: Int = dayWeatherJsonObject.get("forecast.forecastday.day.daily_chance_of_rain").asInt
-                val wind: Int = dayWeatherJsonObject.get("forecast.forecastday.day.maxwind_kph").asInt
+                val weekWeatherJsonObject: JsonObject = dayWeatherJsonElement.asJsonObject
+                val forecastDayJsonObject = weekWeatherJsonObject.get("forecast").asJsonObject.get("forecastday").asJsonArray
+                val dayJsonObject = forecastDayJsonObject[index].asJsonObject.get("day").asJsonObject
+                val temperatureMin: String = dayJsonObject.get("maxtemp_c").toString()
+                val temperatureMax: String = dayJsonObject.get("mintemp_c").asString
+                val precipitation: String = dayJsonObject.get("daily_chance_of_rain").asString
+                val wind: String = dayJsonObject.get("maxwind_kph").asString
 
                 weekWeather.add(DayWeather(temperatureMin, temperatureMax, precipitation, wind))
             }

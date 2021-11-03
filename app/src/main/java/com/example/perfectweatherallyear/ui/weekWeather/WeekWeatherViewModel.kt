@@ -14,11 +14,11 @@ class WeekWeatherViewModel(val repository: Repository) : ViewModel() {
 
     private val weekDaysList = Calendar.getInstance()
         .getDisplayNames(Calendar.DAY_OF_WEEK, Calendar.LONG_FORMAT, Locale.ENGLISH)
-        .toList().sortedBy { value -> value.second }.map { it.first }.toList()
+        .toList().sortedBy { value -> value.second }.map { it.first }.toList().subList(0,3)
 
     fun loadData() {
         viewModelScope.launch {
-            when (val weekWeather = getWeekWeather("London", 1)) {
+            when (val weekWeather = getWeekWeather("London", 7)) {
                 is DataResult.Ok -> {
                     val map: Map<String, DayWeather> =
                         combineListsIntoOrderedMap(weekDaysList, weekWeather.response)
@@ -29,10 +29,7 @@ class WeekWeatherViewModel(val repository: Repository) : ViewModel() {
         }
     }
 
-    private suspend fun getWeekWeather(
-        city: String,
-        daysAmount: Int
-    ): DataResult<List<DayWeather>> {
+    private suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
         return repository.getWeekWeather(city, daysAmount)
     }
 
