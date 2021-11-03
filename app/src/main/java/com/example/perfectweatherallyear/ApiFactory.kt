@@ -41,7 +41,7 @@ object ApiFactory {
         return GsonConverterFactory.create(gson)
     }
 
-    fun weatherApiRetrofit(type: Type, typeAdapter: Any): Retrofit = Retrofit.Builder()
+    fun weatherApiRetrofit(): Retrofit = Retrofit.Builder()
         .client(httpClient)
         .baseUrl("https://api.weatherapi.com/v1/")
         .addConverterFactory(GsonConverterFactory.create())
