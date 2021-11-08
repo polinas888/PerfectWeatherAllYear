@@ -1,17 +1,17 @@
 package com.example.perfectweatherallyear.repository.remoteData.WeatherData
 
-import com.example.perfectweatherallyear.ApiFactory.weatherApiRetrofit
+import com.example.perfectweatherallyear.api.ApiFactory.weatherApiRetrofit
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToDayWeather
 
-class RemoteDataSource {
+class ForecastApiComDataSource : RemoteWeatherDataSource() {
 
-    private val remoteService: WeatherRepositoryImp by lazy {
-        weatherApiRetrofit().create(WeatherRepositoryImp::class.java)
+    private val remoteService: ForecastRequest by lazy {
+        weatherApiRetrofit().create(ForecastRequest::class.java)
     }
 
-    suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
+    override suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
         val response = remoteService.getWeekWeather(city, daysAmount)
 
         val result = when(response.isSuccessful) {

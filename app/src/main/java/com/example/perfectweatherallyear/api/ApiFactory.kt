@@ -1,15 +1,14 @@
-package com.example.perfectweatherallyear
+package com.example.perfectweatherallyear.api
 
-import com.google.gson.GsonBuilder
+import com.example.perfectweatherallyear.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.reflect.Type
 
 object ApiFactory {
+     private const val buildConfig = "https://api.weatherapi.com/v1/"
 
     private val authInterceptor = Interceptor { chain ->
         val newUrl = chain.request().url
@@ -34,16 +33,9 @@ object ApiFactory {
         .addInterceptor(logging)
         .build()
 
-    private fun createGsonConverter(type: Type, typeAdapter: Any): Converter.Factory {
-        val gsonBuilder = GsonBuilder()
-        gsonBuilder.registerTypeAdapter(type, typeAdapter)
-        val gson = gsonBuilder.create()
-        return GsonConverterFactory.create(gson)
-    }
-
     fun weatherApiRetrofit(): Retrofit = Retrofit.Builder()
         .client(httpClient)
-        .baseUrl("https://api.weatherapi.com/v1/")
+        .baseUrl(buildConfig)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 }

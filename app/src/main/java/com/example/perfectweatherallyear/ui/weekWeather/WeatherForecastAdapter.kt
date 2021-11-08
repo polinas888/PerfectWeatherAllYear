@@ -34,19 +34,19 @@ class WeatherForecastAdapter(
         }
 
     inner class ViewHolder(val binding: WeatherRowItemBinding, val onClick: (DayWeather) -> Unit) : RecyclerView.ViewHolder(binding.root) {
-        private var currentDayWeather: DayWeather? = null
+        private var currentWeather: DayWeather? = null
 
         init {
             itemView.setOnClickListener {
-                currentDayWeather?.let {
+                currentWeather?.let {
                     onClick(it)
                 }
             }
         }
 
-        fun bind(dayWeather: DayWeather) {
-            binding.dayWeather = dayWeather
-            currentDayWeather = dayWeather
+        fun bind(weather: DayWeather) {
+            binding.dayWeather = weather
+            currentWeather = weather
         }
     }
 }

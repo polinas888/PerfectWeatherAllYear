@@ -5,7 +5,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface WeatherRepositoryImp {
+interface ForecastRequest {
 
     @GET("forecast.json")
     suspend fun getWeekWeather(@Query("q") city: String, @Query("days") daysAmount: Int): Response<ForecastResponse>

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.perfectweatherallyear.model.DayWeather
 
 class DetailWeatherViewModel : ViewModel() {
-    var dayWeather: DayWeather? = null
+    var weather: DayWeather? = null
 
     val minTemperature = MutableLiveData<String>()
     val maxTemperature = MutableLiveData<String>()
@@ -14,18 +14,18 @@ class DetailWeatherViewModel : ViewModel() {
 
     fun load() {
         getDayWeatherData()?.also {
-            minTemperature.value = dayWeather?.temperatureMin
-            maxTemperature.value = dayWeather?.temperatureMax
-            precipitation.value = dayWeather?.precipitation.toString()
-            wind.value = dayWeather?.wind.toString()
+            minTemperature.value = weather?.weather?.temperatureMin
+            maxTemperature.value = weather?.weather?.temperatureMax
+            precipitation.value = weather?.weather?.precipitation.toString()
+            wind.value = weather?.weather?.wind.toString()
         }
     }
 
-    fun setDayWeatherData(dayWeather: DayWeather) {
-        this.dayWeather = dayWeather
+    fun setDayWeatherData(weather: DayWeather) {
+        this.weather = weather
     }
 
     private fun getDayWeatherData(): DayWeather? {
-        return dayWeather
+        return weather
     }
 }

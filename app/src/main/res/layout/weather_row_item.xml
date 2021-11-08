@@ -6,10 +6,6 @@
         <variable
             name="dayWeather"
             type="com.example.perfectweatherallyear.model.DayWeather" />
-
-        <variable
-            name="weekDay"
-            type="String" />
     </data>
 
     <LinearLayout
@@ -29,14 +25,14 @@
             android:id="@+id/minTemperatureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{dayWeather.temperatureMin}"
+            android:text="@{dayWeather.weather.temperatureMin}"
             tools:text="@string/temperatureTest" />
 
         <TextView
             android:id="@+id/maxTemperatureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{'/' + dayWeather.temperatureMax}"
+            android:text="@{'/' + dayWeather.weather.temperatureMax}"
             tools:text="@string/temperatureTest" />
     </LinearLayout>
 </layout>

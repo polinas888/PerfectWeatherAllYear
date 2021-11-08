@@ -1,6 +1,7 @@
 package com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model
 
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.model.Weather
 import com.google.gson.annotations.SerializedName
 
 data class ForecastResponse(
@@ -34,7 +35,8 @@ fun ForecastResponse.convertToDayWeather(): List<DayWeather> {
     val forecastDay = forecast.forecastDay
     val dayWeatherList = mutableListOf<DayWeather>()
     forecastDay.forEach {
-        val dayWeather = DayWeather(it.day.minTemp, it.day.maxTemp, it.day.precipitation, it.day.wind, it.date)
+        val weather = Weather(it.day.minTemp, it.day.maxTemp, it.day.precipitation, it.day.wind)
+        val dayWeather = DayWeather(it.date, weather)
         dayWeatherList.add(dayWeather)
     }
     return dayWeatherList

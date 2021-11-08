@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.repository.Repository
-import com.example.perfectweatherallyear.repository.remoteData.WeatherData.RemoteDataSource
-import com.example.perfectweatherallyear.ui.ViewModelFactory
+import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
+import com.example.perfectweatherallyear.repository.remoteData.WeatherData.ForecastApiComDataSource
+import com.example.perfectweatherallyear.ui.WeekWeatherViewModelFactory
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
@@ -22,7 +22,11 @@ class WeekWeatherFragment : Fragment() {
     lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeekWeatherBinding
 
-    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>{ ViewModelFactory(Repository(RemoteDataSource())) }
+    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>{
+        WeekWeatherViewModelFactory(
+            WeatherRepositoryImp(ForecastApiComDataSource())
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,13 +50,13 @@ class WeekWeatherFragment : Fragment() {
         })
     }
 
-    private fun adapterOnClick(dayWeather: DayWeather) {
+    private fun adapterOnClick(weather: DayWeather) {
         val fragment = DetailWeatherFragment()
 
         val args = Bundle()
         val builder = GsonBuilder()
         val gson = builder.create()
-        val result: String = gson.toJson(dayWeather)
+        val result: String = gson.toJson(weather)
 
         args.putString(ARG_DAY_WEATHER, result)
         fragment.changeFragment(args, parentFragmentManager)
