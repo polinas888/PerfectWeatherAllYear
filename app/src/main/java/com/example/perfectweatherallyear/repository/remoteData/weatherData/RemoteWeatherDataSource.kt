@@ -1,4 +1,4 @@
-package com.example.perfectweatherallyear.repository.remoteData.WeatherData
+package com.example.perfectweatherallyear.repository.remoteData.weatherData
 
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.repository.DataResult

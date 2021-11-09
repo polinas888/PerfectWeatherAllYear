@@ -11,8 +11,7 @@ import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
-import com.example.perfectweatherallyear.repository.remoteData.WeatherData.ForecastApiComDataSource
-import com.example.perfectweatherallyear.ui.WeekWeatherViewModelFactory
+import com.example.perfectweatherallyear.repository.remoteData.weatherData.ForecastApiComDataSource
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder

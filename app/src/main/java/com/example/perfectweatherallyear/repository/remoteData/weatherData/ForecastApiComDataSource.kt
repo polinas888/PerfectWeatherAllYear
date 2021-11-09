@@ -1,4 +1,4 @@
-package com.example.perfectweatherallyear.repository.remoteData.WeatherData
+package com.example.perfectweatherallyear.repository.remoteData.weatherData
 
 import com.example.perfectweatherallyear.api.ApiFactory.weatherApiRetrofit
 import com.example.perfectweatherallyear.model.DayWeather
@@ -7,8 +7,8 @@ import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.mod
 
 class ForecastApiComDataSource : RemoteWeatherDataSource() {
 
-    private val remoteService: ForecastRequest by lazy {
-        weatherApiRetrofit().create(ForecastRequest::class.java)
+    private val remoteService: WeatherApiCom by lazy {
+        weatherApiRetrofit().create(WeatherApiCom::class.java)
     }
 
     override suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {

@@ -8,12 +8,15 @@ import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
 import kotlinx.coroutines.launch
 
+private const val CITY = "London"
+private const val DAYS_NUMBER = 3
+
 class WeekWeatherViewModel(val repository: WeatherRepositoryImp) : ViewModel() {
     val weekWeatherLiveData = MutableLiveData<List<DayWeather>>()
 
     fun loadData() {
         viewModelScope.launch {
-            when (val weekWeather = getWeekWeather("London", 7)) {
+            when (val weekWeather = getWeekWeather(CITY, DAYS_NUMBER)) {
                 is DataResult.Ok -> {
                     weekWeatherLiveData.value = weekWeather.response!!
                 }

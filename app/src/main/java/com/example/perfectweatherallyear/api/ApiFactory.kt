@@ -8,7 +8,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiFactory {
-     private const val buildConfig = "https://api.weatherapi.com/v1/"
 
     private val authInterceptor = Interceptor { chain ->
         val newUrl = chain.request().url
@@ -35,7 +34,7 @@ object ApiFactory {
 
     fun weatherApiRetrofit(): Retrofit = Retrofit.Builder()
         .client(httpClient)
-        .baseUrl(buildConfig)
+        .baseUrl(BuildConfig.URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 }

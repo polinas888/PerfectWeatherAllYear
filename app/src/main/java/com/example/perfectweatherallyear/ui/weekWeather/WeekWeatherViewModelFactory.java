@@ -1,10 +1,9 @@
-package com.example.perfectweatherallyear.ui;
+package com.example.perfectweatherallyear.ui.weekWeather;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.perfectweatherallyear.repository.WeatherRepositoryImp;
-import com.example.perfectweatherallyear.ui.weekWeather.WeekWeatherViewModel;
 
 public class WeekWeatherViewModelFactory implements ViewModelProvider.Factory {
     private final WeatherRepositoryImp repository;
