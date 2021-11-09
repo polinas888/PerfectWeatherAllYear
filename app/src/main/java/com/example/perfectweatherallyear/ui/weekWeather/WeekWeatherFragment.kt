@@ -12,6 +12,7 @@ import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
+import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
 
 class WeekWeatherFragment : Fragment() {
@@ -41,6 +42,8 @@ class WeekWeatherFragment : Fragment() {
         weekWeatherViewModel.weekWeatherMapLiveData.observe(viewLifecycleOwner, {
             weatherForecastAdapter.setData(it)
         })
+
+        NotificationUtil.displayNotification(requireContext())
     }
 
     private fun adapterOnClick(dayWeather: DayWeather) {
