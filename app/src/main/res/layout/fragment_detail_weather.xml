@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:paddingStart="10dp"
-    android:paddingTop="10dp"
-    tools:context=".ui.detailWeather.DetailWeatherFragment"
-    tools:ignore="RtlSymmetry">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="detailViewModel"
+            type="com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:paddingStart="@dimen/detail_constraintLayout_paddingStart"
+        android:paddingTop="@dimen/detail_constraintLayout_paddingTop"
+        tools:context=".ui.detailWeather.DetailWeatherFragment"
+        tools:ignore="RtlSymmetry">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -22,26 +30,39 @@
         <TextView
             android:id="@+id/temperatureNameTextView"
             style="@style/DetailWeatherPropertiesTextView"
+            android:layout_width="@dimen/detail_name_property_width_textView"
             android:layout_height="wrap_content"
             android:text="@string/temperature_text" />
 
         <TextView
-            android:id="@+id/temperatureTextView"
+            android:id="@+id/minTemperatureTextView"
             style="@style/DetailWeatherPropertiesValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{detailViewModel.minTemperature}"
             android:layout_gravity="end" />
+
+        <TextView
+            android:id="@+id/maxTemperatureTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{'/' + detailViewModel.maxTemperature}"
+            app:layout_constraintStart_toEndOf="@+id/minTemperatureTextView"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/precipitationNameTextView"
             style="@style/DetailWeatherPropertiesTextView"
             android:layout_height="wrap_content"
+            android:layout_width="@dimen/detail_name_property_width_textView"
+            android:layout_marginTop="@dimen/detail_marginTop_name_property_textView"
             android:layout_gravity="center_vertical"
             android:text="@string/precipitation_text" />
 
         <TextView
             android:id="@+id/precipitationTextView"
             style="@style/DetailWeatherPropertiesValueTextView"
+            android:text="@{detailViewModel.precipitation}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end" />
@@ -49,7 +70,9 @@
         <TextView
             android:id="@+id/windNameTextView"
             style="@style/DetailWeatherPropertiesTextView"
+            android:layout_width="@dimen/detail_name_property_width_textView"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_marginTop_name_property_textView"
             android:layout_gravity="bottom"
             android:text="@string/wind_text" />
 
@@ -58,8 +81,10 @@
             style="@style/DetailWeatherPropertiesValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{detailViewModel.wind}"
             android:layout_gravity="bottom|end" />
 
     </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

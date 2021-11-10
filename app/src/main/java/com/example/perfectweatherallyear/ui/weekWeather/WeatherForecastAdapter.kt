@@ -7,7 +7,7 @@ import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
 
 class WeatherForecastAdapter(
-    private val weekWeatherMap: Map<String, DayWeather>,
+    private var weekWeatherList: List<DayWeather>,
     private val onItemClick: (DayWeather) -> Unit
 ) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
@@ -17,39 +17,36 @@ class WeatherForecastAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-            getDayWeather(position).also {
-                viewHolder.bind(it)
-            }
-    }
-
-    override fun getItemCount() = weekWeatherMap.size
-
-    private fun getDayWeather(position: Int): Pair<String, DayWeather> {
-        return weekWeatherMap.entries.toTypedArray()[position].let {
-            Pair(it.key, it.value)
+        getDayWeather(position).also {
+            viewHolder.bind(it)
         }
     }
 
-    inner class ViewHolder(
-        val binding: WeatherRowItemBinding,
-        val onClick: (DayWeather) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
-        private var currentDayWeather: DayWeather? = null
+    override fun getItemCount() = weekWeatherList.size
+
+    fun setData(newData: List<DayWeather>) {
+        weekWeatherList = newData
+        notifyDataSetChanged()
+    }
+
+    private fun getDayWeather(position: Int): DayWeather {
+        return weekWeatherList.get(position)
+        }
+
+    inner class ViewHolder(val binding: WeatherRowItemBinding, val onClick: (DayWeather) -> Unit) : RecyclerView.ViewHolder(binding.root) {
+        private var currentWeather: DayWeather? = null
 
         init {
             itemView.setOnClickListener {
-                currentDayWeather?.let {
+                currentWeather?.let {
                     onClick(it)
                 }
             }
         }
 
-        fun bind(dayWeather: Pair<String, DayWeather>) {
-            currentDayWeather = dayWeather.second
-            binding.apply {
-                dayOfWeekTextView.text = dayWeather.first
-                maxMinTemperatureTextView.text = dayWeather.second.temperature
-            }
+        fun bind(weather: DayWeather) {
+            binding.dayWeather = weather
+            currentWeather = weather
         }
     }
 }

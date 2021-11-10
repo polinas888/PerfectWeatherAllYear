@@ -1,17 +1,32 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.repository.DataResult
+import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
+import kotlinx.coroutines.launch
 
-class WeekWeatherViewModel: ViewModel() {
-    val weekWeatherMap = mapOf(
-        "Monday" to DayWeather("+15/+5", 15, 5),
-        "Tuesday" to DayWeather("+15/+5", 15, 5), "Wednesday" to DayWeather("+16/+6", 20, 10),
-        "Thursday" to DayWeather("+20/+15", 70, 2), "Friday" to DayWeather("+15/+7", 10, 15),
-        "Saturday" to DayWeather("+10/+5", 20, 5), "Sunday" to DayWeather("+7/+0", 15, 8)
-    )
+private const val CITY = "London"
+private const val DAYS_NUMBER = 3
 
-    fun getCurrentDayWeather(position: Int): DayWeather? {
-        return weekWeatherMap[weekWeatherMap.keys.toTypedArray()[position]]
+class WeekWeatherViewModel(val repository: WeatherRepositoryImp) : ViewModel() {
+    val weekWeatherLiveData = MutableLiveData<List<DayWeather>>()
+
+    fun loadData() {
+        viewModelScope.launch {
+            when (val weekWeather = getWeekWeather(CITY, DAYS_NUMBER)) {
+                is DataResult.Ok -> {
+                    weekWeatherLiveData.value = weekWeather.response!!
+                }
+                is DataResult.Error -> weekWeather.error
+            }
+        }
+    }
+
+    private suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
+        return repository.getWeekWeather(city, daysAmount)
     }
 }
+
