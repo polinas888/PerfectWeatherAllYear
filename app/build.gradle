@@ -18,9 +18,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        def url = properties.getProperty("url", "")
-        it.buildConfigField 'String', "URL", url
-        it.resValue 'string', "url", url
+        buildConfigField 'String', "WEATHER_API_URL", "\"https://api.weatherapi.com/v1/\""
     }
 
     buildTypes.each {
