@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
@@ -22,7 +21,7 @@ class NotificationUtil {
         @SuppressLint("LaunchActivityFromNotification")
         fun displayNotification(context: Context) {
 
-            val buttonIntent = Intent(context, ButtonReceiver::class.java)
+            val buttonIntent = Intent(context, NotificationButtonReceiver::class.java)
             buttonIntent.putExtra("notificationId",NOTIFICATION_ID)
             val pendingIntent = PendingIntent.getBroadcast(context, 0, buttonIntent, 0)
 
@@ -52,17 +51,6 @@ class NotificationUtil {
                 val notificationManager: NotificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.createNotificationChannel(channel)
             }
-        }
-    }
-}
-
-class ButtonReceiver: BroadcastReceiver() {
-
-    override fun onReceive(context: Context?, intent: Intent?) {
-        val notificationId: Int? = intent?.getIntExtra("notificationId", 0)
-        val manager: NotificationManager = context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (notificationId != null) {
-            manager.cancel(notificationId)
         }
     }
 }
