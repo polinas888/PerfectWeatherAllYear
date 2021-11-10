@@ -27,12 +27,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/temperatureTextView"
+            android:id="@+id/minTemperatureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{detailViewModel.temperature}"
+            android:text="@{detailViewModel.minTemperature}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/temperatureNameTextView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/maxTemperatureTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{'/' + detailViewModel.maxTemperature}"
+            app:layout_constraintStart_toEndOf="@+id/minTemperatureTextView"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

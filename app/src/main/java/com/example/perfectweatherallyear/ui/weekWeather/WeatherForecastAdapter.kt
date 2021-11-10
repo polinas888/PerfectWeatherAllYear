@@ -7,7 +7,7 @@ import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
 
 class WeatherForecastAdapter(
-    private var weekWeatherMap: Map<String, DayWeather>,
+    private var weekWeatherList: List<DayWeather>,
     private val onItemClick: (DayWeather) -> Unit
 ) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
@@ -22,39 +22,31 @@ class WeatherForecastAdapter(
         }
     }
 
-    override fun getItemCount() = weekWeatherMap.size
+    override fun getItemCount() = weekWeatherList.size
 
-    fun setData(newData: Map<String, DayWeather>) {
-        weekWeatherMap = newData
+    fun setData(newData: List<DayWeather>) {
+        weekWeatherList = newData
         notifyDataSetChanged()
     }
 
-    private fun getDayWeather(position: Int): Pair<String, DayWeather> {
-        return weekWeatherMap.entries.toTypedArray()[position].let {
-            Pair(it.key, it.value)
+    private fun getDayWeather(position: Int): DayWeather {
+        return weekWeatherList.get(position)
         }
-    }
 
-    inner class ViewHolder(
-        val binding: WeatherRowItemBinding,
-        val onClick: (DayWeather) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
-        private var currentDayWeather: DayWeather? = null
+    inner class ViewHolder(val binding: WeatherRowItemBinding, val onClick: (DayWeather) -> Unit) : RecyclerView.ViewHolder(binding.root) {
+        private var currentWeather: DayWeather? = null
 
         init {
             itemView.setOnClickListener {
-                currentDayWeather?.let {
+                currentWeather?.let {
                     onClick(it)
                 }
             }
         }
 
-        fun bind(dayWeatherPair: Pair<String, DayWeather>) {
-            with(dayWeatherPair) {
-                binding.dayWeather = second
-                binding.weekDay = first
-                currentDayWeather = second
-            }
+        fun bind(weather: DayWeather) {
+            binding.dayWeather = weather
+            currentWeather = weather
         }
     }
 }

@@ -10,17 +10,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
+import com.example.perfectweatherallyear.repository.remoteData.weatherData.ForecastApiComDataSource
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
 
 class WeekWeatherFragment : Fragment() {
-    private var weekWeatherMap: Map<String, DayWeather> = mapOf()
+    private var weekWeatherList: List<DayWeather> = listOf()
     lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeekWeatherBinding
 
-    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>()
+    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>{
+        WeekWeatherViewModelFactory(
+            WeatherRepositoryImp(ForecastApiComDataSource())
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,25 +40,25 @@ class WeekWeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         weekWeatherViewModel.loadData()
         binding.apply {
-            weatherForecastAdapter = WeatherForecastAdapter(weekWeatherMap) { dayWeather -> adapterOnClick(dayWeather) }
+            weatherForecastAdapter = WeatherForecastAdapter(weekWeatherList) { dayWeather -> adapterOnClick(dayWeather) }
             weatherForecastRecyclerView.adapter = weatherForecastAdapter
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        weekWeatherViewModel.weekWeatherMapLiveData.observe(viewLifecycleOwner, {
+        weekWeatherViewModel.weekWeatherLiveData.observe(viewLifecycleOwner, {
             weatherForecastAdapter.setData(it)
         })
 
         NotificationUtil.displayNotification(requireContext())
     }
 
-    private fun adapterOnClick(dayWeather: DayWeather) {
+    private fun adapterOnClick(weather: DayWeather) {
         val fragment = DetailWeatherFragment()
 
         val args = Bundle()
         val builder = GsonBuilder()
         val gson = builder.create()
-        val result: String = gson.toJson(dayWeather)
+        val result: String = gson.toJson(weather)
 
         args.putString(ARG_DAY_WEATHER, result)
         fragment.changeFragment(args, parentFragmentManager)
