@@ -24,6 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_margin="36dp"
+        android:paddingStart="@dimen/detail_constraintLayout_paddingStart"
+        android:paddingTop="@dimen/detail_constraintLayout_paddingTop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -34,28 +36,31 @@
             android:layout_height="wrap_content"
             android:text="@string/temperature_text" />
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end">
+
         <TextView
             android:id="@+id/minTemperatureTextView"
             style="@style/DetailWeatherPropertiesValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{detailViewModel.minTemperature}"
-            android:layout_gravity="end" />
+            android:text="@{detailViewModel.minTemperature}"/>
 
         <TextView
             android:id="@+id/maxTemperatureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{'/' + detailViewModel.maxTemperature}"
-            app:layout_constraintStart_toEndOf="@+id/minTemperatureTextView"
-            app:layout_constraintTop_toTopOf="parent" />
+            style="@style/DetailWeatherPropertiesValueTextView"
+            android:text="@{'/' + detailViewModel.maxTemperature}" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <TextView
             android:id="@+id/precipitationNameTextView"
             style="@style/DetailWeatherPropertiesTextView"
             android:layout_height="wrap_content"
             android:layout_width="@dimen/detail_name_property_width_textView"
-            android:layout_marginTop="@dimen/detail_marginTop_name_property_textView"
             android:layout_gravity="center_vertical"
             android:text="@string/precipitation_text" />
 
