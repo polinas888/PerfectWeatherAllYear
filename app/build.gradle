@@ -24,7 +24,6 @@ android {
     buildTypes.each {
         def apiKey = properties.getProperty("api_key", "")
         it.buildConfigField 'String', "API_KEY", apiKey
-        it.resValue 'string', "api_key", apiKey
     }
 
     buildTypes {
