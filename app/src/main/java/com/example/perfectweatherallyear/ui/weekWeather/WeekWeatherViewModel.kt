@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.repository.DataResult
-import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
+import com.example.perfectweatherallyear.repository.WeatherRepository
 import kotlinx.coroutines.launch
 
 private const val CITY = "London"
 private const val DAYS_NUMBER = 3
 
-class WeekWeatherViewModel(val repository: WeatherRepositoryImp) : ViewModel() {
+class WeekWeatherViewModel(val repository: WeatherRepository) : ViewModel() {
     val weekWeatherLiveData = MutableLiveData<List<DayWeather>>()
 
     fun loadData() {

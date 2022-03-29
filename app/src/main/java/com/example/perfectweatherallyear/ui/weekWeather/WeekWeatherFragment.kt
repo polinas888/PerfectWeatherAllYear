@@ -7,25 +7,26 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
-import com.example.perfectweatherallyear.repository.remoteData.weatherData.ForecastApiComDataSource
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
+import javax.inject.Inject
 
 class WeekWeatherFragment : Fragment() {
     private var weekWeatherList: List<DayWeather> = listOf()
-    lateinit var weatherForecastAdapter: WeatherForecastAdapter
+    private lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeekWeatherBinding
 
+    @Inject
+    lateinit var weekWeatherViewModelFactory: WeekWeatherViewModelFactory
+
     private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>{
-        WeekWeatherViewModelFactory(
-            WeatherRepositoryImp(ForecastApiComDataSource())
-        )
+        weekWeatherViewModelFactory
     }
 
     override fun onCreateView(
@@ -33,6 +34,7 @@ class WeekWeatherFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentWeekWeatherBinding.inflate(layoutInflater)
+        requireContext().appComponent.inject(this)
         return binding.root
     }
 
