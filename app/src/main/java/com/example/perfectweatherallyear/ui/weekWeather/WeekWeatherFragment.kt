@@ -10,23 +10,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
-import com.example.perfectweatherallyear.repository.remoteData.weatherData.ForecastApiComDataSource
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WeekWeatherFragment : Fragment() {
     private var weekWeatherList: List<DayWeather> = listOf()
     lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeekWeatherBinding
 
-    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>{
-        WeekWeatherViewModelFactory(
-            WeatherRepositoryImp(ForecastApiComDataSource())
-        )
-    }
+    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

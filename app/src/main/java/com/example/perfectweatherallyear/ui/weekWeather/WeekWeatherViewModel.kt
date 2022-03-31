@@ -6,12 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val CITY = "London"
 private const val DAYS_NUMBER = 3
 
-class WeekWeatherViewModel(val repository: WeatherRepositoryImp) : ViewModel() {
+@HiltViewModel
+class WeekWeatherViewModel @Inject constructor(val repository: WeatherRepositoryImp) : ViewModel() {
     val weekWeatherLiveData = MutableLiveData<List<DayWeather>>()
 
     fun loadData() {
