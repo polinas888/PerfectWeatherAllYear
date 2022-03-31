@@ -52,8 +52,8 @@ object AppModule {
         }
 
     @Provides
-    fun provideRemoteWeatherDataSource(): RemoteWeatherDataSource {
-        return ForecastApiComDataSource()
+    fun provideRemoteWeatherDataSource(retrofit: Retrofit): RemoteWeatherDataSource {
+        return ForecastApiComDataSource(retrofit)
     }
 }
 
