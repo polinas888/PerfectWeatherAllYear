@@ -4,17 +4,12 @@ import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.ForecastApiComDataSource
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.RemoteWeatherDataSource
-import com.example.perfectweatherallyear.ui.weekWeather.WeekWeatherViewModelFactory
+import com.example.perfectweatherallyear.repository.remoteData.weatherData.WeatherApiCom
 import dagger.Module
 import dagger.Provides
 
 @Module
-object ModuleViewModelFactory {
-
-    @Provides
-    fun provideWeekWeatherViewModelFactory(weatherRepository: WeatherRepository): WeekWeatherViewModelFactory {
-        return WeekWeatherViewModelFactory(repository = weatherRepository)
-    }
+object ApiRepositoryFactory {
 
     @Provides
     fun provideWeatherRepository(remoteWeatherDataSource: RemoteWeatherDataSource): WeatherRepository {
@@ -22,7 +17,7 @@ object ModuleViewModelFactory {
     }
 
     @Provides
-    fun provideRemoteWeatherDataSource() : RemoteWeatherDataSource {
-        return ForecastApiComDataSource()
+    fun provideRemoteWeatherDataSource(weatherApiCom: WeatherApiCom) : RemoteWeatherDataSource {
+        return ForecastApiComDataSource(weatherApiCom)
     }
 }
