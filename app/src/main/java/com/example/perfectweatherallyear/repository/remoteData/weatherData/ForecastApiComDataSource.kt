@@ -3,13 +3,12 @@ package com.example.perfectweatherallyear.repository.remoteData.weatherData
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToDayWeather
-import retrofit2.Retrofit
 import javax.inject.Inject
 
-class ForecastApiComDataSource @Inject constructor(retrofit: Retrofit) : RemoteWeatherDataSource() {
+class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom) : RemoteWeatherDataSource() {
 
     private val remoteService: WeatherApiCom by lazy {
-        retrofit.create(WeatherApiCom::class.java)
+        weatherApiCom
     }
 
     override suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
