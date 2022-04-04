@@ -31,7 +31,6 @@ class WeekWeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        weekWeatherViewModel.loadData()
         binding.apply {
             weatherForecastAdapter = WeatherForecastAdapter(weekWeatherMap) { dayWeather -> adapterOnClick(dayWeather) }
             weatherForecastRecyclerView.adapter = weatherForecastAdapter
