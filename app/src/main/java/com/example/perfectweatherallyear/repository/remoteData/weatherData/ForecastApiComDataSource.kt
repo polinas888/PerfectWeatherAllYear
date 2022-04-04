@@ -1,14 +1,14 @@
 package com.example.perfectweatherallyear.repository.remoteData.weatherData
 
-import com.example.perfectweatherallyear.api.ApiFactory.weatherApiRetrofit
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToDayWeather
+import javax.inject.Inject
 
-class ForecastApiComDataSource : RemoteWeatherDataSource() {
+class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom) : RemoteWeatherDataSource() {
 
     private val remoteService: WeatherApiCom by lazy {
-        weatherApiRetrofit().create(WeatherApiCom::class.java)
+        weatherApiCom
     }
 
     override suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
