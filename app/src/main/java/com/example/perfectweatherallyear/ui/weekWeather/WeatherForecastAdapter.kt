@@ -7,7 +7,7 @@ import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
 
 class WeatherForecastAdapter(
-    private var weekWeatherMap: Map<String, DayWeather>,
+    private var weekWeather: List<DayWeather>,
     private val onItemClick: (DayWeather) -> Unit
 ) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
@@ -22,16 +22,16 @@ class WeatherForecastAdapter(
         }
     }
 
-    override fun getItemCount() = weekWeatherMap.size
+    override fun getItemCount() = weekWeather.size
 
-    fun setData(newData: Map<String, DayWeather>) {
-        weekWeatherMap = newData
+    fun setData(newData: List<DayWeather>) {
+        weekWeather = newData
         notifyDataSetChanged()
     }
 
     private fun getDayWeather(position: Int): Pair<String, DayWeather> {
-        return weekWeatherMap.entries.toTypedArray()[position].let {
-            Pair(it.key, it.value)
+        return weekWeather[position].let {
+            Pair(it.date, it)
         }
     }
 

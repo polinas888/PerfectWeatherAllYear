@@ -11,19 +11,14 @@ import kotlinx.coroutines.launch
 
 class WeekWeatherViewModel : ViewModel() {
     private val forecastRepository: ForecastRepository = ForecastRepository()
-    val weekWeatherMapLiveData = MutableLiveData<Map<String, DayWeather>>()
+    val weekWeatherLiveData = MutableLiveData<List<DayWeather>>()
 
     fun fetchForecast(city: String, days: String) {
-        val weekWeatherDayTemp = mutableMapOf<String, DayWeather>()
         viewModelScope.launch {
             forecastRepository.fetchForecast(city, days).let {
                 when (it) {
                     is SuccessResult -> {
-                        val forecastList = it.data.forecast.forecastList
-                        for (forecastPerDay in forecastList) {
-                            weekWeatherDayTemp.put(forecastPerDay.date, forecastPerDay.dayWeather)
-                        }
-                        weekWeatherMapLiveData.value = weekWeatherDayTemp
+                        weekWeatherLiveData.value = it.data!!
                     }
                     else -> {
                         Log.i("No data", "No data")

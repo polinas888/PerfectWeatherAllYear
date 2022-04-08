@@ -3,6 +3,8 @@ package com.example.perfectweatherallyear.model
 import com.google.gson.annotations.SerializedName
 
 data class DayWeather(
+    @SerializedName("date")
+    val date: String,
     @SerializedName("maxtemp_c")
     val max_temperature: Double,
     @SerializedName("mintemp_c")

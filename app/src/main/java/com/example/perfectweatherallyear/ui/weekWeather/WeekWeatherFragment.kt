@@ -15,7 +15,7 @@ import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
 
 class WeekWeatherFragment : Fragment() {
-    private var weekWeatherMap: Map<String, DayWeather> = mapOf()
+    private var weatherList: List<DayWeather> = listOf()
     lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeekWeatherBinding
 
@@ -37,12 +37,12 @@ class WeekWeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            weatherForecastAdapter = WeatherForecastAdapter(weekWeatherMap) { dayWeather -> adapterOnClick(dayWeather) }
+            weatherForecastAdapter = WeatherForecastAdapter(weatherList) { dayWeather -> adapterOnClick(dayWeather) }
             weatherForecastRecyclerView.adapter = weatherForecastAdapter
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        weekWeatherViewModel.weekWeatherMapLiveData.observe(viewLifecycleOwner, {
+        weekWeatherViewModel.weekWeatherLiveData.observe(viewLifecycleOwner, {
             weatherForecastAdapter.setData(it)
         })
     }
