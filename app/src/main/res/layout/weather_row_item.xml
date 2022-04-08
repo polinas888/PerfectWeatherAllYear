@@ -26,10 +26,24 @@
             tools:text="@string/dayOfWeekTest" />
 
         <TextView
-            android:id="@+id/maxMinTempretureTextView"
+            android:id="@+id/maxTempretureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{dayWeather.temperature}"
+            android:text="@{String.valueOf(dayWeather.max_temperature)}"
+            tools:text="@string/temperatureTest" />
+
+        <TextView
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sepereter_temp"
+            tools:text="/" />
+
+        <TextView
+            android:id="@+id/minTemperatureTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(dayWeather.min_temperature)}"
             tools:text="@string/temperatureTest" />
     </LinearLayout>
 </layout>

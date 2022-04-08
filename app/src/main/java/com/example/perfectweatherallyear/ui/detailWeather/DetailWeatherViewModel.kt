@@ -7,13 +7,15 @@ import com.example.perfectweatherallyear.model.DayWeather
 class DetailWeatherViewModel : ViewModel() {
     var dayWeather: DayWeather? = null
 
-    val temperature = MutableLiveData<String>()
+    val temperatureMax = MutableLiveData<String>()
+    val temperatureMin = MutableLiveData<String>()
     val precipitation = MutableLiveData<String>()
     val wind = MutableLiveData<String>()
 
     fun load() {
         getDayWeatherData()?.also {
-            temperature.value = dayWeather?.temperature
+            temperatureMax.value = dayWeather?.max_temperature.toString()
+            temperatureMin.value = dayWeather?.min_temperature.toString()
             precipitation.value = dayWeather?.precipitation.toString()
             wind.value = dayWeather?.wind.toString()
         }

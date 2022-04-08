@@ -10,13 +10,8 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:paddingStart="@dimen/detail_constraintLayout_paddingStart"
-        android:paddingTop="@dimen/detail_constraintLayout_paddingTop"
-        tools:context=".ui.detailWeather.DetailWeatherFragment"
-        tools:ignore="RtlSymmetry">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/temperatureNameTextView"
@@ -27,13 +22,32 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/temperatureTextView"
+            android:id="@+id/maxTemperatureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{detailViewModel.temperature}"
+            android:text="@{detailViewModel.temperatureMax}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/temperatureNameTextView"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/maxTemperatureTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@string/sepereter_temp"
+            tools:text="/" />
+
+        <TextView
+            android:id="@+id/minTemperatureTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/separator"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@{detailViewModel.temperatureMin}"
+            tools:text="@string/temperatureTest" />
 
         <TextView
             android:id="@+id/precipitationNameTextView"
@@ -70,6 +84,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/windNameTextView"
             app:layout_constraintTop_toTopOf="@+id/windNameTextView" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

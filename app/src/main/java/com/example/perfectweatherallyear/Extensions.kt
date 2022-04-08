@@ -10,6 +10,6 @@ fun Fragment.changeFragment(args: Bundle, fragmentManager: FragmentManager) {
 
         fragmentManager.commit {
             addToBackStack(null)
-            add(R.id.nav_host_fragment, this@changeFragment)
+            replace(R.id.nav_host_fragment, this@changeFragment)
         }
     }

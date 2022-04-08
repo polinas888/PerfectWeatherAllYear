@@ -21,6 +21,11 @@ class WeekWeatherFragment : Fragment() {
 
     private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        weekWeatherViewModel.fetchForecast("London", "3")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

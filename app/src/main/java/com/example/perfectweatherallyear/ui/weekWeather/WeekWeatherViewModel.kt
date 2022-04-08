@@ -1,23 +1,35 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.perfectweatherallyear.model.DayWeather
-import java.util.*
+import com.example.perfectweatherallyear.repository.SuccessResult
+import com.example.perfectweatherallyear.repository.remote.ForecastRepository
+import kotlinx.coroutines.launch
 
 class WeekWeatherViewModel : ViewModel() {
-    val weekWeatherMapLiveData = MutableLiveData<Map<String,DayWeather>>()
+    private val forecastRepository: ForecastRepository = ForecastRepository()
+    val weekWeatherMapLiveData = MutableLiveData<Map<String, DayWeather>>()
 
-    private val weekDaysList = Calendar.getInstance()
-        .getDisplayNames(Calendar.DAY_OF_WEEK,Calendar.LONG_FORMAT,Locale.ENGLISH)
-        .toList().sortedBy { value -> value.second }.map { it.first}.toList()
-
-    private fun combineListsIntoOrderedMap(keys: List<String>, values: List<DayWeather>): Map<String, DayWeather> {
-        require(keys.size == values.size) { "Cannot combine lists with dissimilar sizes" }
-        val map: MutableMap<String, DayWeather> = LinkedHashMap()
-        for (i in keys.indices) {
-            map[keys[i]] = values[i]
+    fun fetchForecast(city: String, days: String) {
+        val weekWeatherDayTemp = mutableMapOf<String, DayWeather>()
+        viewModelScope.launch {
+            forecastRepository.fetchForecast(city, days).let {
+                when (it) {
+                    is SuccessResult -> {
+                        val forecastList = it.data.forecast.forecastList
+                        for (forecastPerDay in forecastList) {
+                            weekWeatherDayTemp.put(forecastPerDay.date, forecastPerDay.dayWeather)
+                        }
+                        weekWeatherMapLiveData.value = weekWeatherDayTemp
+                    }
+                    else -> {
+                        Log.i("No data", "No data")
+                    }
+                }
+            }
         }
-        return map
     }
 }
