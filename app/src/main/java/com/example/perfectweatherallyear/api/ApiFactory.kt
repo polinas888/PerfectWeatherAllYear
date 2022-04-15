@@ -10,15 +10,16 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+private const val KEY_QUERY_PARAM = "key"
 object ApiFactory {
 
     fun createWeatherApi(): ForecastApi {
         val client = OkHttpClient.Builder()
             .addInterceptor { chain -> return@addInterceptor addApiKeyToRequests(chain) }
-            .addInterceptor(interceptor)
+            .addInterceptor(loggingInterceptor)
             .build()
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(BuildConfig.base_url)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -29,12 +30,12 @@ object ApiFactory {
         val request = chain.request().newBuilder()
         val originalHttpUrl = chain.request().url
         val newUrl = originalHttpUrl.newBuilder()
-            .addQueryParameter("key", BuildConfig.API_KEY).build()
+            .addQueryParameter(KEY_QUERY_PARAM, BuildConfig.API_KEY).build()
         request.url(newUrl)
         return chain.proceed(request.build())
     }
 
-    private val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+    private val loggingInterceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
         override fun log(message: String) {
             Log.d("RESTLog", message)
         }

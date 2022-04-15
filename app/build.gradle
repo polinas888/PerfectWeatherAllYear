@@ -4,6 +4,10 @@ plugins {
     id("kotlin-kapt")
 }
 
+def urlPropertiesFile = rootProject.file("api_credentials.properties")
+def urlKeyProperties = new Properties()
+urlKeyProperties.load(new FileInputStream(urlPropertiesFile))
+
 android {
     compileSdk 31
 
@@ -14,7 +18,7 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField("String", "API_KEY", API_KEY)
-        buildConfigField("String", "BASE_URL", BASE_URL)
+        buildConfigField("String", "base_url", urlKeyProperties['base_url'])
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -22,6 +26,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        //    buildConfigField("String", "base_url", awsProperties['base_url'])
         }
     }
 

@@ -9,8 +9,7 @@ import com.example.perfectweatherallyear.repository.remote.forecast2.ForecastPer
 
 class ForecastDataSource {
     private val remoteService: ForecastApi by lazy {
-        val createWeatherApi = ApiFactory.createWeatherApi()
-        createWeatherApi
+        ApiFactory.createWeatherApi()
     }
 
     suspend fun fetchForecast(city: String, days: String): DataResult<List<DayWeather>> {
