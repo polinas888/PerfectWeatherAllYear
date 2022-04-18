@@ -4,9 +4,9 @@ plugins {
     id("kotlin-kapt")
 }
 
-def urlPropertiesFile = rootProject.file("api_credentials.properties")
-def urlKeyProperties = new Properties()
-urlKeyProperties.load(new FileInputStream(urlPropertiesFile))
+def apiPropertiesFile = rootProject.file("credentials.properties")
+def apiKeyProperties = new Properties()
+apiKeyProperties.load(new FileInputStream(apiPropertiesFile))
 
 android {
     compileSdk 31
@@ -17,18 +17,22 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
-        buildConfigField("String", "API_KEY", API_KEY)
-        buildConfigField("String", "base_url", urlKeyProperties['base_url'])
+        buildConfigField("String", "API_KEY", apiKeyProperties['API_KEY'])
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            buildConfigField("String", "base_url", "\"https://api.weatherapi.com/v1/\"")
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        //    buildConfigField("String", "base_url", awsProperties['base_url'])
+        }
+        debug {
+            buildConfigField("String", "base_url", "\"https://api.weatherapi.com/v1/\"")
         }
     }
+
+    productFlavors
 
     buildFeatures{
         viewBinding true
