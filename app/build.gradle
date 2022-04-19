@@ -4,9 +4,7 @@ plugins {
     id("kotlin-kapt")
 }
 
-def apiPropertiesFile = rootProject.file("credentials.properties")
-def apiKeyProperties = new Properties()
-apiKeyProperties.load(new FileInputStream(apiPropertiesFile))
+apply from: rootProject.file("credantials.gradle")
 
 android {
     compileSdk 31
@@ -17,7 +15,7 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
-        buildConfigField("String", "API_KEY", apiKeyProperties['API_KEY'])
+        buildConfigField "String", "API_KEY", API_KEY
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
