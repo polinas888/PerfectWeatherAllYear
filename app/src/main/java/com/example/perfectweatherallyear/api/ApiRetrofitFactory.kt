@@ -34,7 +34,7 @@ object ApiRetrofitFactory {
 
     fun weatherApiRetrofit(): Retrofit = Retrofit.Builder()
         .client(httpClient)
-        .baseUrl(BuildConfig.WEATHER_API_URL)
+        .baseUrl(BuildConfig.base_url)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 }
