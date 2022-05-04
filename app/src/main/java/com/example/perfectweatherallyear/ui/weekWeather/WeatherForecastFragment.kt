@@ -9,58 +9,65 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.changeFragment
-import com.example.perfectweatherallyear.databinding.FragmentWeekWeatherBinding
+import com.example.perfectweatherallyear.databinding.FragmentWeatherForecastBinding
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
-class WeekWeatherFragment : Fragment() {
+const val ARG_LOCATION: String = "LOCATION"
+class WeatherForecastFragment : Fragment() {
     private var weekWeatherList: List<DayWeather> = listOf()
     private lateinit var weatherForecastAdapter: WeatherForecastAdapter
-    private lateinit var binding: FragmentWeekWeatherBinding
+    private lateinit var binding: FragmentWeatherForecastBinding
+    lateinit var location: Location
 
     @Inject
-    lateinit var weekWeatherViewModelFactory: WeekWeatherViewModelFactory
+    lateinit var weatherForecastViewModelFactory: WeatherForecastViewModelFactory
 
-    private val weekWeatherViewModel by viewModels<WeekWeatherViewModel>{
-        weekWeatherViewModelFactory
+    private val weekWeatherViewModel by viewModels<WeatherForecastViewModel>{
+        weatherForecastViewModelFactory
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentWeekWeatherBinding.inflate(layoutInflater)
+        binding = FragmentWeatherForecastBinding.inflate(layoutInflater)
         requireContext().appComponent.inject(this)
+
+        val builder = GsonBuilder()
+        val gson = builder.create()
+        location = gson.fromJson(arguments?.getString(ARG_LOCATION), Location::class.java)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        weekWeatherViewModel.loadData()
+        weekWeatherViewModel.loadData(location)
         binding.apply {
             weatherForecastAdapter = WeatherForecastAdapter(weekWeatherList) { dayWeather -> adapterOnClick(dayWeather) }
             weatherForecastRecyclerView.adapter = weatherForecastAdapter
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        weekWeatherViewModel.weekWeatherLiveData.observe(viewLifecycleOwner, {
+        weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner, {
             weatherForecastAdapter.setData(it)
         })
 
         NotificationUtil.displayNotification(requireContext())
     }
 
-    private fun adapterOnClick(weather: DayWeather) {
+    private fun adapterOnClick(dayWeather: DayWeather) {
         val fragment = DetailWeatherFragment()
-
         val args = Bundle()
         val builder = GsonBuilder()
         val gson = builder.create()
-        val result: String = gson.toJson(weather)
+        val result: String = gson.toJson(dayWeather)
 
         args.putString(ARG_DAY_WEATHER, result)
         fragment.changeFragment(args, parentFragmentManager)

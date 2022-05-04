@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="dayWeather"
-            type="com.example.perfectweatherallyear.model.DayWeather" />
+            name="hourWeather"
+            type="com.example.perfectweatherallyear.model.HourWeather" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,10 +16,10 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/dateTextView"
+            android:id="@+id/hourTextView"
             android:layout_width="@dimen/day_of_week_textView"
             android:layout_height="wrap_content"
-            android:text="@{dayWeather.date}"
+            android:text="@{hourWeather.time}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/dayOfWeekTest" />
@@ -28,27 +28,18 @@
             android:id="@+id/temperatureTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/dateTextView"
+            app:layout_constraintStart_toEndOf="@+id/hourTextView"
             app:layout_constraintTop_toTopOf="parent"
             android:paddingEnd="50dp"
             android:text="@string/temperatureTitle"/>
 
         <TextView
-            android:id="@+id/minTemperatureTextView"
+            android:id="@+id/temperatureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/temperatureTitleTextView"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@{dayWeather.generalWeather.temperatureMin}"
-            tools:text="@string/temperatureTest" />
-
-        <TextView
-            android:id="@+id/maxTemperatureTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/minTemperatureTextView"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@{'/' + dayWeather.generalWeather.temperatureMax}"
+            android:text="@{hourWeather.temperature}"
             tools:text="@string/temperatureTest" />
 
         <TextView
@@ -63,9 +54,9 @@
             android:id="@+id/precipitationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{dayWeather.generalWeather.precipitation}"
-            app:layout_constraintStart_toStartOf="@+id/minTemperatureTextView"
-            app:layout_constraintTop_toBottomOf="@+id/minTemperatureTextView"
+            android:text="@{hourWeather.precipitation}"
+            app:layout_constraintStart_toStartOf="@+id/temperatureTextView"
+            app:layout_constraintTop_toBottomOf="@+id/temperatureTextView"
             tools:text="10"/>
 
         <TextView
@@ -80,8 +71,8 @@
             android:id="@+id/windTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{dayWeather.generalWeather.wind}"
-            app:layout_constraintStart_toStartOf="@+id/minTemperatureTextView"
+            android:text="@{hourWeather.wind}"
+            app:layout_constraintStart_toStartOf="@+id/temperatureTextView"
             app:layout_constraintTop_toBottomOf="@+id/precipitationTitleTextView"
             tools:text="10"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

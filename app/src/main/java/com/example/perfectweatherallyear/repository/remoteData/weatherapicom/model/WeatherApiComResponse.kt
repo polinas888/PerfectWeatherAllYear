@@ -1,13 +1,22 @@
 package com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model
 
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.model.Weather
+import com.example.perfectweatherallyear.model.GeneralWeather
+import com.example.perfectweatherallyear.model.HourWeather
 import com.google.gson.annotations.SerializedName
 
 data class ForecastResponse(
-    val location: Any,
+    @SerializedName("location")
+    val location: Location,
+    @SerializedName("current")
     val current: Any,
+    @SerializedName("forecast")
     val forecast: Forecast
+)
+
+data class Location(
+    @SerializedName("name")
+    val city: String
 )
 
 data class Forecast(
@@ -16,8 +25,12 @@ data class Forecast(
 )
 
 data class DayItem(
+    @SerializedName("date")
     val date: String,
-    val day: Day
+    @SerializedName("day")
+    val day: Day,
+    @SerializedName("hour")
+    val hourWeather: List<Hour>
 )
 
 data class Day(
@@ -31,13 +44,45 @@ data class Day(
     val wind: String
 )
 
-fun ForecastResponse.convertToDayWeather(): List<DayWeather> {
+data class Hour(
+    @SerializedName("time")
+    val time: String,
+    @SerializedName("temp_c")
+    val temp: String,
+    @SerializedName("precip_mm")
+    val precipitation: String,
+    @SerializedName("wind_kph")
+    val wind: String
+)
+
+fun ForecastResponse.convertToDayWeather(cityId: String): List<DayWeather> {
     val forecastDay = forecast.forecastDay
     val dayWeatherList = mutableListOf<DayWeather>()
     forecastDay.forEach {
-        val weather = Weather(it.day.minTemp, it.day.maxTemp, it.day.precipitation, it.day.wind)
-        val dayWeather = DayWeather(it.date, weather)
+        val weather =
+            GeneralWeather(it.day.minTemp, it.day.maxTemp, it.day.precipitation, it.day.wind)
+
+        val dayWeather = DayWeather(date = it.date, cityId = cityId, generalWeather = weather)
         dayWeatherList.add(dayWeather)
     }
     return dayWeatherList
+}
+
+fun ForecastResponse.convertToHourWeather(dayWeather: DayWeather): List<HourWeather> {
+    val forecastDay = forecast.forecastDay
+    val hourWeatherList = mutableListOf<HourWeather>()
+    val dayItem = getDayItemFromListItems(forecastDay, dayWeather.date)
+    dayItem?.hourWeather?.forEach {
+            val hourWeather = HourWeather(it.time, it.temp, it.precipitation, it.wind, dayWeather.id)
+        hourWeatherList.add(hourWeather)
+    }
+    return hourWeatherList
+}
+
+private fun getDayItemFromListItems(listDayItem: List<DayItem>, date: String): DayItem? {
+    listDayItem.forEach {
+        if (it.date == date)
+            return it
+    }
+    return null
 }
