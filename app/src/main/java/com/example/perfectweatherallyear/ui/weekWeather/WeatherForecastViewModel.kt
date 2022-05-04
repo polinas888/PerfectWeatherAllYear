@@ -17,7 +17,7 @@ class WeatherForecastViewModel(val weatherRepository: WeatherRepository, val loc
 
     fun loadData(location: Location) {
         viewModelScope.launch {
-            when (val weatherForecast = getWeatherForecast(location.name, DAYS_NUMBER)) {
+            when (val weatherForecast = getWeatherForecast(location, DAYS_NUMBER)) {
                 is DataResult.Ok -> {
                     weatherForecastLiveData.value = weatherForecast.response!!
                 }
@@ -26,9 +26,8 @@ class WeatherForecastViewModel(val weatherRepository: WeatherRepository, val loc
         }
     }
 
-    private suspend fun getWeatherForecast(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
-        val cityId = locationRepository.getLocationIdByCityName(city)
-        return weatherRepository.getWeatherForecast(city, daysAmount, cityId)
+    private suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
+        return weatherRepository.getWeatherForecast(location, daysAmount)
     }
 }
 

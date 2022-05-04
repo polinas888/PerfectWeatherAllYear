@@ -2,6 +2,7 @@ package com.example.perfectweatherallyear.repository
 
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
+import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.localData.LocalWeatherDataSource
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.RemoteWeatherDataSource
 import javax.inject.Inject
@@ -11,11 +12,11 @@ class WeatherRepositoryImp @Inject constructor(
     private val localWeatherDataSource: LocalWeatherDataSource
 ) : WeatherRepository {
 
-    override suspend fun getWeatherForecast(city: String, daysAmount: Int, cityId: String): DataResult<List<DayWeather>> {
+    override suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
         return try {
-            val remoteWeekWeather = remoteDataSource.getWeatherForecast(city, daysAmount)
+            val remoteWeekWeather = remoteDataSource.getWeatherForecast(location.name, daysAmount)
             localWeatherDataSource.insertDayWeather(remoteWeekWeather)
-            val localWeekWeather = localWeatherDataSource.getWeatherForecast(cityId, daysAmount)
+            val localWeekWeather = localWeatherDataSource.getWeatherForecast(location.id, daysAmount)
             DataResult.Ok(localWeekWeather)
         } catch (e: Exception) {
             DataResult.Error(e.message.toString())
