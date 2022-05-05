@@ -1,5 +1,6 @@
 package com.example.perfectweatherallyear.di
 
+import android.content.Context
 import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherViewModelFactory
@@ -11,8 +12,9 @@ import dagger.Provides
 @Module
 object ModuleViewModelFactory {
     @Provides
-    fun provideForecastViewModelFactory(weatherRepository: WeatherRepository, locationRepository: LocationRepository): WeatherForecastViewModelFactory {
-        return WeatherForecastViewModelFactory(weatherRepository = weatherRepository, locationRepository)
+    fun provideForecastViewModelFactory(weatherRepository: WeatherRepository, locationRepository: LocationRepository, context: Context): WeatherForecastViewModelFactory {
+        return WeatherForecastViewModelFactory(weatherRepository = weatherRepository,
+            locationRepository = locationRepository, context = context)
     }
 
     @Provides

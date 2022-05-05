@@ -1,5 +1,6 @@
 package com.example.perfectweatherallyear.di
 
+import android.content.Context
 import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.LocationRepositoryImpl
 import com.example.perfectweatherallyear.repository.WeatherRepository
@@ -18,8 +19,9 @@ import dagger.Provides
 object ApiRepositoryFactory {
 
     @Provides
-    fun provideWeatherRepository(remoteWeatherDataSource: RemoteWeatherDataSource, localWeatherDataSource: LocalWeatherDataSource): WeatherRepository {
-        return WeatherRepositoryImp(remoteDataSource = remoteWeatherDataSource, localWeatherDataSource = localWeatherDataSource)
+    fun provideWeatherRepository(remoteWeatherDataSource: RemoteWeatherDataSource, localWeatherDataSource: LocalWeatherDataSource, context: Context)
+    : WeatherRepository {
+        return WeatherRepositoryImp(remoteDataSource = remoteWeatherDataSource, localWeatherDataSource = localWeatherDataSource, context = context)
     }
 
     @Provides

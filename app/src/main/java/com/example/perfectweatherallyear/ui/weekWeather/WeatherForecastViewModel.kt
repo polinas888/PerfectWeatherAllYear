@@ -1,5 +1,6 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +13,11 @@ import kotlinx.coroutines.launch
 
 const val DAYS_NUMBER = 7
 
-class WeatherForecastViewModel(val weatherRepository: WeatherRepository, val locationRepository: LocationRepository ) : ViewModel() {
+class WeatherForecastViewModel(
+    val weatherRepository: WeatherRepository,
+    val locationRepository: LocationRepository,
+    val context: Context
+) : ViewModel() {
     val weatherForecastLiveData = MutableLiveData<List<DayWeather>>()
 
     fun loadData(location: Location) {
@@ -21,12 +26,16 @@ class WeatherForecastViewModel(val weatherRepository: WeatherRepository, val loc
                 is DataResult.Ok -> {
                     weatherForecastLiveData.value = weatherForecast.response!!
                 }
-                is DataResult.Error -> weatherForecast.error
+                is DataResult.Error ->
+                    weatherForecast.error
             }
         }
     }
 
-    private suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
+    private suspend fun getWeatherForecast(
+        location: Location,
+        daysAmount: Int
+    ): DataResult<List<DayWeather>> {
         return weatherRepository.getWeatherForecast(location, daysAmount)
     }
 }
