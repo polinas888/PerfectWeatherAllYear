@@ -23,7 +23,7 @@ class WeatherRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getHourlyWeather(daysAmount: Int, cityId: String, date: String
+    override suspend fun getHourlyWeather(daysAmount: Int, cityId: Int, date: String
     ): DataResult<List<HourWeather>> {
         return try {
             val hourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, cityId, date)

@@ -1,21 +1,18 @@
 package com.example.perfectweatherallyear.model
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import java.util.*
+import androidx.room.*
 
-@Entity(indices = [Index(value = ["id"], unique = true)],
+@Entity(indices = [Index(value = ["date", "cityId"], unique = true)],
     foreignKeys = [ForeignKey(entity = Location::class,
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("cityId"),
-    onDelete = ForeignKey.CASCADE)], primaryKeys = ["date", "cityId"]
+    onDelete = ForeignKey.CASCADE)]
 )
 data class DayWeather(
-    val id: String = UUID.randomUUID().toString(),
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val date: String,
-    val cityId: String = UUID.randomUUID().toString(),
+    val cityId: Int,
     @Embedded
     val generalWeather: GeneralWeather
 )

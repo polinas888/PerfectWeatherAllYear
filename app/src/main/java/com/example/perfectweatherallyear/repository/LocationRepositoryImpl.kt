@@ -12,11 +12,11 @@ class LocationRepositoryImpl @Inject constructor(
         localLocationDataSource.insertLocation(locations)
     }
 
-    override suspend fun getLocationIdByCityName(city: String): String {
+    override suspend fun getLocationIdByCityName(city: String): Int {
         return localLocationDataSource.getLocationIdByCityName(city)
     }
 
-    override suspend fun getCityNameByCityId(cityId: String): String {
+    override suspend fun getCityNameByCityId(cityId: Int): String {
         return localLocationDataSource.getCityNameByCityId(cityId)
     }
 }

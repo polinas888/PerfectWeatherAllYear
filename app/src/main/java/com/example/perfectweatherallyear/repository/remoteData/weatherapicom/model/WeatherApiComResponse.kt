@@ -55,7 +55,7 @@ data class Hour(
     val wind: String
 )
 
-fun ForecastResponse.convertToDayWeather(cityId: String): List<DayWeather> {
+fun ForecastResponse.convertToDayWeather(cityId: Int): List<DayWeather> {
     val forecastDay = forecast.forecastDay
     val dayWeatherList = mutableListOf<DayWeather>()
     forecastDay.forEach {
@@ -73,7 +73,7 @@ fun ForecastResponse.convertToHourWeather(dayWeather: DayWeather): List<HourWeat
     val hourWeatherList = mutableListOf<HourWeather>()
     val dayItem = getDayItemFromListItems(forecastDay, dayWeather.date)
     dayItem?.hourWeather?.forEach {
-            val hourWeather = HourWeather(it.time, it.temp, it.precipitation, it.wind, dayWeather.id)
+            val hourWeather = HourWeather(time = it.time, temperature = it.temp, precipitation = it.precipitation, wind = it.wind, dayWeatherId = dayWeather.id)
         hourWeatherList.add(hourWeather)
     }
     return hourWeatherList

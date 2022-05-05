@@ -6,5 +6,5 @@ import com.example.perfectweatherallyear.model.Location
 
 interface WeatherRepository {
     suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>>
-    suspend fun getHourlyWeather(daysAmount: Int, cityId: String, date: String): DataResult<List<HourWeather>>
+    suspend fun getHourlyWeather(daysAmount: Int, cityId: Int, date: String): DataResult<List<HourWeather>>
 }

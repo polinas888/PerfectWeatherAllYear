@@ -24,7 +24,7 @@ class DetailWeatherViewModel(val repository: WeatherRepository) : ViewModel() {
         }
     }
 
-    private suspend fun getHourlyWeather(daysAmount: Int, cityId: String, date: String)
+    private suspend fun getHourlyWeather(daysAmount: Int, cityId: Int, date: String)
             : DataResult<List<HourWeather>> {
         return repository.getHourlyWeather(daysAmount, cityId, date)
     }

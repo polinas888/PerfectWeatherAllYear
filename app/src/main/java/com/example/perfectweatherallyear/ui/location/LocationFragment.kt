@@ -17,8 +17,8 @@ import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
 class LocationFragment: Fragment() {
-    private val locations: List<Location> = listOf(Location(name = "Moscow"), Location(name = "London"),
-        Location(name = "New-York"))
+    private val locations: List<Location> = listOf(Location(id = 1, name = "Moscow"), Location(id = 2, name = "London"),
+        Location(id = 3, name = "New-York"))
     private lateinit var binding: FragmentLocationBinding
     private lateinit var locationAdapter: LocationAdapter
 
