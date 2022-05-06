@@ -15,7 +15,7 @@ class DetailWeatherViewModel(val repository: WeatherRepository) : ViewModel() {
 
     fun loadData(dayWeather: DayWeather) {
         viewModelScope.launch {
-            when (val hourlyWeather = getHourlyWeather(DAYS_NUMBER, dayWeather.cityId, dayWeather.date)) {
+            when (val hourlyWeather = getHourlyWeather(DAYS_NUMBER, dayWeather.cityId, dayWeather.date, dayWeather.id)) {
                 is DataResult.Ok -> {
                     detailWeatherLiveData.value = hourlyWeather.response!!
                 }
@@ -24,8 +24,8 @@ class DetailWeatherViewModel(val repository: WeatherRepository) : ViewModel() {
         }
     }
 
-    private suspend fun getHourlyWeather(daysAmount: Int, cityId: Int, date: String)
+    private suspend fun getHourlyWeather(daysAmount: Int, cityId: Int, date: String, dayWeatherId: Int)
             : DataResult<List<HourWeather>> {
-        return repository.getHourlyWeather(daysAmount, cityId, date)
+        return repository.getHourlyWeather(daysAmount, cityId, date, dayWeatherId)
     }
 }

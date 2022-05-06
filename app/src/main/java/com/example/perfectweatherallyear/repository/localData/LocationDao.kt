@@ -17,4 +17,7 @@ interface LocationDao {
     @Query("SELECT location.name FROM location JOIN dayweather ON location.id = dayweather.cityId " +
             "WHERE location.id =:cityId")
     suspend fun getCityNameByCityId(cityId: Int): String
+
+    @Query("SELECT * FROM location")
+    suspend fun getLocations(): List<Location>
 }

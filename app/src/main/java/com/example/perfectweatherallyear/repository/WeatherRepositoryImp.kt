@@ -19,9 +19,14 @@ class WeatherRepositoryImp @Inject constructor(private val remoteDataSource: Rem
     ): DataResult<List<DayWeather>> {
         return if (mConnectionDetector.isConnectingToInternet())
             try {
-                val remoteWeekWeather =
+               val remoteWeekWeather =
                     remoteDataSource.getWeatherForecast(location.name, daysAmount)
+                val localWeatherForecast =
+                    localWeatherDataSource.getWeatherForecast(location.id, daysAmount)
+                if(localWeatherForecast.isEmpty())
                 localWeatherDataSource.insertDayWeather(remoteWeekWeather)
+                else
+                    localWeatherDataSource.updateDayWeather(remoteWeekWeather)
 
                 val localWeekWeather =
                     localWeatherDataSource.getWeatherForecast(location.id, daysAmount)
@@ -35,19 +40,19 @@ class WeatherRepositoryImp @Inject constructor(private val remoteDataSource: Rem
     }
 
     override suspend fun getHourlyWeather(
-        daysAmount: Int, cityId: Int, date: String
+        daysAmount: Int, cityId: Int, date: String, dayWeatherId: Int
     ): DataResult<List<HourWeather>> {
         return if (mConnectionDetector.isConnectingToInternet())
             try {
                 val hourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, cityId, date)
                 localWeatherDataSource.insertHourlyWeather(hourlyWeather)
-                val localHourWeather = localWeatherDataSource.getHourlyWeather()
+                val localHourWeather = localWeatherDataSource.getHourlyWeather(dayWeatherId)
                 DataResult.Ok(localHourWeather)
             } catch (e: Exception) {
                 DataResult.Error(e.message.toString())
             }
         else {
-            DataResult.Ok(localWeatherDataSource.getHourlyWeather())
+            DataResult.Ok(localWeatherDataSource.getHourlyWeather(dayWeatherId))
         }
     }
 }

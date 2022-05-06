@@ -54,12 +54,14 @@ class WeatherForecastFragment : Fragment() {
             weatherForecastRecyclerView.adapter = weatherForecastAdapter
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
+        NotificationUtil.displayNotification(requireContext())
+    }
 
+    override fun onResume() {
+        super.onResume()
         weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner, {
             weatherForecastAdapter.setData(it)
         })
-
-        NotificationUtil.displayNotification(requireContext())
     }
 
     private fun adapterOnClick(dayWeather: DayWeather) {

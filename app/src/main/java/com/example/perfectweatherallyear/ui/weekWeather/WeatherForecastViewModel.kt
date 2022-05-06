@@ -11,7 +11,7 @@ import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.WeatherRepository
 import kotlinx.coroutines.launch
 
-const val DAYS_NUMBER = 7
+const val DAYS_NUMBER = 3
 
 class WeatherForecastViewModel(
     val weatherRepository: WeatherRepository,

@@ -17,8 +17,6 @@ import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
 class LocationFragment: Fragment() {
-    private val locations: List<Location> = listOf(Location(id = 1, name = "Moscow"), Location(id = 2, name = "London"),
-        Location(id = 3, name = "New-York"))
     private lateinit var binding: FragmentLocationBinding
     private lateinit var locationAdapter: LocationAdapter
 
@@ -37,25 +35,30 @@ class LocationFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.apply {
-            locationAdapter = LocationAdapter(locations) { location -> adapterOnClick(location) }
+            locationAdapter = LocationAdapter { location -> adapterOnClick(location) }
             locationsRecyclerView.adapter = locationAdapter
             locationsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
-        locationViewModel.loadLocationsToDB(locations)
+        initViewModel()
     }
+
+    private fun initViewModel(){
+        locationViewModel.loadLocation()
+        locationViewModel.listLocationsLiveData.observe(viewLifecycleOwner) { locationAdapter.setData(it) }
+    }
+
+
 
     private fun adapterOnClick(location: Location) {
         val fragment = WeatherForecastFragment()
+            val args = Bundle()
+            val builder = GsonBuilder()
+            val gson = builder.create()
+            val result: String = gson.toJson(location)
 
-        val args = Bundle()
-        val builder = GsonBuilder()
-        val gson = builder.create()
-        val result: String = gson.toJson(location)
-
-        args.putString(ARG_LOCATION, result)
-        fragment.changeFragment(args, parentFragmentManager)
+            args.putString(ARG_LOCATION, result)
+            fragment.changeFragment(args, parentFragmentManager)
     }
 }
 
