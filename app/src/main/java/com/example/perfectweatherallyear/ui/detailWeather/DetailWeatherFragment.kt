@@ -10,14 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.databinding.FragmentDetailWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
 const val ARG_DAY_WEATHER: String = "DAY_WEATHER"
 class DetailWeatherFragment : Fragment() {
-    private var detailWeatherList: List<HourWeather> = listOf()
     private lateinit var detailWeatherForecastAdapter: DetailWeatherForecastAdapter
     private lateinit var binding: FragmentDetailWeatherBinding
     lateinit var dayWeather: DayWeather
@@ -45,17 +43,19 @@ class DetailWeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        detailWeatherViewModel.loadData(dayWeather)
         binding.apply {
-            detailWeatherForecastAdapter = DetailWeatherForecastAdapter(detailWeatherList)
+            detailWeatherForecastAdapter = DetailWeatherForecastAdapter()
             hourWeatherRecyclerView.adapter = detailWeatherForecastAdapter
             hourWeatherRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
+        initViewModel()
 
-        detailWeatherViewModel.detailWeatherLiveData.observe(viewLifecycleOwner, {
-            detailWeatherForecastAdapter.setData(it)
-        })
 
         NotificationUtil.displayNotification(requireContext())
+    }
+
+    private fun initViewModel(){
+        detailWeatherViewModel.loadData(dayWeather)
+        detailWeatherViewModel.detailWeatherLiveData.observe(viewLifecycleOwner) { detailWeatherForecastAdapter.setData(it) }
     }
 }

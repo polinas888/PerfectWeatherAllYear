@@ -23,9 +23,9 @@ class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom,
     }
 
     override suspend fun getWeatherForecast(city: String, daysAmount: Int): List<DayWeather> {
-        val weekWeather = remoteService.getWeatherForecast(city, daysAmount)
+        val forecast = remoteService.getWeatherForecast(city, daysAmount)
         val cityId = localLocationService.getLocationIdByCityName(city)
-        return weekWeather.convertToDayWeather(cityId)
+        return forecast.convertToDayWeather(cityId)
     }
 
     override suspend fun getHourlyWeather(daysAmount: Int, cityId: Int, date: String): List<HourWeather> {

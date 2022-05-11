@@ -7,8 +7,8 @@ import com.example.perfectweatherallyear.databinding.ItemHourWeatherBinding
 import com.example.perfectweatherallyear.model.HourWeather
 
 class DetailWeatherForecastAdapter(
-    private var detailWeatherList: List<HourWeather>
 ) : RecyclerView.Adapter<DetailWeatherForecastAdapter.ViewHolder>() {
+    private val detailWeatherList: MutableList<HourWeather> = mutableListOf()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemHourWeatherBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
@@ -24,7 +24,8 @@ class DetailWeatherForecastAdapter(
     override fun getItemCount() = detailWeatherList.size
 
     fun setData(newData: List<HourWeather>) {
-        detailWeatherList = newData
+        detailWeatherList.clear()
+        detailWeatherList.addAll(newData)
         notifyDataSetChanged()
     }
 

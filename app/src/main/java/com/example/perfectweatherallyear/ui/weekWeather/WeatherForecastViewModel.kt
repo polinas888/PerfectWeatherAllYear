@@ -20,7 +20,7 @@ class WeatherForecastViewModel(
 ) : ViewModel() {
     val weatherForecastLiveData = MutableLiveData<List<DayWeather>>()
 
-    fun loadData(location: Location) {
+    fun loadForecast(location: Location) {
         viewModelScope.launch {
             when (val weatherForecast = getWeatherForecast(location, DAYS_NUMBER)) {
                 is DataResult.Ok -> {
@@ -32,10 +32,7 @@ class WeatherForecastViewModel(
         }
     }
 
-    private suspend fun getWeatherForecast(
-        location: Location,
-        daysAmount: Int
-    ): DataResult<List<DayWeather>> {
+    private suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
         return weatherRepository.getWeatherForecast(location, daysAmount)
     }
 }

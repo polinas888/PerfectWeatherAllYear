@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 const val ARG_LOCATION: String = "LOCATION"
 class WeatherForecastFragment : Fragment() {
-    private var weekWeatherList: List<DayWeather> = listOf()
     private lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeatherForecastBinding
     lateinit var location: Location
@@ -32,10 +31,7 @@ class WeatherForecastFragment : Fragment() {
         weatherForecastViewModelFactory
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentWeatherForecastBinding.inflate(layoutInflater)
         requireContext().appComponent.inject(this)
 
@@ -48,20 +44,18 @@ class WeatherForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        weekWeatherViewModel.loadData(location)
         binding.apply {
-            weatherForecastAdapter = WeatherForecastAdapter(weekWeatherList) { dayWeather -> adapterOnClick(dayWeather) }
+            weatherForecastAdapter = WeatherForecastAdapter{ dayWeather -> adapterOnClick(dayWeather) }
             weatherForecastRecyclerView.adapter = weatherForecastAdapter
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
+        initViewModel()
         NotificationUtil.displayNotification(requireContext())
     }
 
-    override fun onResume() {
-        super.onResume()
-        weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner, {
-            weatherForecastAdapter.setData(it)
-        })
+    private fun initViewModel(){
+        weekWeatherViewModel.loadForecast(location)
+        weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner) { weatherForecastAdapter.setData(it) }
     }
 
     private fun adapterOnClick(dayWeather: DayWeather) {
