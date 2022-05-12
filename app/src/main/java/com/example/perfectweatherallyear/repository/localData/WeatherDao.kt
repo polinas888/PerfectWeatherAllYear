@@ -43,7 +43,7 @@ interface WeatherDao {
     @Query("SELECT * FROM dayweather WHERE cityId = :city AND date = :date")
     suspend fun getDayWeatherByCityAndDate(city: Int, date: String): DayWeather
 
-    @Query("SELECT * FROM dayweather JOIN location ON location.id = dayweather.cityId WHERE dayweather.cityId = :cityId LIMIT :daysAmount")
+    @Query("SELECT * FROM dayweather WHERE dayweather.cityId = :cityId LIMIT :daysAmount")
     suspend fun getWeatherForecast(cityId: Int, daysAmount: Int): List<DayWeather>
 
     @Query("SELECT * FROM hourweather WHERE hourweather.dayWeatherId = :dayWeatherId")
