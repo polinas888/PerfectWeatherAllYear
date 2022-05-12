@@ -2,20 +2,18 @@ package com.example.perfectweatherallyear.ui.weekWeather
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
 
 class WeatherForecastAdapter(
     private var weekWeatherList: List<DayWeather>,
-    private var listener: OnItemClick,
-    private var parentFragmentManager: FragmentManager
+    private var onItemClick: (DayWeather) -> Unit
 ) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding = WeatherRowItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        return ViewHolder(binding, listener)
+        return ViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
@@ -35,12 +33,12 @@ class WeatherForecastAdapter(
         return weekWeatherList.get(position)
         }
 
-    inner class ViewHolder(private val binding: WeatherRowItemBinding, listener: OnItemClick) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: WeatherRowItemBinding, onItemClick: (DayWeather) -> Unit) : RecyclerView.ViewHolder(binding.root) {
         private var currentWeather: DayWeather? = null
 
         init {
             itemView.setOnClickListener {
-                currentWeather?.let { dayWeather -> listener.onItemClick(dayWeather, parentFragmentManager) }
+                currentWeather?.let { currentWeather -> onItemClick(currentWeather) }
             }
         }
 
@@ -48,10 +46,6 @@ class WeatherForecastAdapter(
             binding.dayWeather = weather
             currentWeather = weather
         }
-    }
-
-    interface OnItemClick {
-        fun onItemClick(dayWeather: DayWeather, parentFragmentManager: FragmentManager)
     }
 }
 
