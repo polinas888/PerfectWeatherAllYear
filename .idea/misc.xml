@@ -3,14 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/activity_main.xml" value="0.1331521739130435" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/fragment_detail_weather.xml" value="0.1331521739130435" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/fragment_location.xml" value="0.2421875" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/fragment_weather_forecast.xml" value="0.16145833333333334" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/fragment_week_weather.xml" value="0.1331521739130435" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/item_hour_weather.xml" value="0.18342391304347827" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/location_item.xml" value="0.215625" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/weather_row_item.xml" value="0.16799999999999998" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/fragment_detail_weather.xml" value="0.11778115501519756" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/fragment_weather_forecast.xml" value="0.11778115501519756" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2346014492753623" />
         <entry key="app/src/main/res/layout/fragment_detail_weather.xml" value="0.22644927536231885" />
         <entry key="app/src/main/res/layout/fragment_weather_per_week.xml" value="0.2346014492753623" />
