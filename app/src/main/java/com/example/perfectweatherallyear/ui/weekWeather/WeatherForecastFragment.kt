@@ -18,6 +18,7 @@ import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
+
 const val ARG_LOCATION: String = "LOCATION"
 class WeatherForecastFragment : Fragment() {
     private lateinit var weatherForecastAdapter: WeatherForecastAdapter
@@ -51,6 +52,11 @@ class WeatherForecastFragment : Fragment() {
         }
         initViewModel()
         NotificationUtil.displayNotification(requireContext())
+
+        binding.swipeRefresh.setOnRefreshListener {
+            weekWeatherViewModel.loadForecast(location)
+            binding.swipeRefresh.isRefreshing = false
+        }
     }
 
     private fun initViewModel(){

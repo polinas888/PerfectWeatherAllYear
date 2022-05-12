@@ -49,9 +49,12 @@ class DetailWeatherFragment : Fragment() {
             hourWeatherRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
         initViewModel()
-
-
         NotificationUtil.displayNotification(requireContext())
+
+        binding.swipeRefresh.setOnRefreshListener {
+            detailWeatherViewModel.loadData(dayWeather)
+            binding.swipeRefresh.isRefreshing = false
+        }
     }
 
     private fun initViewModel(){
