@@ -2,18 +2,20 @@ package com.example.perfectweatherallyear.ui.weekWeather
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
 
 class WeatherForecastAdapter(
     private var weekWeatherList: List<DayWeather>,
-    private val onItemClick: (DayWeather) -> Unit
+    private var listener: OnItemClick,
+    private var parentFragmentManager: FragmentManager
 ) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding = WeatherRowItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        return ViewHolder(binding, onItemClick)
+        return ViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
@@ -33,14 +35,12 @@ class WeatherForecastAdapter(
         return weekWeatherList.get(position)
         }
 
-    inner class ViewHolder(val binding: WeatherRowItemBinding, val onClick: (DayWeather) -> Unit) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: WeatherRowItemBinding, listener: OnItemClick) : RecyclerView.ViewHolder(binding.root) {
         private var currentWeather: DayWeather? = null
 
         init {
             itemView.setOnClickListener {
-                currentWeather?.let {
-                    onClick(it)
-                }
+                currentWeather?.let { dayWeather -> listener.onItemClick(dayWeather, parentFragmentManager) }
             }
         }
 
@@ -48,6 +48,10 @@ class WeatherForecastAdapter(
             binding.dayWeather = weather
             currentWeather = weather
         }
+    }
+
+    interface OnItemClick {
+        fun onItemClick(dayWeather: DayWeather, parentFragmentManager: FragmentManager)
     }
 }
 
