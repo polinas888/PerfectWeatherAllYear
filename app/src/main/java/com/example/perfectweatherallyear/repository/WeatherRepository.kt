@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface WeatherRepository {
     suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>>
-    suspend fun getHourlyWeatherPaged(daysAmount: Int, dayWeather: DayWeather): DataResult<Flow<PagingData<HourWeather>>>
+    suspend fun getHourlyWeatherPaged(daysAmount: Int, dayWeather: DayWeather): Flow<DataResult<PagingData<HourWeather>>>
 }

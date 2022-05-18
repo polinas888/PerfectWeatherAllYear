@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 const val ARG_DAY_WEATHER: String = "DAY_WEATHER"
+
 class DetailWeatherFragment : Fragment() {
     private lateinit var detailWeatherForecastAdapter: DetailWeatherForecastAdapter
     private lateinit var binding: FragmentDetailWeatherBinding
@@ -25,7 +26,7 @@ class DetailWeatherFragment : Fragment() {
     @Inject
     lateinit var detailWeatherViewModelFactory: DetailWeatherViewModelFactory
 
-    private val detailWeatherViewModel by viewModels<DetailWeatherViewModel>{
+    private val detailWeatherViewModel by viewModels<DetailWeatherViewModel> {
         detailWeatherViewModelFactory
     }
 
@@ -54,20 +55,19 @@ class DetailWeatherFragment : Fragment() {
         NotificationUtil.displayNotification(requireContext())
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
 //        val pager = detailWeatherViewModel.loadData(dayWeather)
 //        lifecycleScope.launch {
 //            pager.collectLatest {
 //                detailWeatherForecastAdapter.submitData(it)
 //            }
 //        }
-
+        detailWeatherViewModel.loadData(dayWeather)
         lifecycleScope.launchWhenStarted {
-            detailWeatherViewModel.loadData(dayWeather)
             detailWeatherViewModel.detailWeatherFlowData.collectLatest {
                 detailWeatherForecastAdapter.submitData(it)
             }
         }
-     //   detailWeatherViewModel.detailWeatherLiveData.observe(viewLifecycleOwner) { detailWeatherForecastAdapter.setData(it) }
+        //   detailWeatherViewModel.detailWeatherLiveData.observe(viewLifecycleOwner) { detailWeatherForecastAdapter.setData(it) }
     }
 }

@@ -12,6 +12,8 @@ import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.localData.LocalWeatherDataSource
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.RemoteWeatherDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class WeatherRepositoryImp @Inject constructor(
@@ -20,7 +22,10 @@ class WeatherRepositoryImp @Inject constructor(
 ) : WeatherRepository {
     private val mConnectionDetector: ConnectionDetector = ConnectionDetector(context)
 
-    override suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
+    override suspend fun getWeatherForecast(
+        location: Location,
+        daysAmount: Int
+    ): DataResult<List<DayWeather>> {
         return if (mConnectionDetector.isConnectingToInternet())
             try {
                 val remoteWeekWeather =
@@ -38,20 +43,40 @@ class WeatherRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getHourlyWeatherPaged(daysAmount: Int, dayWeather: DayWeather
-    ): DataResult<Flow<PagingData<HourWeather>>>  {
+    override suspend fun getHourlyWeatherPaged(daysAmount: Int, dayWeather: DayWeather): Flow<DataResult<PagingData<HourWeather>>> {
         return if (mConnectionDetector.isConnectingToInternet())
             try {
                 val remoteHourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, dayWeather.cityId, dayWeather.date)
                 localWeatherDataSource.upsertHourlyWeather(remoteHourlyWeather)
-           //     DataResult.Ok(localWeatherDataSource.getHourlyWeatherPaged(dayWeather.id))
-                DataResult.Ok(getHourlyWeatherPagingData(dayWeather.id))
+                getHourlyWeatherPagingData(dayWeather.id)
+                    .map {
+                        DataResult.Ok(it)
+                    }
             } catch (e: Exception) {
-                DataResult.Error(e.message.toString())
-            } else {
-            DataResult.Ok(getHourlyWeatherPagingData(dayWeather.id))
+                flowOf(DataResult.Error(e.message.toString()))
+            }
+        else {
+            getHourlyWeatherPagingData(dayWeather.id)
+                .map {
+                    DataResult.Ok(it)
+                }
         }
     }
+
+//    override suspend fun getHourlyWeatherPaged(daysAmount: Int, dayWeather: DayWeather
+//    ): Flow<DataResult<PagingData<HourWeather>>>  {
+//        return if (mConnectionDetector.isConnectingToInternet())
+//            try {
+//                val remoteHourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, dayWeather.cityId, dayWeather.date)
+//                localWeatherDataSource.upsertHourlyWeather(remoteHourlyWeather)
+//           //     DataResult.Ok(localWeatherDataSource.getHourlyWeatherPaged(dayWeather.id))
+//                DataResult.Ok(getHourlyWeatherPagingData(dayWeather.id))
+//            } catch (e: Exception) {
+//                DataResult.Error(e.message.toString())
+//            } else {
+//            DataResult.Ok(getHourlyWeatherPagingData(dayWeather.id))
+//        }
+//    }
 
     @OptIn(ExperimentalPagingApi::class)
     private fun getHourlyWeatherPagingData(dayWeatherId: Int): Flow<PagingData<HourWeather>> {
