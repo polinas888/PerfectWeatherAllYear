@@ -62,8 +62,8 @@ class DetailWeatherFragment : Fragment() {
 //            }
 //        }
 
+        detailWeatherViewModel.loadData(dayWeather)
         lifecycleScope.launchWhenStarted {
-            detailWeatherViewModel.loadData(dayWeather)
             detailWeatherViewModel.detailWeatherFlowData.collectLatest {
                 detailWeatherForecastAdapter.submitData(it)
             }
