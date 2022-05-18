@@ -63,21 +63,6 @@ class WeatherRepositoryImp @Inject constructor(
         }
     }
 
-//    override suspend fun getHourlyWeatherPaged(daysAmount: Int, dayWeather: DayWeather
-//    ): Flow<DataResult<PagingData<HourWeather>>>  {
-//        return if (mConnectionDetector.isConnectingToInternet())
-//            try {
-//                val remoteHourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, dayWeather.cityId, dayWeather.date)
-//                localWeatherDataSource.upsertHourlyWeather(remoteHourlyWeather)
-//           //     DataResult.Ok(localWeatherDataSource.getHourlyWeatherPaged(dayWeather.id))
-//                DataResult.Ok(getHourlyWeatherPagingData(dayWeather.id))
-//            } catch (e: Exception) {
-//                DataResult.Error(e.message.toString())
-//            } else {
-//            DataResult.Ok(getHourlyWeatherPagingData(dayWeather.id))
-//        }
-//    }
-
     @OptIn(ExperimentalPagingApi::class)
     private fun getHourlyWeatherPagingData(dayWeatherId: Int): Flow<PagingData<HourWeather>> {
         return Pager(

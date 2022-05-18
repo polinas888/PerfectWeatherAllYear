@@ -56,18 +56,11 @@ class DetailWeatherFragment : Fragment() {
     }
 
     private fun initViewModel() {
-//        val pager = detailWeatherViewModel.loadData(dayWeather)
-//        lifecycleScope.launch {
-//            pager.collectLatest {
-//                detailWeatherForecastAdapter.submitData(it)
-//            }
-//        }
         detailWeatherViewModel.loadData(dayWeather)
         lifecycleScope.launchWhenStarted {
             detailWeatherViewModel.detailWeatherFlowData.collectLatest {
                 detailWeatherForecastAdapter.submitData(it)
             }
         }
-        //   detailWeatherViewModel.detailWeatherLiveData.observe(viewLifecycleOwner) { detailWeatherForecastAdapter.setData(it) }
     }
 }
