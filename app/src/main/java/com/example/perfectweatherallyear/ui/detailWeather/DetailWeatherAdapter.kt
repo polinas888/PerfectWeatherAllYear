@@ -2,20 +2,22 @@ package com.example.perfectweatherallyear.ui.detailWeather
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.databinding.ItemHourWeatherBinding
 import com.example.perfectweatherallyear.model.HourWeather
 
-class DetailWeatherForecastAdapter(
-) : RecyclerView.Adapter<DetailWeatherForecastAdapter.ViewHolder>() {
+class DetailWeatherForecastAdapter
+    : PagingDataAdapter<HourWeather, DetailWeatherForecastAdapter.WeatherViewHolder>(POST_COMPARATOR) {
     private val detailWeatherList: MutableList<HourWeather> = mutableListOf()
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): WeatherViewHolder {
         val binding = ItemHourWeatherBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        return ViewHolder(binding)
+        return WeatherViewHolder(binding)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: WeatherViewHolder, position: Int) {
         getDayWeather(position).also {
             viewHolder.bind(it)
         }
@@ -33,7 +35,20 @@ class DetailWeatherForecastAdapter(
         return detailWeatherList.get(position)
     }
 
-    inner class ViewHolder(val binding: ItemHourWeatherBinding) : RecyclerView.ViewHolder(binding.root) {
+    companion object {
+        val POST_COMPARATOR = object : DiffUtil.ItemCallback<HourWeather>() {
+
+            override fun areContentsTheSame(oldItem: HourWeather, newItem: HourWeather): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areItemsTheSame(oldItem: HourWeather, newItem: HourWeather): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
+    }
+
+    inner class WeatherViewHolder(val binding: ItemHourWeatherBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(hourWeather: HourWeather) {
             binding.hourWeather = hourWeather
         }

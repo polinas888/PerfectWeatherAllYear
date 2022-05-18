@@ -1,6 +1,7 @@
 package com.example.perfectweatherallyear.repository.localData
 
 import android.database.sqlite.SQLiteConstraintException
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
@@ -47,5 +48,5 @@ interface WeatherDao {
     suspend fun getWeatherForecast(cityId: Int, daysAmount: Int): List<DayWeather>
 
     @Query("SELECT * FROM hourweather WHERE hourweather.dayWeatherId = :dayWeatherId")
-    suspend fun getHourlyWeather(dayWeatherId: Int): List<HourWeather>
+    fun getHourlyWeatherPaged(dayWeatherId: Int): PagingSource<Int, HourWeather>
 }

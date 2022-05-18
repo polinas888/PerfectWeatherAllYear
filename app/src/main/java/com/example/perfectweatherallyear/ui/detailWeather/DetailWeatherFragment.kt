@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.databinding.FragmentDetailWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 const val ARG_DAY_WEATHER: String = "DAY_WEATHER"
@@ -49,13 +51,23 @@ class DetailWeatherFragment : Fragment() {
             hourWeatherRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
         initViewModel()
-
-
         NotificationUtil.displayNotification(requireContext())
     }
 
     private fun initViewModel(){
-        detailWeatherViewModel.loadData(dayWeather)
-        detailWeatherViewModel.detailWeatherLiveData.observe(viewLifecycleOwner) { detailWeatherForecastAdapter.setData(it) }
+//        val pager = detailWeatherViewModel.loadData(dayWeather)
+//        lifecycleScope.launch {
+//            pager.collectLatest {
+//                detailWeatherForecastAdapter.submitData(it)
+//            }
+//        }
+
+        lifecycleScope.launchWhenStarted {
+            detailWeatherViewModel.loadData(dayWeather)
+            detailWeatherViewModel.detailWeatherFlowData.collectLatest {
+                detailWeatherForecastAdapter.submitData(it)
+            }
+        }
+     //   detailWeatherViewModel.detailWeatherLiveData.observe(viewLifecycleOwner) { detailWeatherForecastAdapter.setData(it) }
     }
 }

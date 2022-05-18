@@ -1,12 +1,17 @@
 package com.example.perfectweatherallyear.repository
 
 import android.content.Context
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.perfectweatherallyear.api.ConnectionDetector
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.localData.LocalWeatherDataSource
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.RemoteWeatherDataSource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class WeatherRepositoryImp @Inject constructor(
@@ -33,20 +38,27 @@ class WeatherRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getHourlyWeather(
-        daysAmount: Int, dayWeather: DayWeather
-    ): DataResult<List<HourWeather>> {
+    override suspend fun getHourlyWeatherPaged(daysAmount: Int, dayWeather: DayWeather
+    ): DataResult<Flow<PagingData<HourWeather>>>  {
         return if (mConnectionDetector.isConnectingToInternet())
             try {
                 val remoteHourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, dayWeather.cityId, dayWeather.date)
                 localWeatherDataSource.upsertHourlyWeather(remoteHourlyWeather)
-                val localHourWeather = localWeatherDataSource.getHourlyWeather(dayWeather.id)
-                DataResult.Ok(localHourWeather)
+           //     DataResult.Ok(localWeatherDataSource.getHourlyWeatherPaged(dayWeather.id))
+                DataResult.Ok(getHourlyWeatherPagingData(dayWeather.id))
             } catch (e: Exception) {
                 DataResult.Error(e.message.toString())
-            }
-        else {
-            DataResult.Ok(localWeatherDataSource.getHourlyWeather(dayWeather.id))
+            } else {
+            DataResult.Ok(getHourlyWeatherPagingData(dayWeather.id))
         }
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    private fun getHourlyWeatherPagingData(dayWeatherId: Int): Flow<PagingData<HourWeather>> {
+        return Pager(
+            PagingConfig(pageSize = 6)
+        ) {
+            localWeatherDataSource.getHourlyWeatherPaged(dayWeatherId)
+        }.flow
     }
 }

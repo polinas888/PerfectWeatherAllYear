@@ -1,5 +1,6 @@
 package com.example.perfectweatherallyear.repository.localData
 
+import androidx.paging.PagingSource
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import javax.inject.Inject
@@ -33,7 +34,7 @@ class LocalWeatherDataSource @Inject constructor(weatherDao: WeatherDao) : Weath
         return localService.getWeatherForecast(cityId, daysAmount)
     }
 
-    override suspend fun getHourlyWeather(dayWeatherId: Int): List<HourWeather> {
-        return localService.getHourlyWeather(dayWeatherId)
+    override fun getHourlyWeatherPaged(dayWeatherId: Int): PagingSource<Int, HourWeather> {
+        return localService.getHourlyWeatherPaged(dayWeatherId)
     }
 }
