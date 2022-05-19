@@ -5,11 +5,7 @@ import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToDayWeather
 import javax.inject.Inject
 
-class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom) : RemoteWeatherDataSource() {
-
-    private val remoteService: WeatherApiCom by lazy {
-        weatherApiCom
-    }
+class ForecastApiComDataSource @Inject constructor(val remoteService: WeatherApiCom) : RemoteWeatherDataSource() {
 
     override suspend fun getWeekWeather(city: String, daysAmount: Int): DataResult<List<DayWeather>> {
         val response = remoteService.getWeekWeather(city, daysAmount)

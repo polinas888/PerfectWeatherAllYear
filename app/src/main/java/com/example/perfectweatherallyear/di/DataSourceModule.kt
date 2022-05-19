@@ -1,4 +1,4 @@
-package com.example.perfectweatherallyear.api
+package com.example.perfectweatherallyear.di
 
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.ForecastApiComDataSource
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.RemoteWeatherDataSource
@@ -10,7 +10,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ApiRepositoryFactory {
+object DataSourceModule {
     @Provides
     fun provideRemoteWeatherDataSource(weatherApiCom: WeatherApiCom): RemoteWeatherDataSource {
         return ForecastApiComDataSource(weatherApiCom)
