@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
@@ -24,7 +23,7 @@ class WeekWeatherFragment : Fragment() {
     private lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeekWeatherBinding
     private val listener: OnItemClick = object : OnItemClick {
-        override fun onItemClick(dayWeather: DayWeather, parentFragmentManager: FragmentManager) {
+        override fun onItemClick(dayWeather: DayWeather) {
             onAdaptorItemClick(dayWeather)
         }
     }
@@ -49,19 +48,23 @@ class WeekWeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         weekWeatherViewModel.loadData()
         binding.apply {
-            weatherForecastAdapter = WeatherForecastAdapter(weekWeatherList, listener, parentFragmentManager)
+            weatherForecastAdapter = WeatherForecastAdapter(weekWeatherList, listener)
             weatherForecastRecyclerView.adapter = weatherForecastAdapter
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        weekWeatherViewModel.weekWeatherLiveData.observe(viewLifecycleOwner, {
+        weekWeatherViewModel.weekWeatherLiveData.observe(viewLifecycleOwner) {
             weatherForecastAdapter.setData(it)
-        })
+        }
 
         NotificationUtil.displayNotification(requireContext())
     }
 
     fun onAdaptorItemClick(dayWeather: DayWeather) {
+        navigateToFragment(dayWeather)
+    }
+
+    private fun navigateToFragment(dayWeather: DayWeather) {
         val fragment = DetailWeatherFragment()
 
         val args = Bundle()
