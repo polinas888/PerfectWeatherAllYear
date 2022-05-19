@@ -2,15 +2,13 @@ package com.example.perfectweatherallyear.ui.weekWeather
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
 
 class WeatherForecastAdapter(
     private var weekWeatherList: List<DayWeather>,
-    private var listener: OnItemClick,
-    private var parentFragmentManager: FragmentManager
+    private var listener: OnItemClick
 ) : RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -40,7 +38,7 @@ class WeatherForecastAdapter(
 
         init {
             itemView.setOnClickListener {
-                currentWeather?.let { dayWeather -> listener.onItemClick(dayWeather, parentFragmentManager) }
+                currentWeather?.let { dayWeather -> listener.onItemClick(dayWeather) }
             }
         }
 
@@ -51,7 +49,7 @@ class WeatherForecastAdapter(
     }
 
     interface OnItemClick {
-        fun onItemClick(dayWeather: DayWeather, parentFragmentManager: FragmentManager)
+        fun onItemClick(dayWeather: DayWeather)
     }
 }
 
