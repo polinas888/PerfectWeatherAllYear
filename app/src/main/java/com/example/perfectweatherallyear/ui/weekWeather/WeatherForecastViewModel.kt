@@ -1,6 +1,5 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,8 +14,7 @@ const val DAYS_NUMBER = 3
 
 class WeatherForecastViewModel(
     val weatherRepository: WeatherRepository,
-    val locationRepository: LocationRepository,
-    val context: Context
+    val locationRepository: LocationRepository
 ) : ViewModel() {
     val weatherForecastLiveData = MutableLiveData<List<DayWeather>>()
 

@@ -5,13 +5,16 @@ import com.example.perfectweatherallyear.api.ConnectionDetector
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
+import com.example.perfectweatherallyear.repository.localData.LocalLocationDataSource
 import com.example.perfectweatherallyear.repository.localData.LocalWeatherDataSource
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.RemoteWeatherDataSource
 import javax.inject.Inject
 
 class WeatherRepositoryImp @Inject constructor(
     private val remoteDataSource: RemoteWeatherDataSource,
-    private val localWeatherDataSource: LocalWeatherDataSource, context: Context
+    private val localWeatherDataSource: LocalWeatherDataSource,
+    private val localLocationDataSource: LocalLocationDataSource,
+    context: Context
 ) : WeatherRepository {
     private val mConnectionDetector: ConnectionDetector = ConnectionDetector(context)
 
@@ -38,7 +41,8 @@ class WeatherRepositoryImp @Inject constructor(
     ): DataResult<List<HourWeather>> {
         return if (mConnectionDetector.isConnectingToInternet())
             try {
-                val remoteHourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, dayWeather.cityId, dayWeather.date)
+                val cityName = localLocationDataSource.getCityNameByCityId(dayWeather.cityId)
+                val remoteHourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, dayWeather, cityName)
                 localWeatherDataSource.upsertHourlyWeather(remoteHourlyWeather)
                 val localHourWeather = localWeatherDataSource.getHourlyWeather(dayWeather.id)
                 DataResult.Ok(localHourWeather)

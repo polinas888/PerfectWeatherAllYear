@@ -19,9 +19,9 @@ import dagger.Provides
 object ApiRepositoryFactory {
 
     @Provides
-    fun provideWeatherRepository(remoteWeatherDataSource: RemoteWeatherDataSource, localWeatherDataSource: LocalWeatherDataSource, context: Context)
+    fun provideWeatherRepository(remoteWeatherDataSource: RemoteWeatherDataSource, localWeatherDataSource: LocalWeatherDataSource, localLocationDataSource: LocalLocationDataSource, context: Context)
     : WeatherRepository {
-        return WeatherRepositoryImp(remoteDataSource = remoteWeatherDataSource, localWeatherDataSource = localWeatherDataSource, context = context)
+        return WeatherRepositoryImp(remoteDataSource = remoteWeatherDataSource, localWeatherDataSource = localWeatherDataSource, localLocationDataSource = localLocationDataSource, context = context)
     }
 
     @Provides
