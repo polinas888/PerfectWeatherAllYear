@@ -34,8 +34,7 @@ class DetailWeatherFragment : Fragment() {
         binding = FragmentDetailWeatherBinding.inflate(layoutInflater)
         requireContext().appComponent.inject(this)
 
-        val builder = GsonBuilder()
-        val gson = builder.create()
+        val gson = GsonBuilder().create()
         dayWeather = gson.fromJson(arguments?.getString(ARG_DAY_WEATHER), DayWeather::class.java)
 
         return binding.root

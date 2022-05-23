@@ -7,7 +7,7 @@ import com.example.perfectweatherallyear.ui.weekWeather.WeatherForecastFragment
 import dagger.BindsInstance
 import dagger.Component
 
-@Component(modules = [ModuleViewModelFactory::class, ModuleService:: class, ApiRepositoryFactory:: class])
+@Component(modules = [ModuleViewModelFactory::class, ModuleService:: class, ApiRepositoryFactory:: class, ModuleDatabase:: class])
 interface AppComponent {
 
     @Component.Factory

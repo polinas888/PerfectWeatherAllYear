@@ -9,9 +9,9 @@ class ConnectionDetector(private val context: Context) {
     fun isConnectingToInternet(): Boolean {
         val cm: ConnectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected) {
-            return true;
+            if (cm.activeNetworkInfo?.isConnected == true ) {
+                return true
+            }
+            return false
         }
-        return false;
-    }
 }
