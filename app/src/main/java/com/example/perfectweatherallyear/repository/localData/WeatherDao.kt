@@ -8,11 +8,11 @@ import com.example.perfectweatherallyear.model.HourWeather
 @Dao
 interface WeatherDao {
 
-    /* don't use this method outside, use upsertForecast for insert or update object*/
+    /* don't use this method outside, use upsertForecast for insert or update object */
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertDayWeather(dataWeatherData: List<DayWeather>)
 
-    /* don't use this method outside, use upsertForecast for insert or update object*/
+    /* don't use this method outside, use upsertForecast for insert or update object */
     @Update
     suspend fun updateDayWeather(dataWeatherData: List<DayWeather>)
 
@@ -26,11 +26,11 @@ interface WeatherDao {
         }
     }
 
-    /* don't use this method outside, use upsertForecast for insert or update object*/
+    /* don't use this method outside, use upsertForecast for insert or update object */
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertHourlyWeather(dataWeatherData: List<HourWeather>)
 
-    /* don't use this method outside, use upsertForecast for insert or update object*/
+    /* don't use this method outside, use upsertForecast for insert or update object */
     @Update
     suspend fun updateHourlyWeather(dataWeatherData: List<HourWeather>)
 
