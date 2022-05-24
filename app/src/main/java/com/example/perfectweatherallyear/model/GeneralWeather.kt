@@ -1,7 +1,7 @@
 package com.example.perfectweatherallyear.model
 
 
-data class Weather(
+data class GeneralWeather(
     val temperatureMin: String,
     val temperatureMax: String,
     val precipitation: String,

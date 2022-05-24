@@ -4,13 +4,15 @@ import android.app.Application
 import android.content.Context
 import com.example.perfectweatherallyear.di.AppComponent
 import com.example.perfectweatherallyear.di.DaggerAppComponent
+import com.example.perfectweatherallyear.repository.localData.DatabaseFactory
 
 class AppApplication: Application() {
     lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.create()
+        appComponent = DaggerAppComponent.factory().create(applicationContext)
+        DatabaseFactory.initialize(this)
     }
 }
 

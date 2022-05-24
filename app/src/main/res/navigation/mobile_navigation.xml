@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/weekWeatherFragment">
+    app:startDestination="@id/locationFragment">
 
     <fragment
         android:id="@+id/weekWeatherFragment"
-        android:name="com.example.perfectweatherallyear.ui.weekWeather.WeekWeatherFragment"
+        android:name="com.example.perfectweatherallyear.ui.weekWeather.WeatherForecastFragment"
         android:label="fragment_week_weather"
-        tools:layout="@layout/fragment_week_weather" >
+        tools:layout="@layout/fragment_weather_forecast" >
         <action
             android:id="@+id/action_weekWeatherFragment_to_detailWeatherFragment"
             app:destination="@id/detailWeatherFragment" />
@@ -19,4 +19,12 @@
         android:name="com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment"
         android:label="fragment_detail_weather"
         tools:layout="@layout/fragment_detail_weather" />
+    <fragment
+        android:id="@+id/locationFragment"
+        android:name="com.example.perfectweatherallyear.ui.location.LocationFragment"
+        android:label="LocationFragment" >
+        <action
+            android:id="@+id/action_locationFragment_to_weekWeatherFragment"
+            app:destination="@id/weekWeatherFragment" />
+    </fragment>
 </navigation>
