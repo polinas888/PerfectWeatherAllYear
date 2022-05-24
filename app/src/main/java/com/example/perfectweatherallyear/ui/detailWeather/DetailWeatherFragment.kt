@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.databinding.FragmentDetailWeatherBinding
@@ -19,6 +20,7 @@ class DetailWeatherFragment : Fragment() {
     private lateinit var detailWeatherForecastAdapter: DetailWeatherForecastAdapter
     private lateinit var binding: FragmentDetailWeatherBinding
     lateinit var dayWeather: DayWeather
+    val args: DetailWeatherFragmentArgs by navArgs()
 
     @Inject
     lateinit var detailWeatherViewModelFactory: DetailWeatherViewModelFactory
@@ -34,8 +36,9 @@ class DetailWeatherFragment : Fragment() {
         binding = FragmentDetailWeatherBinding.inflate(layoutInflater)
         requireContext().appComponent.inject(this)
 
+        val dayWeatherArgs = args.dayWeather
         val gson = GsonBuilder().create()
-        dayWeather = gson.fromJson(arguments?.getString(ARG_DAY_WEATHER), DayWeather::class.java)
+        dayWeather = gson.fromJson(dayWeatherArgs, DayWeather::class.java)
 
         return binding.root
     }

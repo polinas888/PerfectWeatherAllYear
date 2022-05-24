@@ -6,12 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
-import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentLocationBinding
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.ui.weekWeather.ARG_LOCATION
 import com.example.perfectweatherallyear.ui.weekWeather.WeatherForecastFragment
 import com.google.gson.GsonBuilder
 import javax.inject.Inject
@@ -57,8 +56,8 @@ class LocationFragment: Fragment() {
             val gson = builder.create()
             val result: String = gson.toJson(location)
 
-            args.putString(ARG_LOCATION, result)
-            fragment.changeFragment(args, parentFragmentManager)
+            val action = LocationFragmentDirections.actionLocationFragmentToWeatherForecastFragment(result)
+            view?.findNavController()?.navigate(action)
     }
 }
 
