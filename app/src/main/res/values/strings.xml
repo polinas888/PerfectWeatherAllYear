@@ -8,4 +8,5 @@
     <string name="dayOfWeekTest">Monday</string>
     <string name="temperatureTest">+15</string>
     <string name="temperatureTitle">Temperature:</string>
+    <string name="notification_title">Last weather</string>
 </resources>
