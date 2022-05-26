@@ -14,7 +14,6 @@ import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
-import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
@@ -51,7 +50,6 @@ class WeatherForecastFragment : Fragment() {
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
         initViewModel()
-        NotificationUtil.displayNotification(requireContext())
 
         binding.swipeRefresh.setOnRefreshListener {
             weekWeatherViewModel.loadForecast(location)
