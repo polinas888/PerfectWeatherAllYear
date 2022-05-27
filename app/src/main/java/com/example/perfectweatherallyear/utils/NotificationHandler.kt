@@ -14,7 +14,7 @@ const val CHANNEL_ID  = "reminder_channel_id"
 class NotificationHandler {
 
     companion object {
-        fun createNotification(context: Context, contentMessage: String): Notification{
+        fun createNotification(context: Context, contentMessage: String): Notification {
             val intent = Intent(context, MainActivity:: class.java).apply{
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }

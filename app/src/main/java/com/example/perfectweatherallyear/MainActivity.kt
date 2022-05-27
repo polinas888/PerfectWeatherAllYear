@@ -22,8 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         NotificationHandler.createNotificationChannel(this.application)
-        Intent(this, ForecastService::class.java).also { intent ->
-            startService(intent)
+        val intent = Intent(this, ForecastService::class.java)
+        applicationContext.startForegroundService(intent)
         }
     }
-}

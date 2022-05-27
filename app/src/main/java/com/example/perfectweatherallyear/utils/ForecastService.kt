@@ -1,10 +1,13 @@
 package com.example.perfectweatherallyear.utils
 
+import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
+import androidx.annotation.RequiresApi
 import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
@@ -38,22 +41,25 @@ class ForecastService : Service() {
     override fun onCreate() {
         super.onCreate()
         mHandler = Handler()
+        var notification = Notification()
         mRunnable = Runnable{
             GlobalScope.launch {
-                NotificationHandler.createNotification(
+                notification = NotificationHandler.createNotification(
                     applicationContext,
                     loadHourWeatherTempForNotification()
                 )
+                startForeground(NOTIFICATION_ID, notification)
             }
-            mHandler.postDelayed(mRunnable, 10000)
+            mHandler.postDelayed(mRunnable, 5000)
         }
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-       mRunnable.run()
+        mRunnable.run()
         return START_STICKY
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onDestroy() {
         super.onDestroy()
         mHandler.removeCallbacks(mRunnable)
