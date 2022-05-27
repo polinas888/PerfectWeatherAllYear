@@ -25,6 +25,12 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".util.WeatherBroadcastReceiver"  android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.applicationfortestbroadcast.BROADCAST"/>
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".util.NotificationButtonReceiver"/>
     </application>
 
