@@ -55,7 +55,7 @@ class WorkerHandler(appContext: Context, workerParams: WorkerParameters): Worker
             val location = Location(1, "Moscow")
           when (val weatherForecast = repository.getWeatherForecast(location, DAYS_NUMBER)) {
                 is DataResult.Ok -> {
-                    dayWeatherForNotification = weatherForecast.response[weatherForecast.response.size - 1]
+                    dayWeatherForNotification = weatherForecast.response[0]
                 }
                 is DataResult.Error ->
                     weatherForecast.error
