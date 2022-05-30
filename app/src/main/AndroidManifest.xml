@@ -31,7 +31,12 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".util.NotificationButtonReceiver"/>
+<!--        <receiver android:name=".util.WeatherBroadcastReceiver"  android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.LOCALE_CHANGED"/>-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
+
     </application>
 
 </manifest>
