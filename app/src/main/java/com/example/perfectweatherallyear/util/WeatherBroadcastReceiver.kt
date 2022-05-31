@@ -12,10 +12,7 @@ import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.ui.weekWeather.DAYS_NUMBER
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class WeatherBroadcastReceiver : BroadcastReceiver() {
@@ -35,15 +32,15 @@ class WeatherBroadcastReceiver : BroadcastReceiver() {
         context?.applicationContext?.appComponent?.inject(this)
         val pendingResult: PendingResult = goAsync()
 
-        GlobalScope.launch {
+        CoroutineScope(CoroutineName("BroadcastReceiverCoroutine")).launch {
             try {
-                val locationId =
-                    cityName.let { locationRepository.getLocationIdByCityName(cityName) }
-                getForecast(Location(locationId, cityName))
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "We got forecast", Toast.LENGTH_LONG).show()
-                }
-            } catch (exception: Exception) {
+                    val locationId =
+                        cityName.let { locationRepository.getLocationIdByCityName(cityName) }
+                    getForecast(Location(locationId, cityName))
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "We got forecast", Toast.LENGTH_LONG).show()
+                    }
+                } catch (exception: Exception) {
                 Log.e("onReceive", exception.message.toString())
             } finally {
                 pendingResult.finish()
