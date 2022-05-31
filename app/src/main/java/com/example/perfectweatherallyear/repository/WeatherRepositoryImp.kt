@@ -23,7 +23,7 @@ class WeatherRepositoryImp @Inject constructor(
             try {
                 val remoteWeekWeather =
                     remoteDataSource.getWeatherForecast(location.name, daysAmount)
-                localWeatherDataSource.upsertForecast(remoteWeekWeather)
+                localWeatherDataSource.insertDayWeather(remoteWeekWeather)
 
                 val localWeekWeather =
                     localWeatherDataSource.getWeatherForecast(location.id, daysAmount)
@@ -43,7 +43,7 @@ class WeatherRepositoryImp @Inject constructor(
             try {
                 val cityName = localLocationDataSource.getCityNameByCityId(dayWeather.cityId)
                 val remoteHourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, dayWeather, cityName)
-                localWeatherDataSource.upsertHourlyWeather(remoteHourlyWeather)
+                localWeatherDataSource.insertHourlyWeather(remoteHourlyWeather)
                 val localHourWeather = localWeatherDataSource.getHourlyWeather(dayWeather.id)
                 DataResult.Ok(localHourWeather)
             } catch (e: Exception) {
