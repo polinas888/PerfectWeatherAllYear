@@ -7,5 +7,5 @@ import retrofit2.http.Query
 interface WeatherApiCom {
 
     @GET("forecast.json")
-    suspend fun getWeatherForecast(@Query("q") city: String, @Query("days") daysAmount: Int): ForecastResponse
+    fun getWeatherForecast(@Query("q") city: String, @Query("days") daysAmount: Int): ForecastResponse
 }

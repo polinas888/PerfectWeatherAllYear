@@ -18,7 +18,7 @@ class WeatherRepositoryImp @Inject constructor(
 ) : WeatherRepository {
     private val mConnectionDetector: ConnectionDetector = ConnectionDetector(context)
 
-    override suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
+    override fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
         return if (mConnectionDetector.isConnectingToInternet())
             try {
                 val remoteWeekWeather =

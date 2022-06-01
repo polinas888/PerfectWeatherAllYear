@@ -36,5 +36,6 @@ object ApiRetrofitFactory {
         .client(httpClient)
         .baseUrl(BuildConfig.base_url)
         .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(SynchronousCallAdapterFactory.create())
         .build()
 }

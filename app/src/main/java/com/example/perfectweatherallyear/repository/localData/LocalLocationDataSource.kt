@@ -12,7 +12,7 @@ class LocalLocationDataSource @Inject constructor(locationDao: LocationDao) : Lo
         localService.insertLocation(locations)
     }
 
-    override suspend fun getLocationIdByCityName(city: String): Int {
+    override fun getLocationIdByCityName(city: String): Int {
         return localService.getLocationIdByCityName(city)
     }
 

@@ -5,6 +5,6 @@ import com.example.perfectweatherallyear.model.HourWeather
 
 abstract class RemoteWeatherDataSource {
 
-    abstract suspend fun getWeatherForecast(city: String, daysAmount: Int): List<DayWeather>
+    abstract fun getWeatherForecast(city: String, daysAmount: Int): List<DayWeather>
     abstract suspend fun getHourlyWeather(daysAmount: Int, dayWeather: DayWeather, cityName: String): List<HourWeather>
 }

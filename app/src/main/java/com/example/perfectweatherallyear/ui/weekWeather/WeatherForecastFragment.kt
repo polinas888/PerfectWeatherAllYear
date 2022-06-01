@@ -15,6 +15,7 @@ import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
 import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
 import com.google.gson.GsonBuilder
+import java.util.concurrent.Executors
 import javax.inject.Inject
 
 
@@ -23,6 +24,7 @@ class WeatherForecastFragment : Fragment() {
     private lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeatherForecastBinding
     lateinit var location: Location
+    private val executor = Executors.newSingleThreadExecutor()
 
     @Inject
     lateinit var weatherForecastViewModelFactory: WeatherForecastViewModelFactory
@@ -58,7 +60,9 @@ class WeatherForecastFragment : Fragment() {
     }
 
     private fun initViewModel(){
-        weekWeatherViewModel.loadForecast(location)
+        executor.execute {
+            weekWeatherViewModel.loadForecast(location)
+        }
         weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner) { weatherForecastAdapter.setData(it) }
     }
 

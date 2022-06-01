@@ -11,7 +11,7 @@ import com.example.perfectweatherallyear.model.HourWeather
 interface WeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDayWeather(dataWeatherData: List<DayWeather>)
+    fun insertDayWeather(dataWeatherData: List<DayWeather>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertHourlyWeather(dataWeatherData: List<HourWeather>)
@@ -20,7 +20,7 @@ interface WeatherDao {
     suspend fun getDayWeatherByCityAndDate(city: Int, date: String): DayWeather
 
     @Query("SELECT * FROM dayweather WHERE dayweather.cityId = :cityId ORDER BY ID DESC LIMIT :daysAmount")
-    suspend fun getWeatherForecast(cityId: Int, daysAmount: Int): List<DayWeather>
+    fun getWeatherForecast(cityId: Int, daysAmount: Int): List<DayWeather>
 
     @Query("SELECT * FROM hourweather WHERE hourweather.dayWeatherId = :dayWeatherId")
     suspend fun getHourlyWeather(dayWeatherId: Int): List<HourWeather>

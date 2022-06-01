@@ -12,7 +12,7 @@ interface LocationDao {
     suspend fun insertLocation(locations: List<Location>)
 
     @Query("SELECT location.id FROM location WHERE name =:city")
-    suspend fun getLocationIdByCityName(city: String): Int
+    fun getLocationIdByCityName(city: String): Int
 
     @Query("SELECT location.name FROM location WHERE location.id =:cityId")
     suspend fun getCityNameByCityId(cityId: Int): String
