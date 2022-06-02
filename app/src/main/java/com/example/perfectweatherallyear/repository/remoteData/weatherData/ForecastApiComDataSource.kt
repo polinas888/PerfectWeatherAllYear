@@ -1,5 +1,6 @@
 package com.example.perfectweatherallyear.repository.remoteData.weatherData
 
+import android.util.Log
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.repository.localData.LocationDao
@@ -8,9 +9,6 @@ import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.mod
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToHourWeather
 import java.util.concurrent.Executors
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class ForecastApiComDataSource @Inject constructor(
     weatherApiCom: WeatherApiCom,
@@ -38,18 +36,20 @@ class ForecastApiComDataSource @Inject constructor(
         return forecast.convertToDayWeather(cityId)
     }
 
-    override suspend fun getHourlyWeather(daysAmount: Int, dayWeather: DayWeather, cityName: String
+    override suspend fun getHourlyWeather(
+        daysAmount: Int, dayWeather: DayWeather, cityName: String
     ): List<HourWeather> {
-        return suspendCoroutine { continuation ->
-            executor.execute {
-                try {
-                    val weekWeather = remoteService.getWeatherForecast(cityName, daysAmount)
-                    val convertToHourWeather = weekWeather.convertToHourWeather(dayWeather)
-                    continuation.resume(convertToHourWeather)
-                } catch (exception:Exception) {
-                    continuation.resumeWithException(exception)
-                }
+        var hourWeatherList = listOf<HourWeather>()
+        val future = executor.submit {
+            try {
+                val weekWeather = remoteService.getWeatherForecast(cityName, daysAmount)
+                val convertToHourWeather = weekWeather.convertToHourWeather(dayWeather)
+                hourWeatherList = convertToHourWeather
+            } catch (exception: Exception) {
+                Log.i("future", exception.message.toString())
             }
         }
+        future.get()
+        return hourWeatherList
     }
 }
