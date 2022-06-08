@@ -1,14 +1,16 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.WeatherRepository
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.functions.Consumer
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 const val DAYS_NUMBER = 3
 
@@ -19,18 +21,13 @@ class WeatherForecastViewModel(
     val weatherForecastLiveData = MutableLiveData<List<DayWeather>>()
 
     fun loadForecast(location: Location) {
-        viewModelScope.launch {
-            when (val weatherForecast = getWeatherForecast(location, DAYS_NUMBER)) {
-                is DataResult.Ok -> {
-                    weatherForecastLiveData.value = weatherForecast.response!!
-                }
-                is DataResult.Error ->
-                    weatherForecast.error
-            }
-        }
+
+        getWeatherForecast(location, DAYS_NUMBER).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(Consumer { listWeather: List<DayWeather> ->  weatherForecastLiveData.value = listWeather}, {e: Throwable ->  Log.i("ErrorLog", e.toString())})
     }
 
-    private suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
+    private fun getWeatherForecast(location: Location, daysAmount: Int): Flowable<List<DayWeather>> {
         return weatherRepository.getWeatherForecast(location, daysAmount)
     }
 }

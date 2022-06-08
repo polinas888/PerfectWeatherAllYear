@@ -2,6 +2,7 @@ package com.example.perfectweatherallyear.repository
 
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.localData.LocalLocationDataSource
+import io.reactivex.rxjava3.core.Flowable
 import javax.inject.Inject
 
 class LocationRepositoryImpl @Inject constructor(
@@ -14,7 +15,7 @@ class LocationRepositoryImpl @Inject constructor(
         localLocationDataSource.insertLocation(locations)
     }
 
-    override suspend fun getLocationIdByCityName(city: String): Int {
+    override fun getLocationIdByCityName(city: String): Flowable<Int> {
         return localLocationDataSource.getLocationIdByCityName(city)
     }
 

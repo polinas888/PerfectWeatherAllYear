@@ -48,14 +48,14 @@ class DetailWeatherFragment : Fragment() {
         }
         initViewModel()
 
-        binding.swipeRefresh.setOnRefreshListener {
-            detailWeatherViewModel.loadData(dayWeather)
-            binding.swipeRefresh.isRefreshing = false
-        }
+//        binding.swipeRefresh.setOnRefreshListener {
+//            detailWeatherViewModel.loadData(dayWeather)
+//            binding.swipeRefresh.isRefreshing = false
+//        }
     }
 
     private fun initViewModel(){
-        detailWeatherViewModel.loadData(dayWeather)
+   //     detailWeatherViewModel.loadData(dayWeather)
         detailWeatherViewModel.detailWeatherLiveData.observe(viewLifecycleOwner) { detailWeatherForecastAdapter.setData(it) }
     }
 }

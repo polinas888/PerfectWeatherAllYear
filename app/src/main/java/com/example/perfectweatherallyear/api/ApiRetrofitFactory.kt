@@ -5,6 +5,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiRetrofitFactory {
@@ -35,6 +36,7 @@ object ApiRetrofitFactory {
     fun weatherApiRetrofit(): Retrofit = Retrofit.Builder()
         .client(httpClient)
         .baseUrl(BuildConfig.base_url)
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 }

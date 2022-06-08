@@ -1,12 +1,13 @@
 package com.example.perfectweatherallyear.repository.remoteData.weatherData
 
+import androidx.lifecycle.toLiveData
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.repository.localData.LocationDao
 import com.example.perfectweatherallyear.repository.localData.WeatherDao
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToDayWeather
-import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToHourWeather
+import io.reactivex.rxjava3.core.Flowable
 import javax.inject.Inject
+
 
 class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom, weatherDao: WeatherDao, locationDao: LocationDao) : RemoteWeatherDataSource() {
 
@@ -22,14 +23,19 @@ class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom,
         locationDao
     }
 
-    override suspend fun getWeatherForecast(city: String, daysAmount: Int): List<DayWeather> {
+    override fun getWeatherForecast(city: String, daysAmount: Int): Flowable<List<DayWeather>> {
         val forecast = remoteService.getWeatherForecast(city, daysAmount)
-        val cityId = localLocationService.getLocationIdByCityName(city)
-        return forecast.convertToDayWeather(cityId)
+        val cityIdFlowable = localLocationService.getLocationIdByCityName(city)
+        val cityId = cityIdFlowable.toLiveData().value
+        return cityIdFlowable.flatMap { id -> forecast.map { it.convertToDayWeather(id) } }
+        //forecast.map { it.convertToDayWeather(cityId) }
+//        return cityIdSingle.toFlowable().flatMap { id ->
+//            forecast.map { it.convertToDayWeather(id) }
+        }
     }
 
-    override suspend fun getHourlyWeather(daysAmount: Int, dayWeather: DayWeather, cityName: String): List<HourWeather> {
-        val weekWeather = remoteService.getWeatherForecast(cityName, daysAmount)
-        return weekWeather.convertToHourWeather(dayWeather)
-    }
-}
+
+//    override suspend fun getHourlyWeather(daysAmount: Int, dayWeather: DayWeather, cityName: String): Observable<List<HourWeather>> {
+//        val weekWeather = remoteService.getWeatherForecast(cityName, daysAmount)
+//        return weekWeather.convertToHourWeather(dayWeather)
+//    }

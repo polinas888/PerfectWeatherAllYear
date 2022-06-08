@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.perfectweatherallyear.model.Location
+import io.reactivex.rxjava3.core.Flowable
 
 @Dao
 interface LocationDao {
@@ -12,7 +13,7 @@ interface LocationDao {
     suspend fun insertLocation(locations: List<Location>)
 
     @Query("SELECT location.id FROM location WHERE name =:city")
-    suspend fun getLocationIdByCityName(city: String): Int
+    fun getLocationIdByCityName(city: String): Flowable<Int>
 
     @Query("SELECT location.name FROM location WHERE location.id =:cityId")
     suspend fun getCityNameByCityId(cityId: Int): String
