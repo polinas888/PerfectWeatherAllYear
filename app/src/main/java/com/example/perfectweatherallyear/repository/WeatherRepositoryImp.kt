@@ -1,7 +1,6 @@
 package com.example.perfectweatherallyear.repository
 
 import android.content.Context
-import androidx.lifecycle.toLiveData
 import com.example.perfectweatherallyear.api.ConnectionDetector
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.Location
@@ -11,27 +10,15 @@ import com.example.perfectweatherallyear.repository.remoteData.weatherData.Remot
 import io.reactivex.rxjava3.core.Flowable
 import javax.inject.Inject
 
-class WeatherRepositoryImp @Inject constructor(
-    private val remoteDataSource: RemoteWeatherDataSource,
-    private val localWeatherDataSource: LocalWeatherDataSource,
-    private val localLocationDataSource: LocalLocationDataSource,
-    context: Context
-) : WeatherRepository {
+class WeatherRepositoryImp @Inject constructor(private val remoteDataSource: RemoteWeatherDataSource, private val localWeatherDataSource: LocalWeatherDataSource,
+                                               private val localLocationDataSource: LocalLocationDataSource, context: Context) : WeatherRepository {
     private val mConnectionDetector: ConnectionDetector = ConnectionDetector(context)
 
     override fun getWeatherForecast(location: Location, daysAmount: Int): Flowable<List<DayWeather>> {
         return if (mConnectionDetector.isConnectingToInternet()) {
-            try {
-                val remoteWeekWeather = remoteDataSource.getWeatherForecast(location.name, daysAmount)
-                remoteWeekWeather.toLiveData().value?.let {
-                    localWeatherDataSource.insertDayWeather(
-                        it
-                    )
-                }
-                localWeatherDataSource.getWeatherForecast(location.id, daysAmount)
-            } catch (e: Exception) {
-                Flowable.error(e)
-            }
+                remoteDataSource.getWeatherForecast(location.name, daysAmount)
+                    .map { localWeatherDataSource.insertDayWeather(it) }
+                    .flatMap { localWeatherDataSource.getWeatherForecast(location.id, daysAmount) }
         } else {
             localWeatherDataSource.getWeatherForecast(location.id, daysAmount)
         }

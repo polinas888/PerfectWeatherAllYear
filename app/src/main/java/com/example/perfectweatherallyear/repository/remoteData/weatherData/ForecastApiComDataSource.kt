@@ -1,6 +1,5 @@
 package com.example.perfectweatherallyear.repository.remoteData.weatherData
 
-import androidx.lifecycle.toLiveData
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.repository.localData.LocationDao
 import com.example.perfectweatherallyear.repository.localData.WeatherDao
@@ -25,14 +24,28 @@ class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom,
 
     override fun getWeatherForecast(city: String, daysAmount: Int): Flowable<List<DayWeather>> {
         val forecast = remoteService.getWeatherForecast(city, daysAmount)
-        val cityIdFlowable = localLocationService.getLocationIdByCityName(city)
-        val cityId = cityIdFlowable.toLiveData().value
-        return cityIdFlowable.flatMap { id -> forecast.map { it.convertToDayWeather(id) } }
-        //forecast.map { it.convertToDayWeather(cityId) }
-//        return cityIdSingle.toFlowable().flatMap { id ->
-//            forecast.map { it.convertToDayWeather(id) }
+        val cityId = localLocationService.getLocationIdByCityName(city)
+        val listDayWeather = Flowable.combineLatest(forecast, cityId)
+        { forecast, cityIdFlowable ->
+            forecast.convertToDayWeather(cityIdFlowable) }
+        return listDayWeather
+//
+//        remoteService.getWeatherForecast(city, daysAmount).flatMap { localLocationService.getLocationIdByCityName(city) }
+//            .combineLatest()
+//
+//        remoteService.getWeatherForecast(city, daysAmount)
+//            .flatMap { forecast -> forecast.convertToDayWeather(localLocationService.getLocationIdByCityName(city)) }
+
+//        val forecast = remoteService.getWeatherForecast(city, daysAmount)
+//        val cityIdFlowable = localLocationService.getLocationIdByCityName(city)
+//        val flatMap = cityIdFlowable.flatMap { id -> forecast.map { it.convertToDayWeather(id) } }
+//        return flatMap
         }
     }
+
+//forecast.map { it.convertToDayWeather(cityId) }
+//        return cityIdSingle.toFlowable().flatMap { id ->
+//            forecast.map { it.convertToDayWeather(id) }
 
 
 //    override suspend fun getHourlyWeather(daysAmount: Int, dayWeather: DayWeather, cityName: String): Observable<List<HourWeather>> {

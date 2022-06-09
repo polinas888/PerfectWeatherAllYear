@@ -22,9 +22,12 @@ class WeatherForecastViewModel(
 
     fun loadForecast(location: Location) {
 
-        getWeatherForecast(location, DAYS_NUMBER).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(Consumer { listWeather: List<DayWeather> ->  weatherForecastLiveData.value = listWeather}, {e: Throwable ->  Log.i("ErrorLog", e.toString())})
+        getWeatherForecast(location, DAYS_NUMBER)
+            .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(Consumer { listWeather: List<DayWeather> ->  weatherForecastLiveData.value = listWeather}
+            ) { e: Throwable -> Log.i("ErrorLog", e.toString()) }
+        Log.i("Subscribe", "Subscribed")
     }
 
     private fun getWeatherForecast(location: Location, daysAmount: Int): Flowable<List<DayWeather>> {
