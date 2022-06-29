@@ -5,7 +5,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import com.example.perfectweatherallyear.appComponent
@@ -15,8 +14,8 @@ import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.ui.weekWeather.DAYS_NUMBER
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -26,7 +25,7 @@ class ForecastService : Service() {
     lateinit var repository: WeatherRepository
     lateinit var dayWeatherForNotification: DayWeather
     lateinit var hourWeatherForNotification: HourWeather
-    private lateinit var mHandler: Handler
+    private lateinit var jobNotification: Job
     private lateinit var mRunnable: Runnable
 
     override fun attachBaseContext(newBase: Context?) {
@@ -35,26 +34,22 @@ class ForecastService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        throw UnsupportedOperationException("Not yet implemented")
+        return null
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        mHandler = Handler()
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         var notification = Notification()
         mRunnable = Runnable{
-            GlobalScope.launch {
+            jobNotification = CoroutineScope(Dispatchers.Default).launch {
                 notification = NotificationHandler.createNotification(
+                    application,
                     applicationContext,
                     loadHourWeatherTempForNotification()
                 )
                 startForeground(NOTIFICATION_ID, notification)
+                delay(5000)
             }
-            mHandler.postDelayed(mRunnable, 5000)
         }
-    }
-
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         mRunnable.run()
         return START_STICKY
     }
@@ -62,7 +57,7 @@ class ForecastService : Service() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onDestroy() {
         super.onDestroy()
-        mHandler.removeCallbacks(mRunnable)
+        jobNotification.cancel()
     }
 
     private suspend fun loadDayWeatherForNotification(): DayWeather {

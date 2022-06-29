@@ -7,7 +7,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.perfectweatherallyear.databinding.ActivityMainBinding
 import com.example.perfectweatherallyear.utils.ForecastService
-import com.example.perfectweatherallyear.utils.NotificationHandler
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -21,8 +20,12 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStop() {
         super.onStop()
-        NotificationHandler.createNotificationChannel(this.application)
+        startService()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun startService() {
         val intent = Intent(this, ForecastService::class.java)
         applicationContext.startForegroundService(intent)
-        }
     }
+}
