@@ -9,14 +9,20 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.perfectweatherallyear.MainActivity
 import com.example.perfectweatherallyear.R
 
-const val NOTIFICATION_ID = 1
-const val CHANNEL_ID  = "reminder_channel_id"
+const val START_NOTIFICATION_SERVICE_ID = 1
+const val NOTIFICATION_ID = 2
+const val CHANNEL_ID = "reminder_channel_id"
+
 class NotificationHandler {
 
     companion object {
-        fun createNotification(application: Application, context: Context, contentMessage: String): Notification {
+        fun createNotification(
+            application: Application,
+            context: Context,
+            notificationText: String
+        ): Notification {
             createNotificationChannel(application)
-            val intent = Intent(context, MainActivity:: class.java).apply{
+            val intent = Intent(context, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
 
@@ -25,7 +31,7 @@ class NotificationHandler {
             val notification = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.weather)
                 .setContentTitle(context.getString(R.string.notification_title))
-                .setContentText(contentMessage)
+                .setContentText(notificationText)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build()
@@ -34,8 +40,8 @@ class NotificationHandler {
             return notification
         }
 
-        fun createNotificationChannel(application: Application) {
-            application.apply {
+        private fun createNotificationChannel(context: Context) {
+            if (CHANNEL_ID.isEmpty()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     val channel =
                         NotificationChannel(
@@ -47,7 +53,7 @@ class NotificationHandler {
                                 description = "This is default channel"
                             }
                     val notificationManager: NotificationManager =
-                        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     notificationManager.createNotificationChannel(channel)
                 }
             }

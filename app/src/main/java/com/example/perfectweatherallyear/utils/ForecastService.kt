@@ -7,15 +7,17 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.annotation.RequiresApi
+import com.example.perfectweatherallyear.R
 import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.ui.weekWeather.DAYS_NUMBER
-import kotlinx.coroutines.*
-import java.lang.Runnable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -24,9 +26,8 @@ class ForecastService : Service() {
     @Inject
     lateinit var repository: WeatherRepository
     lateinit var dayWeatherForNotification: DayWeather
-    lateinit var hourWeatherForNotification: HourWeather
     private lateinit var jobNotification: Job
-    private lateinit var mRunnable: Runnable
+    private var notification = Notification()
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase)
@@ -38,19 +39,17 @@ class ForecastService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        var notification = Notification()
-        mRunnable = Runnable{
-            jobNotification = CoroutineScope(Dispatchers.Default).launch {
-                notification = NotificationHandler.createNotification(
-                    application,
-                    applicationContext,
-                    loadHourWeatherTempForNotification()
-                )
-                startForeground(NOTIFICATION_ID, notification)
-                delay(5000)
+        notification = NotificationHandler.createNotification(application, applicationContext, getString(R.string.notification_text))
+        startForeground(START_NOTIFICATION_SERVICE_ID, notification)
+
+        CoroutineScope(Dispatchers.Default).launch {
+            notification = when (val notificationTextResult = loadHourWeatherTempForNotification()) {
+                is DataResult.Ok ->
+                    NotificationHandler.createNotification(application, applicationContext, notificationTextResult.response)
+                else ->
+                    NotificationHandler.createNotification(application, applicationContext, getString(R.string.notification_error))
             }
         }
-        mRunnable.run()
         return START_STICKY
     }
 
@@ -73,24 +72,22 @@ class ForecastService : Service() {
         return dayWeatherForNotification
     }
 
-    private suspend fun loadHourWeatherTempForNotification(): String {
-        var hourWeatherTempForNotification = ""
-        when (val hourlyWeatherForecast =
+    private suspend fun loadHourWeatherTempForNotification(): DataResult<String> {
+         return when (val hourlyWeatherForecast =
             repository.getHourlyWeather(DAYS_NUMBER, loadDayWeatherForNotification())) {
             is DataResult.Ok -> {
+                var hourWeatherTempForNotification = ""
                 val sdf = SimpleDateFormat("HH:mm:ss")
                 val currentHour: String = sdf.format(Date()).take(2)
                 for (hourWeather in hourlyWeatherForecast.response) {
                     val hour = hourWeather.time.substringAfterLast(" ").take(2)
                     if (hour == currentHour) {
-                        hourWeatherForNotification = hourWeather
+                        hourWeatherTempForNotification = "temperature ${hourWeather.temperature}"
                     }
                 }
-                hourWeatherTempForNotification =
-                    "temperature ${hourWeatherForNotification.temperature}"
+                DataResult.Ok(hourWeatherTempForNotification)
             }
-            is DataResult.Error -> hourlyWeatherForecast.error
+            is DataResult.Error -> DataResult.Error(hourlyWeatherForecast.error)
         }
-        return hourWeatherTempForNotification
     }
 }
