@@ -1,6 +1,5 @@
 package com.example.perfectweatherallyear.util
 
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -15,29 +14,32 @@ import com.example.perfectweatherallyear.R
 class NotificationHandler {
 
     companion object {
-        private  val CHANNEL_ID  = "reminder_channel_id"
-        private  val NOTIFICATION_ID = 1
+        private val CHANNEL_ID = "reminder_channel_id"
+        private val NOTIFICATION_ID = 1
 
-        fun createNotification(context: Context, contentMessage: String){
-        val intent = Intent(context, MainActivity:: class.java).apply{
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        fun postNotification(context: Context, contentMessage: String) {
+            if (CHANNEL_ID.isEmpty()) {
+                createNotificationChannel(context)
+            }
+            val intent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+
+            val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.weather)
+                .setContentTitle(context.getString(R.string.notification_title))
+                .setContentText(contentMessage)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .build()
+
+            NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification)
         }
 
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.weather)
-            .setContentTitle(context.getString(R.string.notification_title))
-            .setContentText(contentMessage)
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
-
-        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification)
-    }
-
-        fun createNotificationChannel(application: Application) {
-            application.apply {
+        private fun createNotificationChannel(context: Context) {
+            if (CHANNEL_ID.isEmpty()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     val channel =
                         NotificationChannel(
@@ -49,7 +51,7 @@ class NotificationHandler {
                                 description = "This is default channel"
                             }
                     val notificationManager: NotificationManager =
-                        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     notificationManager.createNotificationChannel(channel)
                 }
             }

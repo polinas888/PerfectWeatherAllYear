@@ -3,8 +3,7 @@ package com.example.perfectweatherallyear
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.perfectweatherallyear.databinding.ActivityMainBinding
-import com.example.perfectweatherallyear.util.NotificationHandler
-import com.example.perfectweatherallyear.util.WorkerHandler
+import com.example.perfectweatherallyear.util.ForecastNotifierWorker
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -17,7 +16,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        NotificationHandler.createNotificationChannel(this.application)
-        WorkerHandler.createWorker(this)
+        ForecastNotifierWorker.createWorker(this)
         }
 }

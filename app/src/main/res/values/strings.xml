@@ -9,4 +9,6 @@
     <string name="temperatureTest">+15</string>
     <string name="temperatureTitle">Temperature:</string>
     <string name="notification_title">Last weather</string>
+    <string name="notification_text">Search for weather</string>
+    <string name="notification_error">Couldn\'t get weather</string>
 </resources>
