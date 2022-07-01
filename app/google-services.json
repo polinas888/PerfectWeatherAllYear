@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "410664384844",
+    "project_id": "perfectweatherproject",
+    "storage_bucket": "perfectweatherproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410664384844:android:d80d4ac2d1289e1e74f7e9",
+        "android_client_info": {
+          "package_name": "com.example.perfectweatherallyear"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410664384844-v53lrcltn0svh23ejhsj6m645rrcm8m3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALZvuZmBHCC1g8kcxghl7xjfL3i91bBiM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410664384844-v53lrcltn0svh23ejhsj6m645rrcm8m3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
