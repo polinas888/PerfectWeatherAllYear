@@ -11,8 +11,6 @@ import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.ui.weekWeather.DAYS_NUMBER
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -97,10 +95,6 @@ class ForecastNotifierWorker(appContext: Context, workerParams: WorkerParameters
                 .setConstraints(constraints)
                 .build()
             val workManager = WorkManager.getInstance(context)
-        }
-    }
-
-   
             workManager.enqueueUniquePeriodicWork(
                 WEATHER_TAG,
                 ExistingPeriodicWorkPolicy.REPLACE,
