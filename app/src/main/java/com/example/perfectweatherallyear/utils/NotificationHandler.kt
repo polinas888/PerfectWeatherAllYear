@@ -16,7 +16,7 @@ const val CHANNEL_ID = "reminder_channel_id"
 class NotificationHandler {
 
     companion object {
-        fun createNotification(
+        fun createAndPostNotification(
             application: Application,
             context: Context,
             notificationText: String

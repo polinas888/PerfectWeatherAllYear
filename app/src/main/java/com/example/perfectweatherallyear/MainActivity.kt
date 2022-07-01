@@ -20,11 +20,11 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStop() {
         super.onStop()
-        startService()
+        startForecastNotifierService()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun startService() {
+    private fun startForecastNotifierService() {
         val intent = Intent(this, ForecastService::class.java)
         applicationContext.startForegroundService(intent)
     }

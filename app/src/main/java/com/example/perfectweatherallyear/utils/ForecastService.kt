@@ -27,7 +27,7 @@ class ForecastService : Service() {
     lateinit var repository: WeatherRepository
     lateinit var dayWeatherForNotification: DayWeather
     private lateinit var jobNotification: Job
-    private var notification = Notification()
+    private lateinit var notification: Notification
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase)
@@ -38,16 +38,20 @@ class ForecastService : Service() {
         return null
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        notification = NotificationHandler.createAndPostNotification(application, applicationContext, getString(R.string.notification_text))
+    }
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        notification = NotificationHandler.createNotification(application, applicationContext, getString(R.string.notification_text))
         startForeground(START_NOTIFICATION_SERVICE_ID, notification)
 
         CoroutineScope(Dispatchers.Default).launch {
-            notification = when (val notificationTextResult = loadHourWeatherTempForNotification()) {
+            when (val notificationTextResult = loadHourWeatherTempForNotification()) {
                 is DataResult.Ok ->
-                    NotificationHandler.createNotification(application, applicationContext, notificationTextResult.response)
+                    NotificationHandler.createAndPostNotification(application, applicationContext, notificationTextResult.response)
                 else ->
-                    NotificationHandler.createNotification(application, applicationContext, getString(R.string.notification_error))
+                    NotificationHandler.createAndPostNotification(application, applicationContext, getString(R.string.notification_error))
             }
         }
         return START_STICKY
