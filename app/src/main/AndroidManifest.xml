@@ -24,6 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".util.WeatherBroadcastReceiver"  android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.applicationfortestbroadcast.BROADCAST"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
