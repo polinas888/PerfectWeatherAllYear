@@ -17,7 +17,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class WorkerHandler(appContext: Context, workerParams: WorkerParameters): Worker(appContext, workerParams) {
+class ForecastNotifierWorker(appContext: Context, workerParams: WorkerParameters): Worker(appContext, workerParams) {
     @Inject
     lateinit var repository: WeatherRepository
     lateinit var dayWeatherForNotification: DayWeather
@@ -43,7 +43,7 @@ class WorkerHandler(appContext: Context, workerParams: WorkerParameters): Worker
                 .setRequiresBatteryNotLow(false)
                 .build()
 
-            val work = PeriodicWorkRequestBuilder<WorkerHandler>(4, TimeUnit.HOURS)
+            val work = PeriodicWorkRequestBuilder<ForecastNotifierWorker>(4, TimeUnit.HOURS)
                 .setConstraints(constraints)
                 .build()
             val workManager = WorkManager.getInstance(context)

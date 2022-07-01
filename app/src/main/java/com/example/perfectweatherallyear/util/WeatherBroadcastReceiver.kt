@@ -7,7 +7,7 @@ import android.content.Intent
 class WeatherBroadcastReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context != null) {
-            WorkerHandler.createWorker(context)
+            ForecastNotifierWorker.createWorker(context)
         }
     }
 }
