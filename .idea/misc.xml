@@ -3,9 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/activity_main.xml" value="0.1157548125633232" />
         <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/fragment_detail_weather.xml" value="0.11778115501519756" />
         <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/fragment_weather_forecast.xml" value="0.11778115501519756" />
-        <entry key="..\:/Users/user/AndroidStudioProjects/PerfectWeatherAllYear/app/src/main/res/layout/notification.xml" value="0.16354166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2346014492753623" />
         <entry key="app/src/main/res/layout/fragment_detail_weather.xml" value="0.22644927536231885" />
         <entry key="app/src/main/res/layout/fragment_weather_per_week.xml" value="0.2346014492753623" />
