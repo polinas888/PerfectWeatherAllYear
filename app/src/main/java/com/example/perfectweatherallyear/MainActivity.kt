@@ -17,6 +17,8 @@ import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
 import com.google.gson.GsonBuilder
 
+const val CITY_ID_PARAM = "id"
+const val CITY_NAME_PARAM = "city"
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -29,6 +31,15 @@ class MainActivity : AppCompatActivity() {
         firebaseAnalytics = Firebase.analytics
 
         getDynamicLinkFromFirebase()
+        openLinkFromNotification()
+    }
+
+    private fun openLinkFromNotification() {
+        val link = intent.getStringExtra("link")
+        if (link != null) {
+            val uri = Uri.parse(link)
+            getParamAndOpenDeepLink(uri)
+        }
     }
 
     private fun getDynamicLinkFromFirebase() {
@@ -39,17 +50,23 @@ class MainActivity : AppCompatActivity() {
                 if (pendingDynamicLinkData != null) {
                     deepLink = pendingDynamicLinkData.link
 
-                        val city = deepLink?.getQueryParameter("city")
-                        val id = deepLink?.getQueryParameter("id")?.toInt()
-
-                    if (id != null && city != null) {
-                        val location = Location(id, city)
-                        addFragment(WeatherForecastFragment(), location)
+                    if (deepLink != null) {
+                        getParamAndOpenDeepLink(deepLink)
                     }
                 }
             }
             .addOnFailureListener(this) {
                     e -> Log.i("DynamicLink", "getDynamicLink:onFailure", e) }
+    }
+
+    private fun getParamAndOpenDeepLink(uri: Uri) {
+        val city = uri.getQueryParameter(CITY_NAME_PARAM)
+        val id = uri.getQueryParameter(CITY_ID_PARAM)?.toInt()
+
+        if (id != null && city != null) {
+            val location = Location(id, city)
+            addFragment(WeatherForecastFragment(), location)
+        }
     }
 
     override fun onStop() {
