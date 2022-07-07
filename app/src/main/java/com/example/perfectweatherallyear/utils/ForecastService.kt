@@ -16,7 +16,6 @@ import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.ui.weekWeather.DAYS_NUMBER
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,7 +25,6 @@ class ForecastService : Service() {
     @Inject
     lateinit var repository: WeatherRepository
     lateinit var dayWeatherForNotification: DayWeather
-    private lateinit var jobNotification: Job
     private lateinit var notification: Notification
 
     override fun attachBaseContext(newBase: Context?) {
@@ -40,7 +38,7 @@ class ForecastService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        notification = NotificationHandler.createAndPostNotification(application, applicationContext, getString(R.string.notification_text))
+        notification = NotificationHandler.createNotification(application, applicationContext, getString(R.string.notification_text))
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -48,10 +46,14 @@ class ForecastService : Service() {
 
         CoroutineScope(Dispatchers.Default).launch {
             when (val notificationTextResult = loadHourWeatherTempForNotification()) {
-                is DataResult.Ok ->
-                    NotificationHandler.createAndPostNotification(application, applicationContext, notificationTextResult.response)
-                else ->
-                    NotificationHandler.createAndPostNotification(application, applicationContext, getString(R.string.notification_error))
+                is DataResult.Ok -> {
+                    val notification = NotificationHandler.createNotification(application, applicationContext, notificationTextResult.response)
+                    NotificationHandler.postNotification(applicationContext, notification)
+                }
+                else -> {
+                    val notification = NotificationHandler.createNotification(application, applicationContext, getString(R.string.notification_error))
+                    NotificationHandler.postNotification(applicationContext, notification)
+                }
             }
         }
         return START_STICKY
@@ -60,7 +62,6 @@ class ForecastService : Service() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onDestroy() {
         super.onDestroy()
-        jobNotification.cancel()
     }
 
     private suspend fun loadDayWeatherForNotification(): DayWeather {

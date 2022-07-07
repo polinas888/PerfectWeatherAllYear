@@ -16,7 +16,7 @@ const val CHANNEL_ID = "reminder_channel_id"
 class NotificationHandler {
 
     companion object {
-        fun createAndPostNotification(
+        fun createNotification(
             application: Application,
             context: Context,
             notificationText: String
@@ -35,20 +35,16 @@ class NotificationHandler {
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build()
-
-            NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification)
             return notification
         }
 
+        fun postNotification(context: Context, notification: Notification) {
+            NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification)
+        }
+
         private fun createNotificationChannel(context: Context) {
-            if (CHANNEL_ID.isEmpty()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val channel =
-                        NotificationChannel(
-                            CHANNEL_ID,
-                            "Channel_Default",
-                            NotificationManager.IMPORTANCE_HIGH
-                        )
+                    val channel = NotificationChannel(CHANNEL_ID, "Channel_Default", NotificationManager.IMPORTANCE_HIGH)
                             .apply {
                                 description = "This is default channel"
                             }
@@ -56,7 +52,6 @@ class NotificationHandler {
                         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     notificationManager.createNotificationChannel(channel)
                 }
-            }
         }
     }
 }
