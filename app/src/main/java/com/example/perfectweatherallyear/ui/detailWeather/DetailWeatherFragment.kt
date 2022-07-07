@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.databinding.FragmentDetailWeatherBinding
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.util.NotificationUtil
 import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
@@ -48,7 +47,6 @@ class DetailWeatherFragment : Fragment() {
             hourWeatherRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
         initViewModel()
-        NotificationUtil.displayNotification(requireContext())
 
         binding.swipeRefresh.setOnRefreshListener {
             detailWeatherViewModel.loadData(dayWeather)

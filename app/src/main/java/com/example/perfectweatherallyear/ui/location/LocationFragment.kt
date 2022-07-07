@@ -48,8 +48,6 @@ class LocationFragment: Fragment() {
         locationViewModel.listLocationsLiveData.observe(viewLifecycleOwner) { locationAdapter.setData(it) }
     }
 
-
-
     private fun adapterOnClick(location: Location) {
         val fragment = WeatherForecastFragment()
             val args = Bundle()
