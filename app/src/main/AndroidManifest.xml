@@ -39,7 +39,13 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
+
+        <receiver android:name=".util.WeatherBroadcastReceiver"  android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.applicationfortestbroadcast.BROADCAST"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
