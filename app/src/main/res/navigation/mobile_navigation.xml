@@ -9,16 +9,27 @@
         android:id="@+id/weekWeatherFragment"
         android:name="com.example.perfectweatherallyear.ui.weekWeather.WeatherForecastFragment"
         android:label="fragment_week_weather"
-        tools:layout="@layout/fragment_weather_forecast" >
+        tools:layout="@layout/fragment_weather_forecast">
         <action
             android:id="@+id/action_weekWeatherFragment_to_detailWeatherFragment"
             app:destination="@id/detailWeatherFragment" />
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri="https://perfectweatherallyear.page.link/MyLondonWeather" />
+        <argument
+            android:name="location"
+            app:argType="com.example.perfectweatherallyear.model.Location" />
     </fragment>
     <fragment
         android:id="@+id/detailWeatherFragment"
         android:name="com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment"
         android:label="fragment_detail_weather"
-        tools:layout="@layout/fragment_detail_weather" />
+        tools:layout="@layout/fragment_detail_weather" >
+        <argument
+            android:name="dayWeather"
+            app:argType="com.example.perfectweatherallyear.model.DayWeather" />
+    </fragment>
     <fragment
         android:id="@+id/locationFragment"
         android:name="com.example.perfectweatherallyear.ui.location.LocationFragment"
@@ -27,4 +38,6 @@
             android:id="@+id/action_locationFragment_to_weekWeatherFragment"
             app:destination="@id/weekWeatherFragment" />
     </fragment>
+    <action android:id="@+id/action_global_weekWeatherFragment"
+        app:destination="@id/weekWeatherFragment"/>
 </navigation>
