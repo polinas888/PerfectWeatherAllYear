@@ -56,7 +56,7 @@ class DetailWeatherFragment : Fragment() {
 
     private fun initViewModel(){
         detailWeatherViewModel.loadHourlyWeather(dayWeather)
-        detailWeatherViewModel.remoteHourWeatherLiveData.observe(viewLifecycleOwner) {detailWeatherViewModel.getLocalHourWeatherLiveData(dayWeather)}
+        detailWeatherViewModel.getUpdatedRemoteHourWeather(dayWeather).observe(viewLifecycleOwner) {detailWeatherViewModel.getLocalHourWeatherLiveData(dayWeather)}
         detailWeatherViewModel.getLocalHourWeatherLiveData(dayWeather).observe(viewLifecycleOwner) {
             if (it != null) {
                 detailWeatherForecastAdapter.setData(it)

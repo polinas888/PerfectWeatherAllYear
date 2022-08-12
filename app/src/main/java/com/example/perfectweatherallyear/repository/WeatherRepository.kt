@@ -6,11 +6,9 @@ import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
 
 interface WeatherRepository {
-    fun updateForecastWeather(location: Location, daysAmount: Int)
-    fun updateHourWeather(dayWeather: DayWeather)
+    fun getUpdatedRemoteForecastWeather(location: Location, daysAmount: Int) : MutableLiveData<List<DayWeather>>
+    fun getUpdatedRemoteHourWeather(dayWeather: DayWeather) : MutableLiveData<List<HourWeather>>
     fun getLocalWeatherForecastLiveData(location: Location, numDays: Int) : MutableLiveData<List<DayWeather>>
     fun getLocalHourWeatherLiveData(dayWeather: DayWeather) : MutableLiveData<List<HourWeather>>
-    fun getRemoteWeatherForecastLiveData() : MutableLiveData<List<DayWeather>>
-    fun getRemoteHourWeatherLiveData(): MutableLiveData<List<HourWeather>>
     fun clear()
 }

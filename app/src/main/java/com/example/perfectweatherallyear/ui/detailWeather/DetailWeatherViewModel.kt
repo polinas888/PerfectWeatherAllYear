@@ -16,8 +16,7 @@ class DetailWeatherViewModel(val weatherRepository: WeatherRepository, context: 
     fun loadHourlyWeather(dayWeather: DayWeather) {
         if (mConnectionDetector.isConnectingToInternet()) {
             try {
-                weatherRepository.updateHourWeather(dayWeather)
-                remoteHourWeatherLiveData = weatherRepository.getRemoteHourWeatherLiveData()
+                getUpdatedRemoteHourWeather(dayWeather)
                 getLocalHourWeatherLiveData(dayWeather)
             } catch (e: Exception) {
                 Log.i("WeatherLog", "Couldn't get online weather")
@@ -29,6 +28,10 @@ class DetailWeatherViewModel(val weatherRepository: WeatherRepository, context: 
 
     fun getLocalHourWeatherLiveData(dayWeather: DayWeather) : MutableLiveData<List<HourWeather>> {
         return weatherRepository.getLocalHourWeatherLiveData(dayWeather)
+    }
+
+    fun getUpdatedRemoteHourWeather(dayWeather: DayWeather) : MutableLiveData<List<HourWeather>> {
+        return weatherRepository.getUpdatedRemoteHourWeather(dayWeather)
     }
 
     fun clear() {

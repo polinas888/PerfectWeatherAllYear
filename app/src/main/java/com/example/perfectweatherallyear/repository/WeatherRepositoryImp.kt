@@ -41,13 +41,14 @@ class WeatherRepositoryImp @Inject constructor(
             .subscribe())
     }
 
-    override fun updateForecastWeather(location: Location, daysAmount: Int) {
+    override fun getUpdatedRemoteForecastWeather(location: Location, daysAmount: Int) : MutableLiveData<List<DayWeather>> {
         compositeDisposable.add(
             remoteDataSource.getWeatherForecast(location.name, daysAmount)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<List<DayWeather>>() {
                     override fun onNext(_listDayWeather: List<DayWeather>) {
+                        listDayWeather.clear()
                         insertDayWeather(listDayWeather)
                         listDayWeather.addAll(_listDayWeather)
                     }
@@ -61,6 +62,7 @@ class WeatherRepositoryImp @Inject constructor(
                     }
                 })
         )
+        return remoteWeatherForecastLiveData
     }
 
     override fun getLocalWeatherForecastLiveData(location: Location, numDays: Int) : MutableLiveData<List<DayWeather>> {
@@ -73,11 +75,7 @@ class WeatherRepositoryImp @Inject constructor(
         return localWeatherForecastLiveData
     }
 
-    override fun getRemoteWeatherForecastLiveData() : MutableLiveData<List<DayWeather>> {
-        return remoteWeatherForecastLiveData
-    }
-
-    override fun updateHourWeather(dayWeather: DayWeather) {
+    override fun getUpdatedRemoteHourWeather(dayWeather: DayWeather) : MutableLiveData<List<HourWeather>> {
         compositeDisposable.add(localLocationDataSource.getCityNameByCityId(dayWeather.cityId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -95,6 +93,7 @@ class WeatherRepositoryImp @Inject constructor(
                     Log.i("RemoteHourWeatherLog", "Got remote hourly weather")
                 }
             }))
+        return remoteHourlyWeatherLiveData
     }
 
     private fun updateHourlyWeather(dayWeather: DayWeather) {
@@ -103,6 +102,7 @@ class WeatherRepositoryImp @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<List<HourWeather>>() {
                 override fun onNext(_listHourWeather: List<HourWeather>) {
+                    listHourWeather.clear()
                     insertHourWeather()
                     listHourWeather.addAll(_listHourWeather)
                 }
@@ -127,10 +127,6 @@ class WeatherRepositoryImp @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe())
-    }
-
-    override fun getRemoteHourWeatherLiveData(): MutableLiveData<List<HourWeather>> {
-        return remoteHourlyWeatherLiveData
     }
 
     override fun getLocalHourWeatherLiveData(dayWeather: DayWeather) : MutableLiveData<List<HourWeather>> {

@@ -23,8 +23,7 @@ class WeatherForecastViewModel(
     fun loadForecast(location: Location) {
         if (mConnectionDetector.isConnectingToInternet()) {
             try {
-                weatherRepository.updateForecastWeather(location, DAYS_NUMBER)
-                remoteWeatherForecastLiveData = weatherRepository.getRemoteWeatherForecastLiveData()
+                getUpdatedRemoteForecastData(location, DAYS_NUMBER)
                 getLocalWeatherForecast(location, DAYS_NUMBER)
             } catch (e: Exception) {
                 Log.i("WeatherLog", "Couldn't get online weather")
@@ -32,6 +31,10 @@ class WeatherForecastViewModel(
         } else {
             getLocalWeatherForecast(location, DAYS_NUMBER)
         }
+    }
+
+    fun getUpdatedRemoteForecastData(location: Location, numDays: Int) : MutableLiveData<List<DayWeather>> {
+        return weatherRepository.getUpdatedRemoteForecastWeather(location, numDays)
     }
 
     fun getLocalWeatherForecast(location: Location, numDays: Int) : MutableLiveData<List<DayWeather>> {
