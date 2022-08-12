@@ -1,37 +1,44 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.example.perfectweatherallyear.api.ConnectionDetector
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.WeatherRepository
-import kotlinx.coroutines.launch
 
 const val DAYS_NUMBER = 3
 
 class WeatherForecastViewModel(
     val weatherRepository: WeatherRepository,
-    val locationRepository: LocationRepository
+    val locationRepository: LocationRepository,
+    val context: Context
 ) : ViewModel() {
-    val weatherForecastLiveData = MutableLiveData<List<DayWeather>>()
+    private val mConnectionDetector: ConnectionDetector = ConnectionDetector(context)
+    var remoteWeatherForecastLiveData = MutableLiveData<List<DayWeather>>()
 
     fun loadForecast(location: Location) {
-        viewModelScope.launch {
-            when (val weatherForecast = getWeatherForecast(location, DAYS_NUMBER)) {
-                is DataResult.Ok -> {
-                    weatherForecastLiveData.value = weatherForecast.response!!
-                }
-                is DataResult.Error ->
-                    weatherForecast.error
+        if (mConnectionDetector.isConnectingToInternet()) {
+            try {
+                weatherRepository.updateForecastWeather(location, DAYS_NUMBER)
+                remoteWeatherForecastLiveData = weatherRepository.getRemoteWeatherForecastLiveData()
+                getLocalWeatherForecast(location, DAYS_NUMBER)
+            } catch (e: Exception) {
+                Log.i("WeatherLog", "Couldn't get online weather")
             }
+        } else {
+            getLocalWeatherForecast(location, DAYS_NUMBER)
         }
     }
 
-    private suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
-        return weatherRepository.getWeatherForecast(location, daysAmount)
+    fun getLocalWeatherForecast(location: Location, numDays: Int) : MutableLiveData<List<DayWeather>> {
+        return weatherRepository.getLocalWeatherForecastLiveData(location, numDays)
+    }
+
+    fun clear() {
+        weatherRepository.clear()
     }
 }
-

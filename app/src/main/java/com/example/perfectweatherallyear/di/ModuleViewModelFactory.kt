@@ -23,7 +23,7 @@ object ModuleViewModelFactory {
     }
 
     @Provides
-    fun provideDetailViewModelFactory(weatherRepository: WeatherRepository): DetailWeatherViewModelFactory {
-        return DetailWeatherViewModelFactory(repository = weatherRepository)
+    fun provideDetailViewModelFactory(weatherRepository: WeatherRepository, context: Context): DetailWeatherViewModelFactory {
+        return DetailWeatherViewModelFactory(repository = weatherRepository, context = context )
     }
 }

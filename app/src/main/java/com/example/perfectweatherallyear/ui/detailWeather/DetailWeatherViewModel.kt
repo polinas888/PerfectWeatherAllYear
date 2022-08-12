@@ -1,31 +1,37 @@
 package com.example.perfectweatherallyear.ui.detailWeather
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.example.perfectweatherallyear.api.ConnectionDetector
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
-import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.WeatherRepository
-import com.example.perfectweatherallyear.ui.weekWeather.DAYS_NUMBER
-import kotlinx.coroutines.launch
 
-class DetailWeatherViewModel(val repository: WeatherRepository) : ViewModel() {
-    val detailWeatherLiveData = MutableLiveData<List<HourWeather>>()
+class DetailWeatherViewModel(val weatherRepository: WeatherRepository, context: Context) : ViewModel() {
+    private val mConnectionDetector: ConnectionDetector = ConnectionDetector(context)
+    var remoteHourWeatherLiveData = MutableLiveData<List<HourWeather>>()
 
-    fun loadData(dayWeather: DayWeather) {
-        viewModelScope.launch {
-            when (val hourlyWeather = getHourlyWeather(DAYS_NUMBER, dayWeather)) {
-                is DataResult.Ok -> {
-                    detailWeatherLiveData.value = hourlyWeather.response!!
-                }
-                is DataResult.Error -> hourlyWeather.error
+    fun loadHourlyWeather(dayWeather: DayWeather) {
+        if (mConnectionDetector.isConnectingToInternet()) {
+            try {
+                weatherRepository.updateHourWeather(dayWeather)
+                remoteHourWeatherLiveData = weatherRepository.getRemoteHourWeatherLiveData()
+                getLocalHourWeatherLiveData(dayWeather)
+            } catch (e: Exception) {
+                Log.i("WeatherLog", "Couldn't get online weather")
             }
+        } else {
+            getLocalHourWeatherLiveData(dayWeather)
         }
     }
 
-    private suspend fun getHourlyWeather(daysAmount: Int, dayWeather: DayWeather)
-            : DataResult<List<HourWeather>> {
-        return repository.getHourlyWeather(daysAmount, dayWeather)
+    fun getLocalHourWeatherLiveData(dayWeather: DayWeather) : MutableLiveData<List<HourWeather>> {
+        return weatherRepository.getLocalHourWeatherLiveData(dayWeather)
+    }
+
+    fun clear() {
+        weatherRepository.clear()
     }
 }

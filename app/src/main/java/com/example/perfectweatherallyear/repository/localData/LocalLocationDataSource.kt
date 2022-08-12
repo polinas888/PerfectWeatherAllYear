@@ -1,26 +1,28 @@
 package com.example.perfectweatherallyear.repository.localData
 
 import com.example.perfectweatherallyear.model.Location
+import io.reactivex.Observable
 import javax.inject.Inject
 
 class LocalLocationDataSource @Inject constructor(locationDao: LocationDao) : LocationDao {
+
     private val localService: LocationDao by lazy {
         locationDao
     }
 
-    override suspend fun insertLocation(locations: List<Location>) {
-        localService.insertLocation(locations)
+    override fun insertLocations(locations: List<Location>) {
+        localService.insertLocations(locations)
     }
 
-    override suspend fun getLocationIdByCityName(city: String): Int {
+    override fun getLocationIdByCityName(city: String): Observable<Int> {
         return localService.getLocationIdByCityName(city)
     }
 
-    override suspend fun getCityNameByCityId(cityId: Int): String {
+    override fun getCityNameByCityId(cityId: Int): Observable<String> {
         return localService.getCityNameByCityId(cityId)
     }
 
-    override suspend fun getLocations(): List<Location> {
+    override fun getLocations(): Observable<List<Location>?> {
         return localService.getLocations()
     }
 }

@@ -16,18 +16,22 @@ import com.example.perfectweatherallyear.ui.weekWeather.WeatherForecastFragment
 import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
-class LocationFragment: Fragment() {
+class LocationFragment : Fragment() {
     private lateinit var binding: FragmentLocationBinding
     private lateinit var locationAdapter: LocationAdapter
 
     @Inject
     lateinit var locationViewModelFactory: LocationViewModelFactory
 
-    private val locationViewModel by viewModels<LocationViewModel>{
+    private val locationViewModel by viewModels<LocationViewModel> {
         locationViewModelFactory
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentLocationBinding.inflate(layoutInflater)
         requireContext().appComponent.inject(this)
         return binding.root
@@ -43,20 +47,28 @@ class LocationFragment: Fragment() {
         initViewModel()
     }
 
-    private fun initViewModel(){
-        locationViewModel.loadLocation()
-        locationViewModel.listLocationsLiveData.observe(viewLifecycleOwner) { locationAdapter.setData(it) }
+    private fun initViewModel() {
+        locationViewModel.listLocationsLiveData.observe(viewLifecycleOwner) {
+            locationAdapter.setData(
+                it
+            )
+        }
     }
 
     private fun adapterOnClick(location: Location) {
         val fragment = WeatherForecastFragment()
-            val args = Bundle()
-            val builder = GsonBuilder()
-            val gson = builder.create()
-            val result: String = gson.toJson(location)
+        val args = Bundle()
+        val builder = GsonBuilder()
+        val gson = builder.create()
+        val result: String = gson.toJson(location)
 
-            args.putString(ARG_LOCATION, result)
-            fragment.changeFragment(args, parentFragmentManager)
+        args.putString(ARG_LOCATION, result)
+        fragment.changeFragment(args, parentFragmentManager)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        locationViewModel.clear()
     }
 }
 
