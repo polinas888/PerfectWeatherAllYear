@@ -59,7 +59,6 @@ class WeatherForecastFragment : Fragment() {
 
     private fun initViewModel(){
         weekWeatherViewModel.loadForecast(location)
-        weekWeatherViewModel.getUpdatedRemoteForecastData(location, DAYS_NUMBER).observe(viewLifecycleOwner) { weekWeatherViewModel.getLocalWeatherForecast(location, DAYS_NUMBER)}
         weekWeatherViewModel.getLocalWeatherForecast(location, DAYS_NUMBER).observe(viewLifecycleOwner) { weatherForecastAdapter.setData(it) }
     }
 

@@ -1,14 +1,16 @@
 package com.example.perfectweatherallyear.repository
 
-import androidx.lifecycle.MutableLiveData
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
+import io.reactivex.Observable
 
 interface WeatherRepository {
-    fun getUpdatedRemoteForecastWeather(location: Location, daysAmount: Int) : MutableLiveData<List<DayWeather>>
-    fun getUpdatedRemoteHourWeather(dayWeather: DayWeather) : MutableLiveData<List<HourWeather>>
-    fun getLocalWeatherForecastLiveData(location: Location, numDays: Int) : MutableLiveData<List<DayWeather>>
-    fun getLocalHourWeatherLiveData(dayWeather: DayWeather) : MutableLiveData<List<HourWeather>>
+    fun getRemoteWeatherForecast(city: String, daysAmount: Int): Observable<List<DayWeather>>
+    fun insertDayWeather(dataWeatherData: List<DayWeather>?)
+    fun getLocalWeatherForecast(location: Location, numDays: Int) : Observable<List<DayWeather>>
+    fun insertHourWeather(hourWeatherData: List<HourWeather>)
+    fun getRemoteHourlyWeather(numDay: Int, dayWeather: DayWeather, cityName: String): Observable<List<HourWeather>>
+    fun getLocalHourWeather(dayWeather: DayWeather) : Observable<List<HourWeather>>
     fun clear()
 }

@@ -9,6 +9,10 @@ import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.WeatherRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableObserver
+import io.reactivex.schedulers.Schedulers
 
 const val DAYS_NUMBER = 3
 
@@ -18,13 +22,13 @@ class WeatherForecastViewModel(
     val context: Context
 ) : ViewModel() {
     private val mConnectionDetector: ConnectionDetector = ConnectionDetector(context)
-    var remoteWeatherForecastLiveData = MutableLiveData<List<DayWeather>>()
+    private val compositeDisposable = CompositeDisposable()
+    val localWeatherForecastLiveData = MutableLiveData<List<DayWeather>>()
 
     fun loadForecast(location: Location) {
         if (mConnectionDetector.isConnectingToInternet()) {
             try {
-                getUpdatedRemoteForecastData(location, DAYS_NUMBER)
-                getLocalWeatherForecast(location, DAYS_NUMBER)
+                getUpdatedForecastWeather(location, DAYS_NUMBER)
             } catch (e: Exception) {
                 Log.i("WeatherLog", "Couldn't get online weather")
             }
@@ -33,12 +37,35 @@ class WeatherForecastViewModel(
         }
     }
 
-    fun getUpdatedRemoteForecastData(location: Location, numDays: Int) : MutableLiveData<List<DayWeather>> {
-        return weatherRepository.getUpdatedRemoteForecastWeather(location, numDays)
+    private fun getUpdatedForecastWeather(location: Location, daysAmount: Int) {
+        compositeDisposable.add(
+            weatherRepository.getRemoteWeatherForecast(location.name, daysAmount)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableObserver<List<DayWeather>>() {
+                    override fun onNext(_listDayWeather: List<DayWeather>) {
+                        weatherRepository.insertDayWeather(_listDayWeather)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Log.i("UpdateWeatherLog", "Couldn't update weather")
+                    }
+
+                    override fun onComplete() {
+                        getLocalWeatherForecast(location, DAYS_NUMBER)
+                    }
+                })
+        )
     }
 
     fun getLocalWeatherForecast(location: Location, numDays: Int) : MutableLiveData<List<DayWeather>> {
-        return weatherRepository.getLocalWeatherForecastLiveData(location, numDays)
+        compositeDisposable.add(weatherRepository.getLocalWeatherForecast(location, numDays)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { listDayWeather ->
+                localWeatherForecastLiveData.value = listDayWeather
+            })
+        return localWeatherForecastLiveData
     }
 
     fun clear() {

@@ -40,14 +40,8 @@ class LocationRepositoryImpl @Inject constructor(
         return locationId
     }
 
-    override fun getCityNameByCityId(cityId: Int): String {
-        compositeDisposable.add(localLocationDataSource.getCityNameByCityId(cityId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { name ->
-                cityName = name
-            })
-        return cityName
+    override fun getCityNameByCityId(cityId: Int): Observable<String> {
+        return localLocationDataSource.getCityNameByCityId(cityId)
     }
 
     override fun loadUserLocations(): Observable<List<Location>?> {
