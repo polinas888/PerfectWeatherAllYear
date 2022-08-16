@@ -1,10 +1,11 @@
 package com.example.perfectweatherallyear.repository
 
 import com.example.perfectweatherallyear.model.Location
+import io.reactivex.Observable
 
 interface LocationRepository {
-    suspend fun insertLocations(locations: List<Location>)
-    suspend fun getLocationIdByCityName(city: String): Int
-    suspend fun getCityNameByCityId(cityId: Int): String
-    suspend fun loadUserLocations(): List<Location>
+    fun insertLocations(locations: List<Location>)
+    fun getLocationIdByCityName(city: String): Int
+    fun getCityNameByCityId(cityId: Int): Observable<String>
+    fun loadUserLocations(): Observable<List<Location>?>
 }

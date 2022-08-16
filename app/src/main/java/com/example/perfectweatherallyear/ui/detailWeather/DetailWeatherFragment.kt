@@ -49,13 +49,20 @@ class DetailWeatherFragment : Fragment() {
         initViewModel()
 
         binding.swipeRefresh.setOnRefreshListener {
-            detailWeatherViewModel.loadData(dayWeather)
+            detailWeatherViewModel.loadHourlyWeather(dayWeather)
             binding.swipeRefresh.isRefreshing = false
         }
     }
 
     private fun initViewModel(){
-        detailWeatherViewModel.loadData(dayWeather)
-        detailWeatherViewModel.detailWeatherLiveData.observe(viewLifecycleOwner) { detailWeatherForecastAdapter.setData(it) }
+        detailWeatherViewModel.loadHourlyWeather(dayWeather)
+        detailWeatherViewModel.localHourlyWeatherLiveData.observe(viewLifecycleOwner) {
+                detailWeatherForecastAdapter.setData(it)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        detailWeatherViewModel.clear()
     }
 }

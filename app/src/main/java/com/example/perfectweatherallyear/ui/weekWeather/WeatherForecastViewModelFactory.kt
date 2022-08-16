@@ -12,7 +12,7 @@ class WeatherForecastViewModelFactory @Inject constructor(val weatherRepository:
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(WeatherForecastViewModel::class.java))
-            return WeatherForecastViewModel(weatherRepository, locationRepository) as T
+            return WeatherForecastViewModel(weatherRepository, locationRepository, context) as T
         else
             throw IllegalArgumentException("Unable to construct viewModel")
     }

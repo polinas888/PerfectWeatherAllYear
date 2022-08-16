@@ -1,56 +1,59 @@
 package com.example.perfectweatherallyear.repository
 
-import android.content.Context
-import com.example.perfectweatherallyear.api.ConnectionDetector
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.localData.LocalLocationDataSource
 import com.example.perfectweatherallyear.repository.localData.LocalWeatherDataSource
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.RemoteWeatherDataSource
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class WeatherRepositoryImp @Inject constructor(
     private val remoteDataSource: RemoteWeatherDataSource,
-    private val localWeatherDataSource: LocalWeatherDataSource,
-    private val localLocationDataSource: LocalLocationDataSource,
-    context: Context
+    private val localWeatherDataSource: LocalWeatherDataSource
 ) : WeatherRepository {
-    private val mConnectionDetector: ConnectionDetector = ConnectionDetector(context)
+    private val compositeDisposable = CompositeDisposable()
 
-    override suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
-        return if (mConnectionDetector.isConnectingToInternet())
-            try {
-                val remoteWeekWeather =
-                    remoteDataSource.getWeatherForecast(location.name, daysAmount)
-                localWeatherDataSource.insertDayWeather(remoteWeekWeather)
-
-                val localWeekWeather =
-                    localWeatherDataSource.getWeatherForecast(location.id, daysAmount)
-                DataResult.Ok(localWeekWeather)
-            } catch (e: Exception) {
-                DataResult.Error(e.message.toString())
-            }
-        else {
-            DataResult.Ok(localWeatherDataSource.getWeatherForecast(location.id, daysAmount))
+    override fun insertDayWeather(dataWeatherData: List<DayWeather>?) {
+        compositeDisposable.add(Completable.fromAction {
+            localWeatherDataSource.insertDayWeather(dataWeatherData)
         }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe())
     }
 
-    override suspend fun getHourlyWeather(
-        daysAmount: Int, dayWeather: DayWeather
-    ): DataResult<List<HourWeather>> {
-        return if (mConnectionDetector.isConnectingToInternet())
-            try {
-                val cityName = localLocationDataSource.getCityNameByCityId(dayWeather.cityId)
-                val remoteHourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, dayWeather, cityName)
-                localWeatherDataSource.insertHourlyWeather(remoteHourlyWeather)
-                val localHourWeather = localWeatherDataSource.getHourlyWeather(dayWeather.id)
-                DataResult.Ok(localHourWeather)
-            } catch (e: Exception) {
-                DataResult.Error(e.message.toString())
+    override fun getRemoteWeatherForecast(city: String, daysAmount: Int): Observable<List<DayWeather>> {
+        return remoteDataSource.getWeatherForecast(city, daysAmount)
+    }
+
+    override fun getLocalWeatherForecast(location: Location, numDays: Int) : Observable<List<DayWeather>> {
+        return localWeatherDataSource.getWeatherForecast(location.id, numDays)
+    }
+
+    override fun insertHourWeather(hourWeatherData: List<HourWeather>) {
+        compositeDisposable.add(
+            Completable.fromAction {
+                localWeatherDataSource.insertHourlyWeather(hourWeatherData)
             }
-        else {
-            DataResult.Ok(localWeatherDataSource.getHourlyWeather(dayWeather.id))
-        }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe())
+    }
+
+    override fun getRemoteHourlyWeather(numDay: Int, dayWeather: DayWeather, cityName: String): Observable<List<HourWeather>> {
+        return remoteDataSource.getHourlyWeather(numDay, dayWeather, cityName)
+    }
+
+    override fun getLocalHourWeather(dayWeather: DayWeather) : Observable<List<HourWeather>> {
+        return localWeatherDataSource.getHourlyWeather(dayWeather.id)
+    }
+
+    override fun clear() {
+        compositeDisposable.clear()
     }
 }

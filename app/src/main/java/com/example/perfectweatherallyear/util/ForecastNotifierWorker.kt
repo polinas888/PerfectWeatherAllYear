@@ -8,9 +8,11 @@ import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.ui.weekWeather.DAYS_NUMBER
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -20,66 +22,59 @@ class ForecastNotifierWorker(appContext: Context, workerParams: WorkerParameters
     CoroutineWorker(appContext, workerParams) {
     @Inject
     lateinit var repository: WeatherRepository
-     lateinit var dayWeatherForNotification: DayWeather
-    lateinit var hourWeatherForNotification:  HourWeather
+    private val compositeDisposable = CompositeDisposable()
+    val location = Location(1, "Moscow")
 
     init {
         appContext.appComponent.inject(this)
     }
 
     override suspend fun doWork(): Result {
-
-        return when (val hourlyWeatherForNotificationResult = loadHourWeatherTemp()) {
-            is DataResult.Ok -> {
-                NotificationHandler.postNotification(applicationContext, hourlyWeatherForNotificationResult.response)
-                success()
-            }
-            is DataResult.Error -> {
-                hourlyWeatherForNotificationResult.error
-                failure()
-            }
-        }
-    }
-
-    private suspend fun loadHourWeatherTemp(): DataResult<String> {
-        val dayWeather = loadDayWeather()
-
-        return if (dayWeather == null) {
-            DataResult.Error("No day weather data")
+        val temperatureForNotification = getTemperatureForNotification()
+        return if (temperatureForNotification.isNotEmpty()){
+            userNotification(applicationContext, temperatureForNotification)
+            success()
         } else {
-            val hourlyWeatherForecast = repository.getHourlyWeather(DAYS_NUMBER, dayWeather)
-            getHourWeatherTemp(hourlyWeatherForecast)
+            failure()
         }
     }
 
-    private suspend fun loadDayWeather(): DayWeather? {
-        val location = Location(1, "Moscow")
-        return when (val weatherForecast = repository.getWeatherForecast(location, DAYS_NUMBER)) {
-            is DataResult.Ok -> {
-                weatherForecast.response[weatherForecast.response.size - 1]
-            }
-            is DataResult.Error ->
-                null
-        }
+    private fun userNotification(applicationContext: Context, temperatureForNotification:  String) {
+        NotificationHandler.postNotification(applicationContext, temperatureForNotification)
     }
 
-    private fun getHourWeatherTemp(hourlyWeatherForecast: DataResult<List<HourWeather>>): DataResult<String> {
-        var hourWeatherTemp = ""
+    private fun getTemperatureForNotification(): String {
+        val listDayWeather = getListDayWeather()
+        val listHourlyWeather = getHourlyWeather(listDayWeather, DAYS_NUMBER, location.name)
+        return getTemperatureString(listHourlyWeather)
+    }
 
-        return when (hourlyWeatherForecast)  {
-            is DataResult.Ok -> {
-                val sdf = SimpleDateFormat("HH:mm:ss")
-                val currentHour: String = sdf.format(Date()).take(2)
-                for (hourWeather in hourlyWeatherForecast.response) {
-                    val hour = hourWeather.time.substringAfterLast(" ").take(2)
-                    if (hour == currentHour) {
-                        hourWeatherTemp = "temperature ${hourWeather.temperature}"
-                    }
-                }
-                DataResult.Ok(hourWeatherTemp)
+    private fun getListDayWeather(): List<DayWeather> {
+        compositeDisposable.add(
+            return repository.getRemoteWeatherForecast(location.name, DAYS_NUMBER)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .blockingFirst())
+    }
+
+    private fun getHourlyWeather(listDayWeather:  List<DayWeather>, numDay: Int, cityName: String) : List<HourWeather> {
+        val dayWeatherForNotification = listDayWeather[listDayWeather.size - 1]
+        return repository.getRemoteHourlyWeather(numDay, dayWeatherForNotification, cityName)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .blockingFirst()
+    }
+
+    private fun getTemperatureString(hourlyWeatherForecast: List<HourWeather>) : String {
+        val sdf = SimpleDateFormat("HH:mm:ss")
+        val currentHour: String = sdf.format(Date()).take(2)
+        for (hourWeather in hourlyWeatherForecast) {
+            val hour = hourWeather.time.substringAfterLast(" ").take(2)
+             if (hour == currentHour) {
+                 return "temperature ${hourWeather.temperature}"
             }
-            is DataResult.Error -> DataResult.Error(hourlyWeatherForecast.error)
         }
+        return ""
     }
 
     companion object {

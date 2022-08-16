@@ -5,18 +5,19 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.perfectweatherallyear.model.Location
+import io.reactivex.Observable
 
 @Dao
 interface LocationDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertLocation(locations: List<Location>)
+    fun insertLocations(locations: List<Location>)
 
     @Query("SELECT location.id FROM location WHERE name =:city")
-    suspend fun getLocationIdByCityName(city: String): Int
+    fun getLocationIdByCityName(city: String): Observable<Int>
 
     @Query("SELECT location.name FROM location WHERE location.id =:cityId")
-    suspend fun getCityNameByCityId(cityId: Int): String
+    fun getCityNameByCityId(cityId: Int): Observable<String>
 
     @Query("SELECT * FROM location")
-    suspend fun getLocations(): List<Location>
+    fun getLocations(): Observable<List<Location>?>
 }

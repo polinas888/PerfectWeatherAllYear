@@ -59,7 +59,7 @@ class WeatherForecastFragment : Fragment() {
 
     private fun initViewModel(){
         weekWeatherViewModel.loadForecast(location)
-        weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner) { weatherForecastAdapter.setData(it) }
+        weekWeatherViewModel.getLocalWeatherForecast(location, DAYS_NUMBER).observe(viewLifecycleOwner) { weatherForecastAdapter.setData(it) }
     }
 
     private fun adapterOnClick(dayWeather: DayWeather) {
@@ -71,5 +71,10 @@ class WeatherForecastFragment : Fragment() {
 
         args.putString(ARG_DAY_WEATHER, result)
         fragment.changeFragment(args, parentFragmentManager)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        weekWeatherViewModel.clear()
     }
 }
