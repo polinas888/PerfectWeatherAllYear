@@ -1,7 +1,6 @@
 package com.example.perfectweatherallyear.util
 
 import android.content.Context
-import android.util.Log
 import androidx.work.*
 import androidx.work.ListenableWorker.Result.failure
 import androidx.work.ListenableWorker.Result.success
@@ -9,12 +8,10 @@ import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.ui.weekWeather.DAYS_NUMBER
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,71 +23,49 @@ class ForecastNotifierWorker(appContext: Context, workerParams: WorkerParameters
     @Inject
     lateinit var repository: WeatherRepository
     private val compositeDisposable = CompositeDisposable()
-    var isReady: DataResult<Any>? = null
+    val location = Location(1, "Moscow")
 
     init {
         appContext.appComponent.inject(this)
     }
 
     override suspend fun doWork(): Result {
-        loadHourWeather()
-        while (isReady == null) {
-            Thread.sleep(1000)
-        }
-        return if (isReady == DataResult.Ok(Any()))
+        val temperatureForNotification = getTemperatureForNotification()
+        return if (temperatureForNotification.isNotEmpty()){
+            userNotification(applicationContext, temperatureForNotification)
             success()
-        else failure()
+        } else {
+            failure()
+        }
     }
 
-    private fun loadHourWeather() {
-        val location = Location(1, "Moscow")
+    private fun userNotification(applicationContext: Context, temperatureForNotification:  String) {
+        NotificationHandler.postNotification(applicationContext, temperatureForNotification)
+    }
+
+    private fun getTemperatureForNotification(): String {
+        val listDayWeather = getListDayWeather()
+        val listHourlyWeather = getHourlyWeather(listDayWeather, DAYS_NUMBER, location.name)
+        return getTemperatureString(listHourlyWeather)
+    }
+
+    private fun getListDayWeather(): List<DayWeather> {
         compositeDisposable.add(
-            repository.getRemoteWeatherForecast(location.name, DAYS_NUMBER)
+            return repository.getRemoteWeatherForecast(location.name, DAYS_NUMBER)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<List<DayWeather>>() {
-                    override fun onNext(_listDayWeather: List<DayWeather>) {
-                        val dayWeatherForNotification = _listDayWeather[_listDayWeather.size - 1]
-                        getHourlyWeatherTemp(DAYS_NUMBER, dayWeatherForNotification, location.name)
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Log.i("UpdateWeatherLog", "Couldn't update weather")
-                    }
-
-                    override fun onComplete() {
-                        Log.i("UpdateWeatherLog", "Got weather")
-                    }
-                })
-        )
+                .blockingFirst())
     }
 
-    fun getHourlyWeatherTemp(numDay: Int, dayWeather: DayWeather, cityName: String) {
-        compositeDisposable.add(
-            repository.getRemoteHourlyWeather(numDay, dayWeather, cityName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableObserver<List<HourWeather>>() {
-                    override fun onNext(_listHourWeather: List<HourWeather>) {
-                        val temperatureForNotification =
-                            getTemperatureForNotification(_listHourWeather)
-                        NotificationHandler.postNotification(applicationContext, temperatureForNotification)
-                        isReady = DataResult.Ok(Any())
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Log.i("UpdateWeatherLog", "Couldn't update weather")
-                        isReady = DataResult.Error("error")
-                    }
-
-                    override fun onComplete() {
-                        Log.i("UpdateWeatherLog", "Got weather")
-                    }
-                })
-        )
+    private fun getHourlyWeather(listDayWeather:  List<DayWeather>, numDay: Int, cityName: String) : List<HourWeather> {
+        val dayWeatherForNotification = listDayWeather[listDayWeather.size - 1]
+        return repository.getRemoteHourlyWeather(numDay, dayWeatherForNotification, cityName)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .blockingFirst()
     }
 
-    private fun getTemperatureForNotification(hourlyWeatherForecast: List<HourWeather>):String {
+    private fun getTemperatureString(hourlyWeatherForecast: List<HourWeather>) : String {
         val sdf = SimpleDateFormat("HH:mm:ss")
         val currentHour: String = sdf.format(Date()).take(2)
         for (hourWeather in hourlyWeatherForecast) {
