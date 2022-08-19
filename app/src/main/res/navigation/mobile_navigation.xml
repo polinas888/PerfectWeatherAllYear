@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/locationFragment">
+    app:startDestination="@id/nav_authorization">
+
+    <include app:graph="@navigation/nav_authorization"/>
 
     <fragment
         android:id="@+id/weekWeatherFragment"
@@ -23,6 +25,7 @@
         android:id="@+id/locationFragment"
         android:name="com.example.perfectweatherallyear.ui.location.LocationFragment"
         android:label="LocationFragment" >
+        <deepLink app:uri="perfectweatherallyear://location" />
         <action
             android:id="@+id/action_locationFragment_to_weekWeatherFragment"
             app:destination="@id/weekWeatherFragment" />
