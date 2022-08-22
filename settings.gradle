@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "PerfectWeatherAllYear"
 include ':app'
+include ':authorization'
