@@ -2,9 +2,6 @@ package com.example.perfectweatherallyear.authorization
 
 import android.os.Build
 import android.os.Bundle
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyPermanentlyInvalidatedException
-import android.security.keystore.KeyProperties
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,19 +17,14 @@ import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.perfectweatherallyear.authorization.databinding.FragmentAuthorizationBinding
-import java.io.IOException
-import java.security.*
-import java.security.cert.CertificateException
+import com.example.perfectweatherallyear.authorization.utils.Encryption
+import com.example.perfectweatherallyear.authorization.utils.KEY_NAME
 import javax.crypto.Cipher
-import javax.crypto.KeyGenerator
-import javax.crypto.NoSuchPaddingException
-import javax.crypto.SecretKey
 
+const val TAG = "Authentication"
 class AuthorizationFragment : Fragment() {
     private lateinit var binding: FragmentAuthorizationBinding
     private lateinit var biometricPrompt: BiometricPrompt
-    private lateinit var keyStore: KeyStore
-    private lateinit var keyGenerator: KeyGenerator
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAuthorizationBinding.inflate(layoutInflater)
@@ -42,9 +34,8 @@ class AuthorizationFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupKeyStoreAndKeyGenerator()
-        val cipher = setupCiphers()
-
+        Encryption.setupKeyStoreAndKeyGenerator()
+        val cipher = Encryption.setupCiphers()
         biometricPrompt = createBiometricPrompt()
         loginPressed(cipher)
     }
@@ -53,7 +44,7 @@ class AuthorizationFragment : Fragment() {
         val biometricManager = BiometricManager.from(requireContext())
         when (biometricManager.canAuthenticate()) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
-                createKey()
+                Encryption.createKey()
                 binding.logButton.setOnClickListener(PurchaseButtonClickListener(cipher, KEY_NAME))
             }
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
@@ -66,68 +57,6 @@ class AuthorizationFragment : Fragment() {
                 toast("An unknown error occurred. Please check your Biometric settings")
         }
     }
-
-    private fun setupKeyStoreAndKeyGenerator() {
-        try {
-            keyStore = KeyStore.getInstance(ANDROID_KEY_STORE)
-        } catch (e: KeyStoreException) {
-            throw RuntimeException("Failed to get an instance of KeyStore", e)
-        }
-
-        try {
-            keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
-        } catch (e: Exception) {
-            when (e) {
-                is NoSuchAlgorithmException,
-                is NoSuchProviderException ->
-                    throw RuntimeException("Failed to get an instance of KeyGenerator", e)
-                else -> throw e
-            }
-        }
-    }
-
-    private fun createKey() {
-        try {
-            keyStore.load(null)
-
-            val keyProperties = KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-            val builder = KeyGenParameterSpec.Builder(KEY_NAME, keyProperties)
-                .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                .setUserAuthenticationRequired(true)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                .setInvalidatedByBiometricEnrollment(true)
-
-            keyGenerator.run {
-                init(builder.build())
-                generateKey()
-            }
-        } catch (e: Exception) {
-            when (e) {
-                is NoSuchAlgorithmException,
-                is InvalidAlgorithmParameterException,
-                is CertificateException,
-                is IOException -> throw RuntimeException(e)
-                else -> throw e
-            }
-        }
-    }
-
-    private fun setupCiphers(): Cipher {
-        val cipher: Cipher
-        try {
-            val cipherString = "${KeyProperties.KEY_ALGORITHM_AES}/${KeyProperties.BLOCK_MODE_CBC}/${KeyProperties.ENCRYPTION_PADDING_PKCS7}"
-            cipher = Cipher.getInstance(cipherString)
-        } catch (e: Exception) {
-            when (e) {
-                is NoSuchAlgorithmException,
-                is NoSuchPaddingException ->
-                    throw RuntimeException("Failed to get an instance of Cipher", e)
-                else -> throw e
-            }
-        }
-        return cipher
-    }
-
 
     private fun createBiometricPrompt(): BiometricPrompt {
         val executor = ContextCompat.getMainExecutor(requireContext())
@@ -183,26 +112,6 @@ class AuthorizationFragment : Fragment() {
             .build()
     }
 
-    private fun initCipher(cipher: Cipher, keyName: String): Boolean {
-        try {
-            keyStore.load(null)
-            cipher.init(Cipher.ENCRYPT_MODE, keyStore.getKey(keyName, null) as SecretKey)
-            return true
-        } catch (e: Exception) {
-            when (e) {
-                is KeyPermanentlyInvalidatedException -> return false
-                is KeyStoreException,
-                is CertificateException,
-                is UnrecoverableKeyException,
-                is IOException,
-                is NoSuchAlgorithmException,
-                is InvalidKeyException -> throw RuntimeException("Failed to init Cipher", e)
-                else -> throw e
-            }
-        }
-    }
-
-
     private inner class PurchaseButtonClickListener constructor(
         var cipher: Cipher,
         var keyName: String
@@ -212,17 +121,11 @@ class AuthorizationFragment : Fragment() {
 
             val promptInfo = createPromptInfo()
 
-            if (initCipher(cipher, keyName)) {
+            if (Encryption.initCipher(cipher, keyName)) {
                 biometricPrompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(cipher))
             } else {
              //TODO   loginWithPassword()
             }
         }
-    }
-
-    companion object {
-        private const val TAG = "Authentification"
-        private const val ANDROID_KEY_STORE = "AndroidKeyStore"
-        private const val KEY_NAME = "default_key"
     }
 }
