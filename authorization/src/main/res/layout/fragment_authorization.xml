@@ -9,14 +9,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="32dp"
-        android:text="Authorization fragment" />
+        android:layout_marginTop="100dp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:textSize="24sp"
+        android:text="@string/welcome_to_app" />
 
     <Button
         android:id="@+id/log_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="32dp"
-        android:text="Log in"/>
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:text="@string/log_in"/>
 
 </LinearLayout>
