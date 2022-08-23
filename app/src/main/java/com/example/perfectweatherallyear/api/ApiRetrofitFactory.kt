@@ -1,6 +1,7 @@
 package com.example.perfectweatherallyear.api
 
 import com.example.perfectweatherallyear.BuildConfig
+import com.example.perfectweatherallyear.Logger
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,13 +24,15 @@ object ApiRetrofitFactory {
         chain.proceed(newRequest)
     }
 
-    private val logging: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        setLevel(HttpLoggingInterceptor.Level.BODY)
+    private fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+        val interceptor = HttpLoggingInterceptor { message -> Logger.i(message) }
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        return interceptor
     }
 
     private val httpClient = OkHttpClient().newBuilder()
         .addInterceptor(authInterceptor)
-        .addInterceptor(logging)
+        .addInterceptor(provideHttpLoggingInterceptor())
         .build()
 
     fun weatherApiRetrofit(): Retrofit = Retrofit.Builder()
