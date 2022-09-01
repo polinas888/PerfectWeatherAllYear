@@ -44,7 +44,7 @@ class LocationFragment: Fragment() {
     }
 
     private fun initViewModel(){
-        locationViewModel.loadLocation()
+        locationViewModel.loadLocations()
         locationViewModel.listLocationsLiveData.observe(viewLifecycleOwner) { locationAdapter.setData(it) }
     }
 

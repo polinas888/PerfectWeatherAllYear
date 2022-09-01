@@ -1,17 +1,17 @@
 package com.example.perfectweatherallyear.repository
 
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.localData.LocalLocationDataSource
+import com.example.perfectweatherallyear.repository.localData.LocationDataSource
 import javax.inject.Inject
 
 class LocationRepositoryImpl @Inject constructor(
-    private val localLocationDataSource: LocalLocationDataSource
+    private val localLocationDataSource: LocationDataSource
 ) : LocationRepository {
     private val mockLocations: List<Location> = listOf(Location(name = "Moscow"), Location(name = "London"),
         Location(name = "New-York"))
 
     override suspend fun insertLocations(locations: List<Location>) {
-        localLocationDataSource.insertLocation(locations)
+        localLocationDataSource.insertLocations(locations)
     }
 
     override suspend fun getLocationIdByCityName(city: String): Int {
@@ -23,7 +23,7 @@ class LocationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun loadUserLocations(): List<Location> {
-        localLocationDataSource.insertLocation(mockLocations)
+        localLocationDataSource.insertLocations(mockLocations)
         return localLocationDataSource.getLocations()
     }
 }

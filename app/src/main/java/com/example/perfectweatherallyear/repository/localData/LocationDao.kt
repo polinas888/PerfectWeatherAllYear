@@ -9,7 +9,7 @@ import com.example.perfectweatherallyear.model.Location
 @Dao
 interface LocationDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertLocation(locations: List<Location>)
+    suspend fun insertLocations(locations: List<Location>)
 
     @Query("SELECT location.id FROM location WHERE name =:city")
     suspend fun getLocationIdByCityName(city: String): Int

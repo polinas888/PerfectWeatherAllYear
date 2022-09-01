@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 class LocationViewModel(val locationRepository: LocationRepository) : ViewModel() {
     val listLocationsLiveData = MutableLiveData<List<Location>>()
 
-    fun loadLocation() {
+    fun loadLocations() {
         viewModelScope.launch {
             val loadUserLocations = locationRepository.loadUserLocations()
             listLocationsLiveData.value = loadUserLocations

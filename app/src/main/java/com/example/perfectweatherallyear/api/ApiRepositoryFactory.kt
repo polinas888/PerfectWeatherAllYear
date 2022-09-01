@@ -5,7 +5,7 @@ import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.LocationRepositoryImpl
 import com.example.perfectweatherallyear.repository.WeatherRepository
 import com.example.perfectweatherallyear.repository.WeatherRepositoryImp
-import com.example.perfectweatherallyear.repository.localData.LocalLocationDataSource
+import com.example.perfectweatherallyear.repository.localData.LocalLocationDataSourceImpl
 import com.example.perfectweatherallyear.repository.localData.LocalWeatherDataSource
 import com.example.perfectweatherallyear.repository.localData.LocationDao
 import com.example.perfectweatherallyear.repository.localData.WeatherDao
@@ -19,14 +19,14 @@ import dagger.Provides
 object ApiRepositoryFactory {
 
     @Provides
-    fun provideWeatherRepository(remoteWeatherDataSource: RemoteWeatherDataSource, localWeatherDataSource: LocalWeatherDataSource, localLocationDataSource: LocalLocationDataSource, context: Context)
+    fun provideWeatherRepository(remoteWeatherDataSource: RemoteWeatherDataSource, localWeatherDataSource: LocalWeatherDataSource, localLocationDataSourceImpl: LocalLocationDataSourceImpl, context: Context)
     : WeatherRepository {
-        return WeatherRepositoryImp(remoteDataSource = remoteWeatherDataSource, localWeatherDataSource = localWeatherDataSource, localLocationDataSource = localLocationDataSource, context = context)
+        return WeatherRepositoryImp(remoteDataSource = remoteWeatherDataSource, localWeatherDataSource = localWeatherDataSource, localLocationDataSourceImpl = localLocationDataSourceImpl, context = context)
     }
 
     @Provides
-    fun provideLocationRepository(localLocationDataSource: LocalLocationDataSource): LocationRepository {
-        return LocationRepositoryImpl(localLocationDataSource = localLocationDataSource)
+    fun provideLocationRepository(localLocationDataSourceImpl: LocalLocationDataSourceImpl): LocationRepository {
+        return LocationRepositoryImpl(localLocationDataSource = localLocationDataSourceImpl)
     }
 
     @Provides
@@ -40,7 +40,7 @@ object ApiRepositoryFactory {
     }
 
     @Provides
-    fun provideLocalLocationDataSource(locationDao: LocationDao) : LocalLocationDataSource {
-        return LocalLocationDataSource(locationDao)
+    fun provideLocalLocationDataSource(locationDao: LocationDao) : LocalLocationDataSourceImpl {
+        return LocalLocationDataSourceImpl(locationDao)
     }
 }
