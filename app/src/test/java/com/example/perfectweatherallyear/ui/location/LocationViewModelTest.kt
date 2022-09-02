@@ -1,6 +1,7 @@
 package com.example.perfectweatherallyear.ui.location
 
-import com.example.perfectweatherallyear.MainDispatcherRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.perfectweatherallyear.MainCoroutineRule
 import com.example.perfectweatherallyear.getOrAwaitValue
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.FakeLocationRepository
@@ -17,21 +18,20 @@ class LocationViewModelTest {
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var locationRepository: FakeLocationRepository
 
-//    @get:Rule
-//    var instantExecutorRule = InstantTaskExecutorRule()
-
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-
-//    @get:Rule
-//    val dispatcherRule = MainDispatcherRule()
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Before
-    fun setupViewModel() {
+    fun setupViewModel() = runTest {
         locationRepository = FakeLocationRepository()
+        val locations = listOf(Location(1,"London"), Location(2, "New-York"))
+        locationRepository.insertLocations(locations)
         locationViewModel = LocationViewModel(locationRepository)
     }
+
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
 
     @Test
     fun loadLocations_listLocationsLiveDataValueEqualsListInRepository() = runTest {
@@ -40,9 +40,9 @@ class LocationViewModelTest {
         MatcherAssert.assertThat(
             locations, IsEqual(
                 mutableListOf(
-                    Location(id = 1, name = "Moscow"),
-                    Location(id = 2, name = "London"),
-                    Location(id = 3, "New-York")
+                    Location(1, "London"),
+                    Location(2, "New-York"),
+                    Location(3, "Moscow")
                 )
             )
         )

@@ -2,9 +2,8 @@ package com.example.perfectweatherallyear.repository
 
 import com.example.perfectweatherallyear.model.Location
 
-class FakeLocationRepository() : LocationRepository {
-    var locationServiceData: MutableList<Location> = mutableListOf(Location(id = 1, name = "Moscow"),
-    Location(id = 2, name = "London"))
+class FakeLocationRepository : LocationRepository {
+    var locationServiceData: MutableList<Location> = mutableListOf()
 
     override suspend fun insertLocations(locations: List<Location>) {
         for (location in locations) {
@@ -33,7 +32,7 @@ class FakeLocationRepository() : LocationRepository {
     }
 
     override suspend fun loadUserLocations(): List<Location> {
-        insertLocations(listOf(Location(id = 3, "New-York")))
+        insertLocations(listOf(Location(3, "Moscow")))
         return locationServiceData
     }
 }

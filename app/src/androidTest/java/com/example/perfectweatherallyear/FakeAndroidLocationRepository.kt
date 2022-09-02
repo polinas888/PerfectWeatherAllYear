@@ -4,10 +4,7 @@ import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.LocationRepository
 
 class FakeAndroidLocationRepository: LocationRepository {
-    var locationServiceData: MutableList<Location> = mutableListOf(
-        Location(id = 1, name = "Moscow"),
-        Location(id = 2, name = "London")
-    )
+    var locationServiceData: MutableList<Location> = mutableListOf()
 
     override suspend fun insertLocations(locations: List<Location>) {
         for (location in locations) {
