@@ -13,12 +13,19 @@
         <action
             android:id="@+id/action_weekWeatherFragment_to_detailWeatherFragment"
             app:destination="@id/detailWeatherFragment" />
+        <argument
+            android:name="location"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/detailWeatherFragment"
         android:name="com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment"
         android:label="fragment_detail_weather"
-        tools:layout="@layout/fragment_detail_weather" />
+        tools:layout="@layout/fragment_detail_weather" >
+        <argument
+            android:name="dayWeather"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/locationFragment"
         android:name="com.example.perfectweatherallyear.ui.location.LocationFragment"
