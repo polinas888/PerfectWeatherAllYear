@@ -17,8 +17,8 @@ class LocalLocationDataSourceImpl @Inject constructor(locationDao: LocationDao) 
         return localService.getLocationIdByCityName(city)
     }
 
-    override suspend fun getCityNameByCityId(cityId: Int): String {
-        return localService.getCityNameByCityId(cityId)
+    override suspend fun getCityNameByLocationId(locationId: Int): String {
+        return localService.getCityNameByLocationId(locationId)
     }
 
     override suspend fun getLocations(): List<Location> {

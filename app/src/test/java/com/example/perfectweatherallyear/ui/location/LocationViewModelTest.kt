@@ -1,10 +1,10 @@
 package com.example.perfectweatherallyear.ui.location
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.perfectweatherallyear.MainCoroutineRule
+import com.example.perfectweatherallyear.utils.MainCoroutineRule
 import com.example.perfectweatherallyear.getOrAwaitValue
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.FakeLocationRepository
+import com.example.perfectweatherallyear.FakeLocationRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.MatcherAssert

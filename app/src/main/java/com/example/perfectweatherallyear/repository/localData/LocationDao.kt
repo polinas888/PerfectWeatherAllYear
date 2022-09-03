@@ -14,8 +14,8 @@ interface LocationDao {
     @Query("SELECT location.id FROM location WHERE name =:city")
     suspend fun getLocationIdByCityName(city: String): Int
 
-    @Query("SELECT location.name FROM location WHERE location.id =:cityId")
-    suspend fun getCityNameByCityId(cityId: Int): String
+    @Query("SELECT location.name FROM location WHERE location.id =:locationId")
+    suspend fun getCityNameByLocationId(locationId: Int): String
 
     @Query("SELECT * FROM location")
     suspend fun getLocations(): List<Location>

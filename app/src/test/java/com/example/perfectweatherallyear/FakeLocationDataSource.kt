@@ -1,4 +1,4 @@
-package com.example.perfectweatherallyear.data.source
+package com.example.perfectweatherallyear
 
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.localData.LocationDataSource
@@ -21,7 +21,7 @@ class FakeLocationDataSource(private val locationsList: MutableList<Location> = 
         return locationId
     }
 
-    override suspend fun getCityNameByCityId(cityId: Int): String {
+    override suspend fun getCityNameByLocationId(cityId: Int): String {
         var cityName = ""
         for (location in locationsList) {
             if(location.id == cityId) {

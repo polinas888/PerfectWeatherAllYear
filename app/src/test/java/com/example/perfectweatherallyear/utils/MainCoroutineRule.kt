@@ -1,4 +1,4 @@
-package com.example.perfectweatherallyear
+package com.example.perfectweatherallyear.utils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -19,7 +19,7 @@ class LocationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCityNameByCityId(cityId: Int): String {
-        return localLocationDataSource.getCityNameByCityId(cityId)
+        return localLocationDataSource.getCityNameByLocationId(cityId)
     }
 
     override suspend fun loadUserLocations(): List<Location> {

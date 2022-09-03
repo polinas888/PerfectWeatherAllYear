@@ -1,6 +1,6 @@
 package com.example.perfectweatherallyear.repository
 
-import com.example.perfectweatherallyear.data.source.FakeLocationDataSource
+import com.example.perfectweatherallyear.FakeLocationDataSource
 import com.example.perfectweatherallyear.model.Location
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

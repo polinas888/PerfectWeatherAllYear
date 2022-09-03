@@ -41,7 +41,7 @@ class WeatherRepositoryImp @Inject constructor(
     ): DataResult<List<HourWeather>> {
         return if (mConnectionDetector.isConnectingToInternet())
             try {
-                val cityName = localLocationDataSourceImpl.getCityNameByCityId(dayWeather.cityId)
+                val cityName = localLocationDataSourceImpl.getCityNameByLocationId(dayWeather.cityId)
                 val remoteHourlyWeather = remoteDataSource.getHourlyWeather(daysAmount, dayWeather, cityName)
                 localWeatherDataSource.insertHourlyWeather(remoteHourlyWeather)
                 val localHourWeather = localWeatherDataSource.getHourlyWeather(dayWeather.id)

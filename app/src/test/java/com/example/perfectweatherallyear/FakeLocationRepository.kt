@@ -1,6 +1,7 @@
-package com.example.perfectweatherallyear.repository
+package com.example.perfectweatherallyear
 
 import com.example.perfectweatherallyear.model.Location
+import com.example.perfectweatherallyear.repository.LocationRepository
 
 class FakeLocationRepository : LocationRepository {
     var locationServiceData: MutableList<Location> = mutableListOf()

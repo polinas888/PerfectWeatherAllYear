@@ -8,7 +8,7 @@ interface LocationDataSource {
 
     suspend fun getLocationIdByCityName(city: String): Int
 
-    suspend fun getCityNameByCityId(cityId: Int): String
+    suspend fun getCityNameByLocationId(cityId: Int): String
 
     suspend fun getLocations(): List<Location>
 }
