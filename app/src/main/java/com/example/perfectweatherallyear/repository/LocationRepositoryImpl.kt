@@ -2,6 +2,7 @@ package com.example.perfectweatherallyear.repository
 
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.localData.LocationDataSource
+import com.example.perfectweatherallyear.util.wrapEspressoIdlingResource
 import javax.inject.Inject
 
 class LocationRepositoryImpl @Inject constructor(
@@ -23,7 +24,9 @@ class LocationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun loadUserLocations(): List<Location> {
-        localLocationDataSource.insertLocations(mockLocations)
-        return localLocationDataSource.getLocations()
+        wrapEspressoIdlingResource {
+            localLocationDataSource.insertLocations(mockLocations)
+            return localLocationDataSource.getLocations()
+        }
     }
 }

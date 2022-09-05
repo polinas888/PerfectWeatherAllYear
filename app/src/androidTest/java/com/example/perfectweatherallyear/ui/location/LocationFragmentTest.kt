@@ -7,20 +7,25 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.MediumTest
-import com.example.perfectweatherallyear.FakeAndroidLocationRepository
+import androidx.test.filters.LargeTest
 import com.example.perfectweatherallyear.R
 import com.example.perfectweatherallyear.atPosition
+import com.example.perfectweatherallyear.di.ApiRepositoryFactory
+import com.example.perfectweatherallyear.di.ModuleDatabase
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.localData.DatabaseFactory
+import com.example.perfectweatherallyear.repository.localData.LocalLocationDataSourceImpl
+import com.example.perfectweatherallyear.util.EspressoIdlingResources
+import com.example.perfectweatherallyear.utils.DataBindingIdlingResource
+import com.example.perfectweatherallyear.utils.monitorFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -28,16 +33,19 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 
-@MediumTest
+@LargeTest
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
 class LocationFragmentTest {
     private lateinit var repository: LocationRepository
+    private lateinit var locationViewModel: LocationViewModel
+    private val dataBindingIdlingResource = DataBindingIdlingResource()
     private val lock = Any()
 
     @Before
     fun initRepository() {
-        repository = FakeAndroidLocationRepository()
+        repository = ApiRepositoryFactory.provideLocationRepository(LocalLocationDataSourceImpl(ModuleDatabase.provideLocationDao()))
+        locationViewModel = LocationViewModel(repository)
     }
 
     @After
@@ -51,19 +59,33 @@ class LocationFragmentTest {
         }
     }
 
+    @Before
+    fun registerIdlingResource() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
+        IdlingRegistry.getInstance().register(dataBindingIdlingResource)
+    }
+
+    @After
+    fun unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResources.countingIdlingResource)
+        IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
+    }
+
     @Test
-    fun listLocations_DisplayedInUi() = runTest {
-        val listLocations =
-            listOf(Location(1, "London"), Location(2, "London"))
-        repository.insertLocations(listLocations)
-        launchFragmentInContainer<LocationFragment>(Bundle(), R.style.ThemeOverlay_AppCompat_Light)
+    fun initViewModel_loadLocations_DisplayedThemInUi() = runTest {
+        locationViewModel.loadLocations()
+        val fragmentScenario = launchFragmentInContainer<LocationFragment>(Bundle(), R.style.ThemeOverlay_AppCompat_Light)
+        dataBindingIdlingResource.monitorFragment(fragmentScenario)
 
         onView(withId(R.id.locationsRecyclerView)).check(matches(atPosition(0, isDisplayed())))
         onView(withId(R.id.locationsRecyclerView))
-            .check(matches(atPosition(0, hasDescendant(withText("London")))))
+            .check(matches(atPosition(0, hasDescendant(withText("Moscow")))))
         onView(withId(R.id.locationsRecyclerView)).check(matches(atPosition(1, isDisplayed())))
         onView(withId(R.id.locationsRecyclerView))
             .check(matches(atPosition(1, hasDescendant(withText("London")))));
+        onView(withId(R.id.locationsRecyclerView)).check(matches(atPosition(2, isDisplayed())))
+        onView(withId(R.id.locationsRecyclerView))
+            .check(matches(atPosition(2, hasDescendant(withText("New-York")))));
     }
 
     @Test
