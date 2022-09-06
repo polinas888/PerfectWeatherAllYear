@@ -52,11 +52,12 @@ class LocalLocationDataSourceImplTest {
 
     @Test
     fun insertLocations_getLocations() = runTest {
+        localDataSource.insertLocations(listOf(Location(3, "New-York")))
         val result = localDataSource.getLocations()
 
         assertThat(result, CoreMatchers.notNullValue())
         assertThat(result, IsEqual(listOf(Location(1, "London"),
-            Location(2, "Moscow")))
+            Location(2, "Moscow"), Location(3, "New-York")))
         )
     }
 
