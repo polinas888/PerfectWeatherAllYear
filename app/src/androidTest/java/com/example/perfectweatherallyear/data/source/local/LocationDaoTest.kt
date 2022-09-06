@@ -20,15 +20,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
+@RunWith(AndroidJUnit4::class)
+@SmallTest
 class LocationDaoTest {
     private lateinit var database: WeatherDatabase
 
-    @RunWith(AndroidJUnit4::class)
-    @SmallTest
-    class TasksDaoTest {
         @get:Rule
         var instantExecutorRule = InstantTaskExecutorRule()
-    }
 
     @Before
     fun initDb() = runTest {
