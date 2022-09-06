@@ -17,12 +17,16 @@ class LocalWeatherDataSource @Inject constructor(weatherDao: WeatherDao) : Weath
         localService.insertHourlyWeather(dataWeatherData)
     }
 
-    override suspend fun getDayWeatherByCityAndDate(city: Int, date: String): DayWeather {
-        return localService.getDayWeatherByCityAndDate(city, date)
+    override suspend fun getDayWeather(): List<DayWeather> {
+        return localService.getDayWeather()
     }
 
-    override suspend fun getWeatherForecast(cityId: Int, daysAmount: Int): List<DayWeather> {
-        return localService.getWeatherForecast(cityId, daysAmount)
+    override suspend fun getDayWeatherByCityAndDate(cityId: Int, date: String): DayWeather {
+        return localService.getDayWeatherByCityAndDate(cityId, date)
+    }
+
+    override suspend fun getDayWeatherForSelectedCityForPeriod(cityId: Int, daysAmount: Int): List<DayWeather> {
+        return localService.getDayWeatherForSelectedCityForPeriod(cityId, daysAmount)
     }
 
     override suspend fun getHourlyWeather(dayWeatherId: Int): List<HourWeather> {

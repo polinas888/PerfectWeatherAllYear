@@ -26,13 +26,13 @@ class WeatherRepositoryImp @Inject constructor(
                 localWeatherDataSource.insertDayWeather(remoteWeekWeather)
 
                 val localWeekWeather =
-                    localWeatherDataSource.getWeatherForecast(location.id, daysAmount)
+                    localWeatherDataSource.getDayWeatherForSelectedCityForPeriod(location.id, daysAmount)
                 DataResult.Ok(localWeekWeather)
             } catch (e: Exception) {
                 DataResult.Error(e.message.toString())
             }
         else {
-            DataResult.Ok(localWeatherDataSource.getWeatherForecast(location.id, daysAmount))
+            DataResult.Ok(localWeatherDataSource.getDayWeatherForSelectedCityForPeriod(location.id, daysAmount))
         }
     }
 
