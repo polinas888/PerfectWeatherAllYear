@@ -44,11 +44,12 @@ class LocationDaoTest {
 
     @Test
     fun insertLocationAndGetLocations() = runTest {
+        database.locationDao().insertLocations(listOf(Location(3, "New-York")))
         val locationsLoaded = database.locationDao().getLocations()
 
         assertThat(locationsLoaded, CoreMatchers.notNullValue())
         assertThat(locationsLoaded, IsEqual(listOf(Location(1, "London"),
-            Location(2, "Moscow"))))
+            Location(2, "Moscow"), Location(3, "New-York"))))
     }
 
     @Test
