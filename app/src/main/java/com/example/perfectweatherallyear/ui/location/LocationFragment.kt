@@ -47,11 +47,7 @@ class LocationFragment: Fragment() {
     }
 
     private fun adapterOnClick(location: Location) {
-        val builder = GsonBuilder()
-        val gson = builder.create()
-        val result: String = gson.toJson(location)
-
-        val action = LocationFragmentDirections.actionLocationFragmentToWeekWeatherFragment(result)
+        val action = LocationFragmentDirections.actionLocationFragmentToWeekWeatherFragment(id = location.id, cityName = location.name)
         view?.findNavController()?.navigate(action)
     }
 }

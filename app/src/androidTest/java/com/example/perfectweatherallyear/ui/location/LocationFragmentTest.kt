@@ -46,18 +46,12 @@ class LocationFragmentTest {
     fun initRepository() {
         repository = ApiRepositoryFactory.provideLocationRepository(LocalLocationDataSourceImpl(ModuleDatabase.provideLocationDao()))
         locationViewModel = LocationViewModel(repository)
+        cleanDb()
     }
 
     @After
     @VisibleForTesting
-    fun cleanupDb() = runTest {
-        synchronized(lock) {
-            DatabaseFactory.get().database.apply {
-                clearAllTables()
-                close()
-            }
-        }
-    }
+    fun cleanDb() = cleanupDb()
 
     @Before
     fun registerIdlingResource() {
@@ -69,6 +63,14 @@ class LocationFragmentTest {
     fun unregisterIdlingResource() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResources.countingIdlingResource)
         IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
+    }
+
+    private fun cleanupDb() = runTest {
+        synchronized(lock) {
+            DatabaseFactory.get().database.apply {
+                clearAllTables()
+            }
+        }
     }
 
     @Test
@@ -90,22 +92,20 @@ class LocationFragmentTest {
 
     @Test
     fun clickFirstLocation_navigateToWeatherForecastFragmentWithFirstLocationArg() = runTest {
-        repository.insertLocations(listOf(Location(1, "Moscow"), Location(2, "London")))
 
+        val listLocations = repository.loadUserLocations()
         val scenario = launchFragmentInContainer<LocationFragment>(Bundle(), R.style.ThemeOverlay_AppCompat_Light)
+        dataBindingIdlingResource.monitorFragment(scenario)
         val navController = Mockito.mock(NavController::class.java)
         scenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
         }
 
-        onView(withId(R.id.locationsRecyclerView))
-            .perform(
-                RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                hasDescendant(withText("Moscow")), click()
-                ))
+        onView(withId(R.id.locationsRecyclerView)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()));
 
         Mockito.verify(navController).navigate(
-            LocationFragmentDirections.actionLocationFragmentToWeekWeatherFragment(Location(1, "Moscow").toString())
+            LocationFragmentDirections.actionLocationFragmentToWeekWeatherFragment(listLocations[0].id, listLocations[0].name)
         )
     }
 }

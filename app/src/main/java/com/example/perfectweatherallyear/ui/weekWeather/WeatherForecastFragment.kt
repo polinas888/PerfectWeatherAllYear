@@ -33,11 +33,9 @@ class WeatherForecastFragment : Fragment() {
         binding = FragmentWeatherForecastBinding.inflate(layoutInflater)
         requireContext().appComponent.inject(this)
 
-        val locationArgs = args.location
-        val builder = GsonBuilder()
-        val gson = builder.create()
-        location = gson.fromJson(locationArgs, Location::class.java)
-
+        val locationId = args.id
+        val cityName = args.cityName
+        location = Location(locationId, cityName)
         return binding.root
     }
 

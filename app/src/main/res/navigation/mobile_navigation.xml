@@ -14,7 +14,10 @@
             android:id="@+id/action_weekWeatherFragment_to_detailWeatherFragment"
             app:destination="@id/detailWeatherFragment" />
         <argument
-            android:name="location"
+            android:name="id"
+            app:argType="integer" />
+        <argument
+            android:name="cityName"
             app:argType="string" />
     </fragment>
     <fragment
