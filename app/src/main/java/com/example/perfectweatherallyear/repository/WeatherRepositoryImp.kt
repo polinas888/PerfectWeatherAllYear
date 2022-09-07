@@ -51,4 +51,8 @@ class WeatherRepositoryImp @Inject constructor(
             DataResult.Ok(weatherDataSource.getHourlyWeather(dayWeather.id))
         }
     }
+
+    override suspend fun insertDayWeather(dataWeatherData: List<DayWeather>) {
+        weatherDataSource.insertDayWeather(dataWeatherData)
+    }
 }
