@@ -4,7 +4,7 @@ import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import javax.inject.Inject
 
-class LocalWeatherDataSource @Inject constructor(weatherDao: WeatherDao) : WeatherDao {
+class LocalWeatherDataSourceImpl @Inject constructor(weatherDao: WeatherDao) : WeatherDataSource {
      private val localService: WeatherDao by lazy {
         weatherDao
     }
@@ -25,7 +25,7 @@ class LocalWeatherDataSource @Inject constructor(weatherDao: WeatherDao) : Weath
         return localService.getDayWeatherByCityAndDate(cityId, date)
     }
 
-    override suspend fun getDayWeatherForSelectedCityForPeriod(cityId: Int, daysAmount: Int): List<DayWeather> {
+    override suspend fun getWeatherForecast(cityId: Int, daysAmount: Int): List<DayWeather> {
         return localService.getDayWeatherForSelectedCityForPeriod(cityId, daysAmount)
     }
 

@@ -2,6 +2,7 @@ package com.example.perfectweatherallyear.repository.remoteData.weatherData
 
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
+import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.localData.LocationDao
 import com.example.perfectweatherallyear.repository.localData.WeatherDao
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToDayWeather
@@ -22,9 +23,9 @@ class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom,
         locationDao
     }
 
-    override suspend fun getWeatherForecast(city: String, daysAmount: Int): List<DayWeather> {
-        val forecast = remoteService.getWeatherForecast(city, daysAmount)
-        val cityId = localLocationService.getLocationIdByCityName(city)
+    override suspend fun getWeatherForecast(location: Location, daysAmount: Int): List<DayWeather> {
+        val forecast = remoteService.getWeatherForecast(location.name, daysAmount)
+        val cityId = localLocationService.getLocationIdByCityName(location.name)
         return forecast.convertToDayWeather(cityId)
     }
 

@@ -8,7 +8,7 @@ import androidx.test.filters.MediumTest
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.GeneralWeather
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.localData.LocalWeatherDataSource
+import com.example.perfectweatherallyear.repository.localData.LocalWeatherDataSourceImpl
 import com.example.perfectweatherallyear.repository.localData.WeatherDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -24,11 +24,11 @@ import org.junit.runner.RunWith
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @MediumTest
-class LocalWeatherDataSourceTest {
+class LocalWeatherDataSourceImplTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var localDataSource: LocalWeatherDataSource
+    private lateinit var localDataSourceImpl: LocalWeatherDataSourceImpl
     private lateinit var database: WeatherDatabase
 
     @Before
@@ -40,7 +40,7 @@ class LocalWeatherDataSourceTest {
             .allowMainThreadQueries()
             .build()
 
-        localDataSource = LocalWeatherDataSource(database.weatherDao())
+        localDataSourceImpl = LocalWeatherDataSourceImpl(database.weatherDao())
 
         val locations = listOf(Location(1, "Moscow"), Location(2, "London"))
         database.locationDao().insertLocations(locations)
@@ -64,7 +64,7 @@ class LocalWeatherDataSourceTest {
 
     @Test
     fun insertDayWeather_andGetDayWeather() = runTest {
-        localDataSource.insertDayWeather(
+        localDataSourceImpl.insertDayWeather(
             listOf(
                 DayWeather(
                     3, "12-01-2000", 1,
@@ -72,7 +72,7 @@ class LocalWeatherDataSourceTest {
                 )
             )
         )
-        val dayWeatherList = localDataSource.getDayWeather()
+        val dayWeatherList = localDataSourceImpl.getDayWeather()
         MatcherAssert.assertThat(dayWeatherList, CoreMatchers.notNullValue())
         MatcherAssert.assertThat(
             dayWeatherList, IsEqual(
@@ -95,7 +95,7 @@ class LocalWeatherDataSourceTest {
 
     @Test
     fun getDayWeatherByCityAndDate() = runTest {
-        val dayWeather = localDataSource.getDayWeatherByCityAndDate(1, "10-01-2000")
+        val dayWeather = localDataSourceImpl.getDayWeatherByCityAndDate(1, "10-01-2000")
         MatcherAssert.assertThat(
             dayWeather, IsEqual(
                 DayWeather(
@@ -108,7 +108,7 @@ class LocalWeatherDataSourceTest {
 
     @Test
     fun getDayWeatherForSelectedCityForPeriod() = runTest {
-        val dayWeatherList = localDataSource.getDayWeatherForSelectedCityForPeriod(1, 1)
+        val dayWeatherList = localDataSourceImpl.getWeatherForecast(1, 1)
         MatcherAssert.assertThat(
             dayWeatherList, IsEqual(
                 listOf(
