@@ -2,7 +2,7 @@ package com.example.perfectweatherallyear.ui.weekWeather
 
 import androidx.annotation.VisibleForTesting
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.fragment.app.testing.launchFragment
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions
@@ -106,7 +106,7 @@ class WeatherForecastFragmentTest {
         val location = Location(1, "Moscow")
 
         val bundle = WeatherForecastFragmentArgs(location.id, location.name).toBundle()
-        val fragmentScenario = launchFragment<WeatherForecastFragment>(
+        val fragmentScenario = launchFragmentInContainer<WeatherForecastFragment>(
             bundle, R.style.ThemeOverlay_AppCompat_Light
         )
         dataBindingIdlingResource.monitorFragment(fragmentScenario)
