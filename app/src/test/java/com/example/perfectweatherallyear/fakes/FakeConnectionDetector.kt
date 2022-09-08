@@ -1,4 +1,4 @@
-package com.example.perfectweatherallyear
+package com.example.perfectweatherallyear.fakes
 
 import com.example.perfectweatherallyear.api.ConnectionDetector
 

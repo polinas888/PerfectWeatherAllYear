@@ -1,8 +1,8 @@
 package com.example.perfectweatherallyear.ui.weekWeather
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.perfectweatherallyear.FakeLocationRepository
-import com.example.perfectweatherallyear.FakeWeatherRepository
+import com.example.perfectweatherallyear.fakes.FakeLocationRepository
+import com.example.perfectweatherallyear.fakes.FakeWeatherRepository
 import com.example.perfectweatherallyear.getOrAwaitValue
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.GeneralWeather

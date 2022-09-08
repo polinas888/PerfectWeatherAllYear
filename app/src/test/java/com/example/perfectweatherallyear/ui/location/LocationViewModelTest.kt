@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.perfectweatherallyear.utils.MainCoroutineRule
 import com.example.perfectweatherallyear.getOrAwaitValue
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.FakeLocationRepository
+import com.example.perfectweatherallyear.fakes.FakeLocationRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.MatcherAssert

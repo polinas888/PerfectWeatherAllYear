@@ -1,4 +1,4 @@
-package com.example.perfectweatherallyear
+package com.example.perfectweatherallyear.fakes
 
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather

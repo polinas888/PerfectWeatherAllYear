@@ -1,9 +1,9 @@
 package com.example.perfectweatherallyear.repository
 
-import com.example.perfectweatherallyear.FakeConnectionDetector
-import com.example.perfectweatherallyear.FakeLocationDataSource
-import com.example.perfectweatherallyear.FakeRemoteWeatherDataSource
-import com.example.perfectweatherallyear.FakeWeatherDataSource
+import com.example.perfectweatherallyear.fakes.FakeConnectionDetector
+import com.example.perfectweatherallyear.fakes.FakeLocationDataSource
+import com.example.perfectweatherallyear.fakes.FakeRemoteWeatherDataSource
+import com.example.perfectweatherallyear.fakes.FakeWeatherDataSource
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.GeneralWeather
 import com.example.perfectweatherallyear.model.Location
@@ -14,7 +14,6 @@ import org.hamcrest.core.IsEqual
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
