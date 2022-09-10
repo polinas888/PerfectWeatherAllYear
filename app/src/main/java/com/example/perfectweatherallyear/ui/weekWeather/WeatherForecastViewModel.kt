@@ -20,23 +20,19 @@ class WeatherForecastViewModel(
     val weatherForecastLiveData = MutableLiveData<List<DayWeather>>()
 
     fun loadForecast(location: Location) {
-        wrapEspressoIdlingResource {
-            viewModelScope.launch {
-                when (val weatherForecast = getWeatherForecast(location, DAYS_NUMBER)) {
-                    is DataResult.Ok -> {
-                        weatherForecastLiveData.value = weatherForecast.response!!
-                    }
-                    is DataResult.Error ->
-                        weatherForecast.error
+        viewModelScope.launch {
+            when (val weatherForecast = getWeatherForecast(location, DAYS_NUMBER)) {
+                is DataResult.Ok -> {
+                    weatherForecastLiveData.value = weatherForecast.response!!
                 }
+                is DataResult.Error ->
+                    weatherForecast.error
             }
         }
     }
 
     private suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
-        wrapEspressoIdlingResource {
             return weatherRepository.getWeatherForecast(location, daysAmount)
-        }
     }
 }
 

@@ -9,24 +9,15 @@ import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.mod
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToHourWeather
 import javax.inject.Inject
 
-class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom, weatherDao: WeatherDao, locationDao: LocationDao) : RemoteWeatherDataSource() {
+class ForecastApiComDataSource @Inject constructor(weatherApiCom: WeatherApiCom) : RemoteWeatherDataSource() {
 
     private val remoteService: WeatherApiCom by lazy {
         weatherApiCom
     }
 
-    private val localWeatherService: WeatherDao by lazy {
-        weatherDao
-    }
-
-    private val localLocationService: LocationDao by lazy {
-        locationDao
-    }
-
     override suspend fun getWeatherForecast(location: Location, daysAmount: Int): List<DayWeather> {
         val forecast = remoteService.getWeatherForecast(location.name, daysAmount)
-        val cityId = localLocationService.getLocationIdByCityName(location.name)
-        return forecast.convertToDayWeather(cityId)
+        return forecast.convertToDayWeather(location.id)
     }
 
     override suspend fun getHourlyWeather(daysAmount: Int, dayWeather: DayWeather, cityName: String): List<HourWeather> {

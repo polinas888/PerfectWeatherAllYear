@@ -28,8 +28,8 @@ object ApiRepositoryFactory {
     }
 
     @Provides
-    fun provideRemoteWeatherDataSource(weatherApiCom: WeatherApiCom, weatherDao: WeatherDao, locationDao: LocationDao) : RemoteWeatherDataSource {
-        return ForecastApiComDataSource(weatherApiCom, weatherDao, locationDao)
+    fun provideRemoteWeatherDataSource(weatherApiCom: WeatherApiCom) : RemoteWeatherDataSource {
+        return ForecastApiComDataSource(weatherApiCom)
     }
 
     @Provides

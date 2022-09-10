@@ -23,6 +23,7 @@ import com.example.perfectweatherallyear.util.EspressoIdlingResources
 import com.example.perfectweatherallyear.utils.DataBindingIdlingResource
 import com.example.perfectweatherallyear.utils.monitorFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -102,7 +103,7 @@ class WeatherForecastFragmentTest {
     }
 
     @Test
-    fun initViewModel_loadListWeather_DisplayedInUi() = runTest {
+    fun initViewModel_loadListWeather_DisplayedInUi() = runBlockingTest {
         val location = Location(1, "Moscow")
 
         val bundle = WeatherForecastFragmentArgs(location.id, location.name).toBundle()
