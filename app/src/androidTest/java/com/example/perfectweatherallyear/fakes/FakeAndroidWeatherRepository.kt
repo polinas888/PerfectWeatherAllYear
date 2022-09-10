@@ -1,28 +1,26 @@
 package com.example.perfectweatherallyear.fakes
 
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.model.GeneralWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.WeatherRepository
 
-class FakeAndroidWeatherRepository (private val remoteForecastWeather: MutableList<DayWeather>): WeatherRepository {
-    private var weatherServiceData: LinkedHashSet<DayWeather> = linkedSetOf()
-    var connectionDetector: FakeAndroidConnectorDetector = FakeAndroidConnectorDetector()
+class FakeAndroidWeatherRepository: WeatherRepository {
+    private val forecastWeather = mutableListOf(
+        DayWeather(
+            1, "10-01-2000", 1,
+            GeneralWeather("+7", "+15", "3", "11")
+        ),
+        DayWeather(
+            2, "11-01-2000", 2,
+            GeneralWeather("+8", "+16", "4", "12")
+        )
+    )
 
     override suspend fun getWeatherForecast(location: Location, daysAmount: Int): DataResult<List<DayWeather>> {
-        if(connectionDetector.isConnectingToInternet()) {
-            weatherServiceData.addAll(remoteForecastWeather)
-        }
-        var dayCount = 0
-        val dayWeatherResult = mutableListOf<DayWeather>()
-        for (dayWeather in weatherServiceData) {
-            if (dayWeather.cityId == location.id && dayCount < daysAmount) {
-                dayWeatherResult.add(dayWeather)
-                dayCount++
-            }
-        }
-        return DataResult.Ok(dayWeatherResult)
+        return DataResult.Ok(forecastWeather)
     }
 
     override suspend fun getHourlyWeather(
@@ -33,8 +31,6 @@ class FakeAndroidWeatherRepository (private val remoteForecastWeather: MutableLi
     }
 
     override suspend fun insertDayWeather(dataWeatherData: List<DayWeather>) {
-        for (dayWeather in dataWeatherData) {
-            weatherServiceData.add(dayWeather)
-        }
+        TODO("Not yet implemented")
     }
 }

@@ -3,8 +3,6 @@ package com.example.perfectweatherallyear.repository.remoteData.weatherData
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.HourWeather
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.localData.LocationDao
-import com.example.perfectweatherallyear.repository.localData.WeatherDao
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToDayWeather
 import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.convertToHourWeather
 import javax.inject.Inject

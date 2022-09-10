@@ -47,33 +47,7 @@ class WeatherForecastFragmentTest {
     @Before
     fun initRepository() = runTest {
         locationRepository = FakeAndroidLocationRepository()
-        val locations = mutableListOf(Location(1, "Moscow"), Location(2, "London"))
-        locationRepository.insertLocations(locations)
-
-        val remoteForecastWeather = mutableListOf(
-            DayWeather(
-                3, "13-01-2000", 1,
-                GeneralWeather("+15", "+20", "4", "10")
-            ),
-            DayWeather(
-                4, "14-01-2000", 2,
-                GeneralWeather("+18", "+26", "5", "12")
-            )
-        )
-
-        weatherRepository = FakeAndroidWeatherRepository(remoteForecastWeather)
-
-        val localForecastWeather = mutableListOf(
-            DayWeather(
-                1, "10-01-2000", 1,
-                GeneralWeather("+7", "+15", "3", "11")
-            ),
-            DayWeather(
-                2, "11-01-2000", 2,
-                GeneralWeather("+8", "+16", "4", "12")
-            )
-        )
-        weatherRepository.insertDayWeather(localForecastWeather)
+        weatherRepository = FakeAndroidWeatherRepository()
         weatherViewModel = WeatherForecastViewModel(weatherRepository, locationRepository)
         cleanDb()
     }

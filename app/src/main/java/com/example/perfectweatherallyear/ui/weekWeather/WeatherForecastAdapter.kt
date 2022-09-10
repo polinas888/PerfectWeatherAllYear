@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.perfectweatherallyear.databinding.WeatherRowItemBinding
 import com.example.perfectweatherallyear.model.DayWeather
+import com.example.perfectweatherallyear.util.EspressoIdlingResources
 
 class WeatherForecastAdapter(
     private val onItemClick: (DayWeather) -> Unit
@@ -26,8 +27,10 @@ class WeatherForecastAdapter(
     override fun getItemCount() = weekWeatherList.size
 
     fun setData(listDayWeather: List<DayWeather>) {
+        EspressoIdlingResources.increment()
         weekWeatherList.clear()
         weekWeatherList.addAll(listDayWeather)
+        EspressoIdlingResources.decrement()
         notifyDataSetChanged()
     }
 

@@ -13,6 +13,7 @@ import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.databinding.FragmentWeatherForecastBinding
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.Location
+import com.example.perfectweatherallyear.util.EspressoIdlingResources
 import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
@@ -55,8 +56,10 @@ class WeatherForecastFragment : Fragment() {
     }
 
     private fun initViewModel(){
+        EspressoIdlingResources.increment()
         weekWeatherViewModel.loadForecast(location)
         weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner) { weatherForecastAdapter.setData(it) }
+        EspressoIdlingResources.decrement()
     }
 
     private fun adapterOnClick(dayWeather: DayWeather) {
