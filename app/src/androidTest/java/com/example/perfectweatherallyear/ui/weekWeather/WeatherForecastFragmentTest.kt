@@ -5,16 +5,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.example.perfectweatherallyear.R
-import com.example.perfectweatherallyear.atPosition
 import com.example.perfectweatherallyear.fakes.FakeAndroidLocationRepository
 import com.example.perfectweatherallyear.fakes.FakeAndroidWeatherRepository
-import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.model.GeneralWeather
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.WeatherRepository
@@ -87,15 +85,6 @@ class WeatherForecastFragmentTest {
         dataBindingIdlingResource.monitorFragment(fragmentScenario)
 
         Espresso.onView(ViewMatchers.withId(R.id.weatherForecastRecyclerView))
-            .check(ViewAssertions.matches(atPosition(0, ViewMatchers.isDisplayed())))
-//        Espresso.onView(ViewMatchers.withId(R.id.weatherForecastRecyclerView))
-//            .check(
-//                ViewAssertions.matches(
-//                    atPosition(
-//                        0,
-//                        ViewMatchers.hasDescendant(ViewMatchers.withText("+15"))
-//                    )
-//                )
-//            )
+            .check(matches(isDisplayed()))
     }
 }
