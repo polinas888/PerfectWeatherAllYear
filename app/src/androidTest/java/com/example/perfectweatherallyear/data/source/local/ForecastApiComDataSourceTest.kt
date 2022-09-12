@@ -1,11 +1,13 @@
 package com.example.perfectweatherallyear.data.source.local
 
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.perfectweatherallyear.model.DayWeather
 import com.example.perfectweatherallyear.model.GeneralWeather
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.ForecastApiComDataSource
 import com.example.perfectweatherallyear.repository.remoteData.weatherData.WeatherApiCom
+import com.example.perfectweatherallyear.repository.remoteData.weatherapicom.model.*
 import com.example.perfectweatherallyear.utils.MainAndroidCoroutineRule
 import com.google.gson.Gson
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -77,5 +79,23 @@ class ForecastApiComDataSourceTest {
                 ), actual
             )
         }
+    }
+
+    @Test
+    fun shouldConvertGivenData_returnListDayWeather() {
+
+        val forecast = ForecastResponse(
+            Location("Moscow"), Any(), Forecast(
+                listOf(
+                    DayItem(
+                        "13-13-13", Day("0", "0", "0", "0"),
+                        listOf(Hour("0", "0", "0", "0"))
+                    )
+                )
+            )
+        )
+        val dayWeatherResult = forecast.convertToDayWeather(1)
+        Log.i("someLog", "someLog")
+        assertEquals(dayWeatherResult, listOf(DayWeather(0, "13-13-13", 1, GeneralWeather("0", "0", "0", "0"))))
     }
 }
