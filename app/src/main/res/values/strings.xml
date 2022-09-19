@@ -11,4 +11,5 @@
     <string name="notification_title">Last weather</string>
     <string name="notification_text">Search for weather</string>
     <string name="notification_error">Couldn\'t get weather</string>
+    <string name="update">Update weather</string>
 </resources>
