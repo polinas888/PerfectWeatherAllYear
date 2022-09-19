@@ -17,12 +17,14 @@ class WeatherForecastViewModel(
     val locationRepository: LocationRepository
 ) : ViewModel() {
     val weatherForecastLiveData = MutableLiveData<List<DayWeather>>()
+    var isLoad = MutableLiveData(false)
 
     fun loadForecast(location: Location) {
         viewModelScope.launch {
             when (val weatherForecast = getWeatherForecast(location, DAYS_NUMBER)) {
                 is DataResult.Ok -> {
                     weatherForecastLiveData.value = weatherForecast.response!!
+                    isLoad.value = true
                 }
                 is DataResult.Error ->
                     weatherForecast.error

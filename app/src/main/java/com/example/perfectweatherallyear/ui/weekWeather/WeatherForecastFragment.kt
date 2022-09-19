@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.changeFragment
@@ -19,6 +20,7 @@ import javax.inject.Inject
 
 
 const val ARG_LOCATION: String = "LOCATION"
+
 class WeatherForecastFragment : Fragment() {
     private lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeatherForecastBinding
@@ -27,11 +29,15 @@ class WeatherForecastFragment : Fragment() {
     @Inject
     lateinit var weatherForecastViewModelFactory: WeatherForecastViewModelFactory
 
-    private val weekWeatherViewModel by viewModels<WeatherForecastViewModel>{
+    private val weekWeatherViewModel by viewModels<WeatherForecastViewModel> {
         weatherForecastViewModelFactory
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentWeatherForecastBinding.inflate(layoutInflater)
         requireContext().appComponent.inject(this)
 
@@ -45,7 +51,8 @@ class WeatherForecastFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            weatherForecastAdapter = WeatherForecastAdapter{ dayWeather -> adapterOnClick(dayWeather) }
+            weatherForecastAdapter =
+                WeatherForecastAdapter { dayWeather -> adapterOnClick(dayWeather) }
             weatherForecastRecyclerView.adapter = weatherForecastAdapter
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
@@ -55,11 +62,26 @@ class WeatherForecastFragment : Fragment() {
             weekWeatherViewModel.loadForecast(location)
             binding.swipeRefresh.isRefreshing = false
         }
+
+        binding.updateButton.setOnClickListener {
+            weekWeatherViewModel.isLoad.value = false
+            binding.updateButton.startLoading()
+            weekWeatherViewModel.loadForecast(location)
+            weekWeatherViewModel.isLoad.observe(viewLifecycleOwner, Observer {
+                if (it) {
+                    binding.updateButton.done()
+                }
+            })
+        }
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         weekWeatherViewModel.loadForecast(location)
-        weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner) { weatherForecastAdapter.setData(it) }
+        weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner) {
+            weatherForecastAdapter.setData(
+                it
+            )
+        }
     }
 
     private fun adapterOnClick(dayWeather: DayWeather) {
