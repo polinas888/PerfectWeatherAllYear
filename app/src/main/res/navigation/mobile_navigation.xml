@@ -16,7 +16,7 @@
         <deepLink
             android:id="@+id/deepLink"
             android:autoVerify="true"
-            app:uri="https://perfectweatherallyear.page.link/MyLondonWeather" />
+            app:uri="https://www.perfectweatherallyear.example.com/{location}" />
         <argument
             android:name="location"
             app:argType="com.example.perfectweatherallyear.model.Location" />

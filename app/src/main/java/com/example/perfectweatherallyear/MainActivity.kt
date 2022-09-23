@@ -16,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 
 const val CITY_ID_PARAM = "id"
 const val CITY_NAME_PARAM = "city"
+const val LINK = "link"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleLinkFromNotification() {
-        val link = intent.getStringExtra("link")
+        val link = intent.getStringExtra(LINK)
         if (link != null) {
             val uri = Uri.parse(link)
             navigateToUriDestination(uri)
