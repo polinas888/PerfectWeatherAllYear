@@ -10,6 +10,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.perfectweatherallyear.MainActivity
 import com.example.perfectweatherallyear.R
+import com.example.perfectweatherallyear.channelId
+import com.example.perfectweatherallyear.channelName
 
 class NotificationHandler {
 
@@ -55,6 +57,32 @@ class NotificationHandler {
                     notificationManager.createNotificationChannel(channel)
                 }
             }
+        }
+
+         fun generateFirebaseNotification(context: Context, title: String, message: String) {
+             val intent = Intent(context, MainActivity::class.java).apply {
+                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+             }
+
+             val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+
+             val builder: NotificationCompat.Builder =
+                NotificationCompat.Builder(context, channelId)
+                    .setSmallIcon(R.drawable.close_black)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setOnlyAlertOnce(true)
+                    .setContentIntent(pendingIntent)
+
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val notificationChannel =
+                    NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+                notificationManager.createNotificationChannel(notificationChannel)
+            }
+            notificationManager.notify(0, builder.build())
         }
     }
 }
