@@ -6,23 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
-import com.example.perfectweatherallyear.changeFragment
 import com.example.perfectweatherallyear.databinding.FragmentWeatherForecastBinding
 import com.example.perfectweatherallyear.model.DayWeather
-import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.ui.detailWeather.ARG_DAY_WEATHER
-import com.example.perfectweatherallyear.ui.detailWeather.DetailWeatherFragment
-import com.google.gson.GsonBuilder
 import javax.inject.Inject
 
-
-const val ARG_LOCATION: String = "LOCATION"
 class WeatherForecastFragment : Fragment() {
     private lateinit var weatherForecastAdapter: WeatherForecastAdapter
     private lateinit var binding: FragmentWeatherForecastBinding
-    lateinit var location: Location
+    private val args by navArgs<WeatherForecastFragmentArgs>()
 
     @Inject
     lateinit var weatherForecastViewModelFactory: WeatherForecastViewModelFactory
@@ -34,11 +29,6 @@ class WeatherForecastFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentWeatherForecastBinding.inflate(layoutInflater)
         requireContext().appComponent.inject(this)
-
-        val builder = GsonBuilder()
-        val gson = builder.create()
-        location = gson.fromJson(arguments?.getString(ARG_LOCATION), Location::class.java)
-
         return binding.root
     }
 
@@ -52,24 +42,17 @@ class WeatherForecastFragment : Fragment() {
         initViewModel()
 
         binding.swipeRefresh.setOnRefreshListener {
-            weekWeatherViewModel.loadForecast(location)
+            weekWeatherViewModel.loadForecast(args.location)
             binding.swipeRefresh.isRefreshing = false
         }
     }
 
     private fun initViewModel(){
-        weekWeatherViewModel.loadForecast(location)
+        weekWeatherViewModel.loadForecast(args.location)
         weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner) { weatherForecastAdapter.setData(it) }
     }
 
     private fun adapterOnClick(dayWeather: DayWeather) {
-        val fragment = DetailWeatherFragment()
-        val args = Bundle()
-        val builder = GsonBuilder()
-        val gson = builder.create()
-        val result: String = gson.toJson(dayWeather)
-
-        args.putString(ARG_DAY_WEATHER, result)
-        fragment.changeFragment(args, parentFragmentManager)
+        findNavController().navigate(WeatherForecastFragmentDirections.actionWeekWeatherFragmentToDetailWeatherFragment(dayWeather))
     }
 }

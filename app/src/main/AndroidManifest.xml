@@ -30,6 +30,18 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="perfectweatherallyear.example.com"
+                    android:scheme="https"/>
+                <data
+                    android:host="perfectweatherallyear.example.com"
+                    android:scheme="http"/>
+            </intent-filter>
+            <nav-graph android:value="@navigation/mobile_navigation" />
         </activity>
 
         <service
