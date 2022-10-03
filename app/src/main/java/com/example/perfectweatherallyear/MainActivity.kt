@@ -11,6 +11,7 @@ import com.google.firebase.ktx.Firebase
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    val logger = LoggerFactoryImpl().createLogger(LoggerType.TimberLogger)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         firebaseAnalytics = Firebase.analytics
+        logger.i("My log")
     }
 
     override fun onStop() {

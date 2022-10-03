@@ -1,7 +1,6 @@
 package com.example.perfectweatherallyear.api
 
-import com.example.perfectweatherallyear.BuildConfig
-import com.example.perfectweatherallyear.Logger
+import com.example.perfectweatherallyear.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -9,6 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiRetrofitFactory {
+    val logger = LoggerFactoryImpl().createLogger(LoggerType.TimberLogger)
 
     private val authInterceptor = Interceptor { chain ->
         val newUrl = chain.request().url
@@ -25,7 +25,7 @@ object ApiRetrofitFactory {
     }
 
     private fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
-        val interceptor = HttpLoggingInterceptor { message -> Logger.i(message) }
+        val interceptor = HttpLoggingInterceptor { message -> logger.i(message) }
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return interceptor
     }

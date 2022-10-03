@@ -13,7 +13,6 @@ class AppApplication: Application() {
         super.onCreate()
         appComponent = DaggerAppComponent.factory().create(applicationContext)
         DatabaseFactory.initialize(this)
-        Logger.init()
     }
 }
 
