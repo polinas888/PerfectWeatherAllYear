@@ -36,7 +36,6 @@ class FakeAndroidLocationRepository: LocationRepository {
     }
 
     override suspend fun loadUserLocations(): List<Location> {
-        insertLocations(listOf(Location(id = 3, "New-York")))
         return locationServiceData
     }
 }

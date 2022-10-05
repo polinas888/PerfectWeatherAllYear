@@ -1,8 +1,9 @@
 package com.example.perfectweatherallyear.ui.location
 
 import android.os.Bundle
-import androidx.annotation.VisibleForTesting
+import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.fragment.app.testing.withFragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -16,12 +17,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.example.perfectweatherallyear.R
 import com.example.perfectweatherallyear.atPosition
-import com.example.perfectweatherallyear.di.ApiRepositoryFactory
-import com.example.perfectweatherallyear.di.ModuleDatabase
+import com.example.perfectweatherallyear.fakes.FakeAndroidLocationRepository
 import com.example.perfectweatherallyear.model.Location
-import com.example.perfectweatherallyear.repository.LocationRepository
-import com.example.perfectweatherallyear.repository.localData.DatabaseFactory
-import com.example.perfectweatherallyear.repository.localData.LocalLocationDataSourceImpl
 import com.example.perfectweatherallyear.util.EspressoIdlingResources
 import com.example.perfectweatherallyear.utils.DataBindingIdlingResource
 import com.example.perfectweatherallyear.utils.monitorFragment
@@ -37,24 +34,28 @@ import org.mockito.Mockito
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
 class LocationFragmentTest {
-    private lateinit var repository: LocationRepository
-    private lateinit var locationViewModel: LocationViewModel
-    private val dataBindingIdlingResource = DataBindingIdlingResource()
-    private val lock = Any()
+    private lateinit var repository: FakeAndroidLocationRepository
+    private lateinit var mockLocationViewModel: LocationViewModel
+    private lateinit var dataBindingIdlingResource: DataBindingIdlingResource
+    private lateinit var fragmentScenario: FragmentScenario<LocationFragment>
 
     @Before
-    fun initRepository() {
-        repository = ApiRepositoryFactory.provideLocationRepository(LocalLocationDataSourceImpl(ModuleDatabase.provideLocationDao()))
-        locationViewModel = LocationViewModel(repository)
-        cleanDb()
-    }
+    fun setUpForTest() = runTest {
+        repository = FakeAndroidLocationRepository()
+        val locations = listOf(Location(1, "New-York"), Location(2, "London"))
+        repository.insertLocations(locations)
+        mockLocationViewModel = LocationViewModel(repository)
+        fragmentScenario = launchFragmentInContainer(
+            Bundle(), R.style.ThemeOverlay_AppCompat_Light
+        )
 
-    @After
-    @VisibleForTesting
-    fun cleanDb() = cleanupDb()
+        fragmentScenario.withFragment {
+            locationViewModel = mockLocationViewModel
+            initViewModel()
+        }
 
-    @Before
-    fun registerIdlingResource() {
+        dataBindingIdlingResource = DataBindingIdlingResource()
+        dataBindingIdlingResource.monitorFragment(fragmentScenario)
         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
     }
@@ -65,39 +66,41 @@ class LocationFragmentTest {
         IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
     }
 
-    private fun cleanupDb() = runTest {
-        synchronized(lock) {
-            DatabaseFactory.get().database.apply {
-                clearAllTables()
-            }
+    @Test
+    fun loadLocations_DataDisplayedInUi() = runTest {
+
+        fragmentScenario.withFragment {
+            loadData()
         }
+
+        onView(withId(R.id.locationsRecyclerView)).check(matches(atPosition(0, isDisplayed())))
+        onView(withId(R.id.locationsRecyclerView)).check(matches(atPosition(1, isDisplayed())))
     }
 
     @Test
-    fun initViewModel_loadLocations_DisplayedThemInUi() = runTest {
-        locationViewModel.loadLocations()
-        val fragmentScenario = launchFragmentInContainer<LocationFragment>(Bundle(), R.style.ThemeOverlay_AppCompat_Light)
-        dataBindingIdlingResource.monitorFragment(fragmentScenario)
+    fun loadLocations_CorrectDataDisplayedInUi() = runTest {
 
-        onView(withId(R.id.locationsRecyclerView)).check(matches(atPosition(0, isDisplayed())))
+        fragmentScenario.withFragment {
+            loadData()
+        }
+
         onView(withId(R.id.locationsRecyclerView))
-            .check(matches(atPosition(0, hasDescendant(withText("Moscow")))))
-        onView(withId(R.id.locationsRecyclerView)).check(matches(atPosition(1, isDisplayed())))
+            .check(matches(atPosition(0, hasDescendant(withText("New-York")))))
         onView(withId(R.id.locationsRecyclerView))
             .check(matches(atPosition(1, hasDescendant(withText("London")))));
-        onView(withId(R.id.locationsRecyclerView)).check(matches(atPosition(2, isDisplayed())))
-        onView(withId(R.id.locationsRecyclerView))
-            .check(matches(atPosition(2, hasDescendant(withText("New-York")))));
     }
 
     @Test
     fun clickFirstLocation_navigateToWeatherForecastFragmentWithFirstLocationArg() = runTest {
 
-        val listLocations = repository.loadUserLocations()
-        val scenario = launchFragmentInContainer<LocationFragment>(Bundle(), R.style.ThemeOverlay_AppCompat_Light)
-        dataBindingIdlingResource.monitorFragment(scenario)
+        fragmentScenario.withFragment {
+            loadData()
+        }
+
+        val listLocations = mockLocationViewModel.listLocationsLiveData.value
+
         val navController = Mockito.mock(NavController::class.java)
-        scenario.onFragment {
+        fragmentScenario.onFragment {
             Navigation.setViewNavController(it.view!!, navController)
         }
 
@@ -105,7 +108,7 @@ class LocationFragmentTest {
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()));
 
         Mockito.verify(navController).navigate(
-            LocationFragmentDirections.actionLocationFragmentToWeekWeatherFragment(listLocations[0].id, listLocations[0].name)
+            LocationFragmentDirections.actionLocationFragmentToWeekWeatherFragment(listLocations?.get(0)!!.id, listLocations[0].name)
         )
     }
 }

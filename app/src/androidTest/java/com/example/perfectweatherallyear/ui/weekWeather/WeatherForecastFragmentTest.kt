@@ -56,7 +56,7 @@ class WeatherForecastFragmentTest {
 
         val location = Location(1, "Moscow")
         val bundle = WeatherForecastFragmentArgs(location.id, location.name).toBundle()
-        fragmentScenario = launchFragmentInContainer<WeatherForecastFragment>(
+        fragmentScenario = launchFragmentInContainer(
             bundle, R.style.ThemeOverlay_AppCompat_Light
         )
 

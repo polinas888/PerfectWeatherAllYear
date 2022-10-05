@@ -5,25 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.perfectweatherallyear.appComponent
 import com.example.perfectweatherallyear.databinding.FragmentLocationBinding
 import com.example.perfectweatherallyear.model.Location
-import com.google.gson.GsonBuilder
+import com.example.perfectweatherallyear.util.EspressoIdlingResources
 import javax.inject.Inject
 
 class LocationFragment: Fragment() {
     private lateinit var binding: FragmentLocationBinding
     private lateinit var locationAdapter: LocationAdapter
+    lateinit var locationViewModel: LocationViewModel
 
     @Inject
     lateinit var locationViewModelFactory: LocationViewModelFactory
-
-    private val locationViewModel by viewModels<LocationViewModel>{
-        locationViewModelFactory
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentLocationBinding.inflate(layoutInflater)
@@ -33,18 +30,28 @@ class LocationFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        locationViewModel = ViewModelProvider(this, locationViewModelFactory)
+            .get(LocationViewModel::class.java)
+
         binding.apply {
             locationAdapter = LocationAdapter { location -> adapterOnClick(location) }
             locationsRecyclerView.adapter = locationAdapter
             locationsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
         initViewModel()
+        loadData()
     }
 
-    private fun initViewModel(){
-        locationViewModel.loadLocations()
+    fun initViewModel(){
         locationViewModel.listLocationsLiveData.observe(viewLifecycleOwner) { locationAdapter.setData(it) }
     }
+
+    fun loadData() {
+        EspressoIdlingResources.increment()
+        locationViewModel.loadLocations()
+        EspressoIdlingResources.decrement()
+    }
+
 
     private fun adapterOnClick(location: Location) {
         val action = LocationFragmentDirections.actionLocationFragmentToWeekWeatherFragment(id = location.id, cityName = location.name)
