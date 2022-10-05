@@ -8,7 +8,6 @@ import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.DataResult
 import com.example.perfectweatherallyear.repository.LocationRepository
 import com.example.perfectweatherallyear.repository.WeatherRepository
-import com.example.perfectweatherallyear.util.wrapEspressoIdlingResource
 import kotlinx.coroutines.launch
 
 const val DAYS_NUMBER = 3

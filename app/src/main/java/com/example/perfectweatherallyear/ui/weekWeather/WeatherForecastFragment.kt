@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,13 +22,11 @@ class WeatherForecastFragment : Fragment() {
     private lateinit var binding: FragmentWeatherForecastBinding
     lateinit var location: Location
     val args: WeatherForecastFragmentArgs by navArgs()
+    lateinit var weekWeatherViewModel: WeatherForecastViewModel
+
 
     @Inject
     lateinit var weatherForecastViewModelFactory: WeatherForecastViewModelFactory
-
-    private val weekWeatherViewModel by viewModels<WeatherForecastViewModel>{
-        weatherForecastViewModelFactory
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentWeatherForecastBinding.inflate(layoutInflater)
@@ -47,7 +45,12 @@ class WeatherForecastFragment : Fragment() {
             weatherForecastRecyclerView.adapter = weatherForecastAdapter
             weatherForecastRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
+
+        weekWeatherViewModel = ViewModelProvider(this, weatherForecastViewModelFactory)
+            .get(WeatherForecastViewModel::class.java)
+
         initViewModel()
+        loadData()
 
         binding.swipeRefresh.setOnRefreshListener {
             weekWeatherViewModel.loadForecast(location)
@@ -55,10 +58,14 @@ class WeatherForecastFragment : Fragment() {
         }
     }
 
-    private fun initViewModel(){
+    fun initViewModel(){
+        weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner) {
+            weatherForecastAdapter.setData(it) }
+    }
+
+    fun loadData() {
         EspressoIdlingResources.increment()
         weekWeatherViewModel.loadForecast(location)
-        weekWeatherViewModel.weatherForecastLiveData.observe(viewLifecycleOwner) { weatherForecastAdapter.setData(it) }
         EspressoIdlingResources.decrement()
     }
 

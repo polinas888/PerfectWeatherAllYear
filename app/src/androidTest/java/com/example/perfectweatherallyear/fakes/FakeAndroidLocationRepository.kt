@@ -2,14 +2,17 @@ package com.example.perfectweatherallyear.fakes
 
 import com.example.perfectweatherallyear.model.Location
 import com.example.perfectweatherallyear.repository.LocationRepository
+import com.example.perfectweatherallyear.util.EspressoIdlingResources
 
 class FakeAndroidLocationRepository: LocationRepository {
     var locationServiceData: MutableList<Location> = mutableListOf()
 
     override suspend fun insertLocations(locations: List<Location>) {
+        EspressoIdlingResources.increment()
         for (location in locations) {
             locationServiceData.add(location)
         }
+        EspressoIdlingResources.decrement()
     }
 
     override suspend fun getLocationIdByCityName(city: String): Int {

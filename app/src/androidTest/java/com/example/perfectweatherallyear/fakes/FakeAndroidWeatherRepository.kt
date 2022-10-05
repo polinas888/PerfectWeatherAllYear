@@ -12,10 +12,6 @@ class FakeAndroidWeatherRepository: WeatherRepository {
         DayWeather(
             1, "10-01-2000", 1,
             GeneralWeather("+7", "+15", "3", "11")
-        ),
-        DayWeather(
-            2, "11-01-2000", 2,
-            GeneralWeather("+8", "+16", "4", "12")
         )
     )
 

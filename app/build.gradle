@@ -10,7 +10,7 @@ plugins {
 apply from: rootProject.file("credentials.gradle")
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.perfectweatherallyear"
