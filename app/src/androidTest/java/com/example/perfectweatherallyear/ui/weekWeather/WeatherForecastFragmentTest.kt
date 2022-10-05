@@ -66,9 +66,6 @@ class WeatherForecastFragmentTest {
         }
         dataBindingIdlingResource = DataBindingIdlingResource()
         dataBindingIdlingResource.monitorFragment(fragmentScenario)
-        fragmentScenario.withFragment {
-            loadData()
-        }
 
         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
@@ -84,6 +81,10 @@ class WeatherForecastFragmentTest {
     @Test
     fun loadListWeatherInRecyclerView_DataDisplayedInUi() = runTest {
 
+        fragmentScenario.withFragment {
+            loadData()
+        }
+
         Espresso.onView(withId(R.id.weatherForecastRecyclerView))
             .check(matches(isDisplayed()))
         Espresso.onView(withId(R.id.weatherForecastRecyclerView))
@@ -92,6 +93,10 @@ class WeatherForecastFragmentTest {
 
     @Test
     fun loadListWeatherInRecyclerView_CorrectDataDisplayedInUi() = runTest {
+
+        fragmentScenario.withFragment {
+            loadData()
+        }
 
         Espresso.onView(withId(R.id.weatherForecastRecyclerView))
             .check(matches(atPosition(0, hasDescendant(withText("10-01-2000")))))
@@ -107,6 +112,10 @@ class WeatherForecastFragmentTest {
 
     @Test
     fun clickDayWeather_navigateToDetailWeatherFragmentWithRightArg() = runTest {
+
+        fragmentScenario.withFragment {
+            loadData()
+        }
 
         val listWeather = mockWeatherViewModel.weatherForecastLiveData.value
 
