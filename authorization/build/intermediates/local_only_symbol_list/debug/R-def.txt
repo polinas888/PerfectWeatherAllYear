@@ -1,0 +1,14 @@
+R_DEF: Internal format may change without notice
+local
+id authorizationFragment
+id log_button
+id nav_authorization
+layout fragment_authorization
+navigation nav_authorization
+string hello_blank_fragment
+string log_in
+string prompt_info_description
+string prompt_info_subtitle
+string prompt_info_title
+string prompt_info_use_app_password
+string welcome_to_app
